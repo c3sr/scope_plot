@@ -2,13 +2,15 @@
 
 import json
 import sys
-import pprint
+import prettyprinter as pp
 import os
 import re
 import numpy as np
 import matplotlib.pyplot as plt
 import yaml
 import seaborn as sns
+
+from .configure_plot import *
 
 pp = pprint.PrettyPrinter(indent=4)
 
@@ -128,15 +130,27 @@ def generator_regplot(fig, yaml_dir, plot_cfg):
         l[c] = l[c] + ": " + "{:.2f}".format(slope) + " us/fault"
         print ("set label", c, "to:", l[c])
     ax.legend(h, l)
+    ax.legend(frameon=False, loc='upper left', ncol=2, handlelength=4)
 
     title = plot_cfg.get("title", "")
     ax.set_title(title)
+
+    ax.set_xlabel('')
+    ax.yaxis.set_major_formatter(ScalarFormatter())
+    ax.yaxis.major.formatter._useMathText = True
+    ax.yaxis.set_minor_locator(AutoMinorLocator(5))
+    ax.xaxis.set_minor_locator(AutoMinorLocator(5))
+    ax.yaxis.set_label_coords(0.63, 1.01)
+    ax.yaxis.tick_right()
 
     return fig
 
 def generate_figure(plot_cfg, root_dir):
 
     fig = plt.figure()
+
+
+    configure_plot(fig)
 
     if "generator" in plot_cfg:
         if plot_cfg["generator"] == "regplot":

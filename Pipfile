@@ -1,0 +1,27 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+click = "*"
+matplotlib = "*"
+seaborn = "*"
+bokeh = "*"
+pandas = "*"
+black = "*"
+yapf = "*"
+"flake8" = "*"
+mypy = "*"
+"pep8" = "*"
+schema = "*"
+jsonschema = "*"
+networkx = "*"
+itermplot = "*"
+"flake8-mypy" = "*"
+prettyprinter = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.6"

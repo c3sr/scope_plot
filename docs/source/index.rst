@@ -19,9 +19,9 @@ MicrobenchPlot is available on PyPI can be installed with `pip <https://pip.pypa
 
     $ python -m pip install microbench_plot
 
-To install the latest development version from `Github <https://github.com/abduld/microbench_plot>`_::
+To install the latest development version from `Github <https://github.com/rai-project/microbench_plot>`_::
 
-    $ python -m pip install git+git://github.com/abduld/microbench_plot.git
+    $ python -m pip install git+git://github.com/rai-project/microbench_plot.git
 
 
 If your current Python installation doesn't have pip available, try `get-pip.py <bootstrap.pypa.io>`_
@@ -43,7 +43,7 @@ Support / Report Issues
 -----------------------
 
 All support requests and issue reports should be
-`filed on Github as an issue <https://github.com/abduld/microbench_plot/issues>`_.
+`filed on Github as an issue <https://github.com/rai-project/microbench_plot/issues>`_.
 Make sure to follow the template so your request may be as handled as quickly as possible.
 Please respect contributors by not using personal contacts for support requests.
 

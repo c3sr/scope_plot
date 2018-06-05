@@ -51,8 +51,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # Releases changelog extension
-releases_release_uri = "https://github.com/abduld/microbench_plot/tree/%s"
-releases_issue_uri = "https://github.com/abduld/microbench_plot/issues/%s"
+releases_release_uri = "https://github.com/rai-project/microbench_plot/tree/%s"
+releases_issue_uri = "https://github.com/rai-project/microbench_plot/issues/%s"
 
 # General information about the project.
 project = 'MicrobenchPlot'

@@ -9,7 +9,7 @@ Abdul Dakkak <dakkak@illinois.edu>
 License
 -------
 
-Copied from `LICENSE.txt <https://github.com/abduld/microbench_plot/blob/master/LICENSE.txt>`_:
+Copied from `LICENSE.txt <https://github.com/rai-project/microbench_plot/blob/master/LICENSE.txt>`_:
 
 .. include:: ../../LICENSE.txt
 

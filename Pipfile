@@ -14,6 +14,7 @@ schema = "*"
 jsonschema = "*"
 networkx = "*"
 prettyprinter = "*"
+scipy = "*"
 
 [dev-packages]
 black = "*"

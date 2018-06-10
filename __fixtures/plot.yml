@@ -1,0 +1,30 @@
+
+title: Reduction 256
+file: ex1.json
+
+bar_width: 0.1
+
+yaxis:
+  label: TFlops
+  field: Flops
+  scale: 1e-9
+  lim:
+    - 0
+    - 200
+xaxis:
+  label: Number of 256 Segments (in thousands)
+  field: num_segments
+  scale: 1.0/1000
+  lim:
+    - 2
+    - 8.6
+#  scaling_function: log
+series:
+  - label: Thrust
+    regex: THRUST_SEGMENTED_REDUCTION.*segment_size:256.*
+  - label: CUB
+    regex: CUB_BLOCK_SEGMENTED_REDUCTION.*segment_size:256.*
+  - label: Ours<1,8>
+    regex: CUDA_WMMA_SEGMENTED_REDUCTION<1, 8>.*segment_size:256.*
+  - label: Ours<1,8>2
+    regex: CUDA_WMMA_SEGMENTED_REDUCTION<1, 8>.*segment_size:256.*

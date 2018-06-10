@@ -8,10 +8,6 @@ import re
 import numpy as np
 import matplotlib.pyplot as plt
 import yaml
-import seaborn as sns
-import pandas as pd
-from matplotlib.ticker import ScalarFormatter, AutoMinorLocator
-import matplotlib as mpl
 
 pp = pprint.PrettyPrinter(indent=4)
 
@@ -179,12 +175,21 @@ if __name__ == '__main__':
 
     if output_path is None and cfg.get("output_file", None) is not None:
         output_path = os.path.join(root_dir, cfg.get("output_file"))
+        if not output_path.endswith(".pdf") and not output_path.endswith(".png"):
+            base_output_path = output_path
+            output_path = []
+            for ext in cfg.get("output_format", ["pdf"]):
+                ext = ext.lstrip(".")
+                output_path.append(base_output_path + "." + ext)
 
     configure_plot()
+
+    output_paths = [output_path] if type(output_path) == list() else output_path
 
     fig = generate_figure(cfg, root_dir)
     if fig is not None:
         # Save plot
         xprint("saving to", output_path)
-        fig.show()
-        fig.savefig(output_path,  clip_on=False, transparent=True)
+        # fig.show()
+        for output_path in output_paths:
+            fig.savefig(output_path,  clip_on=False, transparent=True)

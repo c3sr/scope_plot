@@ -1,7 +1,10 @@
 
 title: Reduction 256
 input_file: ex1.json
-output_file: reduction_256.pdf
+output_file: reduction_256
+output_format:
+  - pdf
+  - png
 bar_width: 0.1
 
 yaxis:

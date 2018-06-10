@@ -15,12 +15,15 @@ import matplotlib as mpl
 
 pp = pprint.PrettyPrinter(indent=4)
 
+def xprint(*args):
+    return
+
 def generator_bar(fig, yaml_dir, plot_cfg):
     ax = fig.add_subplot(1, 1, 1)
     bar_width = plot_cfg.get("bar_width", 0.8)
     num_series = len(plot_cfg["series"])
 
-    default_file = plot_cfg.get("file", "not_found")
+    default_file = plot_cfg.get("input_file", "not_found")
 
     default_x_scale =  eval(str(plot_cfg.get("xaxis", {}).get("scale", 1.0)))
     default_y_scale =  eval(str(plot_cfg.get("yaxis", {}).get("scale", 1.0)))
@@ -29,16 +32,16 @@ def generator_bar(fig, yaml_dir, plot_cfg):
     default_y_field = plot_cfg.get("yaxis", {}).get("field", "real_time")
 
     for c, s in enumerate(plot_cfg["series"]):
-        file_path = s.get("file", default_file)
+        file_path = s.get("input_file", default_file)
         label = s["label"]
-        print(label)
+        xprint(label)
         regex = s.get("regex", ".*")
-        print("Using regex:", regex)
+        xprint("Using regex:", regex)
         yscale = eval(str(s.get("yscale", default_y_scale)))
         xscale = eval(str(s.get("xscale", default_x_scale)))
         if not os.path.isabs(file_path):
             file_path = os.path.join(yaml_dir, file_path)
-        print("reading", file_path)
+        xprint("reading", file_path)
         with open(file_path, "rb") as f:
             j = json.loads(f.read().decode('utf-8'))
         
@@ -72,31 +75,31 @@ def generator_bar(fig, yaml_dir, plot_cfg):
         axis_cfg = plot_cfg["yaxis"]
         if axis_cfg and "lim" in axis_cfg:
             lim = axis_cfg["lim"]
-            print("setting ylim", lim)
+            xprint("setting ylim", lim)
             ax.set_ylim(lim)
         if axis_cfg and "label" in axis_cfg:
             label = axis_cfg["label"]
-            print("setting ylabel", label)
+            xprint("setting ylabel", label)
             ax.set_ylabel(label)
 
     if "xaxis" in plot_cfg:
         axis_cfg = plot_cfg["xaxis"]
         if axis_cfg and "lim" in axis_cfg:
             lim = axis_cfg["lim"]
-            print("setting xlim", lim)
+            xprint("setting xlim", lim)
             ax.set_xlim(lim)
         if axis_cfg and "scaling_function" in axis_cfg:
             scale = axis_cfg["scaling_function"]
-            print("setting xscale", scale)
+            xprint("setting xscale", scale)
             ax.set_xscale(scale, basex=2)
         if axis_cfg and "label" in axis_cfg:
             label = axis_cfg["label"]
-            print("setting xlabel", label)
+            xprint("setting xlabel", label)
             ax.set_xlabel(label)
 
     if "title" in plot_cfg:
         title = plot_cfg["title"]
-        print("setting title", title)
+        xprint("setting title", title)
         ax.set_title(title)
 
     # ax.legend(loc='upper left')
@@ -159,7 +162,10 @@ def configure_plot():
 
 if __name__ == '__main__':
 
-    if len(sys.argv) >= 3:
+    if len(sys.argv) == 2:
+        output_path = None
+        yaml_path = sys.argv[1]
+    elif len(sys.argv) == 3:
         output_path = sys.argv[1]
         yaml_path = sys.argv[2]
     else:
@@ -171,12 +177,14 @@ if __name__ == '__main__':
     with open(yaml_path, 'rb') as f:
         cfg = yaml.load(f)
 
+    if output_path is None and cfg.get("output_file", None) is not None:
+        output_path = os.path.join(root_dir, cfg.get("output_file"))
 
     configure_plot()
 
     fig = generate_figure(cfg, root_dir)
     if fig is not None:
         # Save plot
-        print("saving to", output_path)
+        xprint("saving to", output_path)
         fig.show()
         fig.savefig(output_path,  clip_on=False, transparent=True)

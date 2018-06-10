@@ -11,8 +11,10 @@ import yaml
 
 pp = pprint.PrettyPrinter(indent=4)
 
+
 def xprint(*args):
     return
+
 
 def generator_bar(fig, yaml_dir, plot_cfg):
     ax = fig.add_subplot(1, 1, 1)
@@ -21,8 +23,8 @@ def generator_bar(fig, yaml_dir, plot_cfg):
 
     default_file = plot_cfg.get("input_file", "not_found")
 
-    default_x_scale =  eval(str(plot_cfg.get("xaxis", {}).get("scale", 1.0)))
-    default_y_scale =  eval(str(plot_cfg.get("yaxis", {}).get("scale", 1.0)))
+    default_x_scale = eval(str(plot_cfg.get("xaxis", {}).get("scale", 1.0)))
+    default_y_scale = eval(str(plot_cfg.get("yaxis", {}).get("scale", 1.0)))
 
     default_x_field = plot_cfg.get("xaxis", {}).get("field", "real_time")
     default_y_field = plot_cfg.get("yaxis", {}).get("field", "real_time")
@@ -39,10 +41,12 @@ def generator_bar(fig, yaml_dir, plot_cfg):
             file_path = os.path.join(yaml_dir, file_path)
         xprint("reading", file_path)
         with open(file_path, "rb") as f:
-            j = json.loads(f.read().decode('utf-8'))
-        
+            j = json.loads(f.read().decode("utf-8"))
+
         pattern = re.compile(regex)
-        matches = [b for b in j["benchmarks"] if pattern == None or pattern.search(b["name"])]
+        matches = [
+            b for b in j["benchmarks"] if pattern == None or pattern.search(b["name"])
+        ]
         times = matches
 
         if len(times) == 0:
@@ -60,11 +64,11 @@ def generator_bar(fig, yaml_dir, plot_cfg):
 
         # pp.pprint(y)
 
-        # ax.bar(x + (c - num_series/2) * bar_width, y, width=bar_width, label=label, align='center')
-        ax.bar(x + bar_width*c, y, width=bar_width, label=label, align='center')
+        ax.bar(x + bar_width * c, y, width=bar_width, label=label, align="center")
         ax.set_xticks(x + 1.5 * bar_width)
+
         if c == 0:
-            ax.set_xticklabels((x + c*bar_width).round(1))
+            ax.set_xticklabels((x + c * bar_width).round(1))
         # ax.bar(x , y, width=bar_width, label=label, align='center')
 
     if "yaxis" in plot_cfg:
@@ -99,13 +103,12 @@ def generator_bar(fig, yaml_dir, plot_cfg):
         ax.set_title(title)
 
     # ax.legend(loc='upper left')
-    ax.legend(loc='best')
+    ax.legend(loc="best")
 
     return fig
 
 
 def generate_figure(plot_cfg, root_dir):
-
 
     fig = plt.figure()
     fig.set_tight_layout(True)
@@ -117,46 +120,52 @@ def generate_figure(plot_cfg, root_dir):
 
 
 # Make some style choices for plotting
-color_wheel = ['#329932',
-               '#ff6961',
-               'b',
-               '#6a3d9a',
-               '#fb9a99',
-               '#e31a1c',
-               '#fdbf6f',
-               '#ff7f00',
-               '#cab2d6',
-               '#6a3d9a',
-               '#ffff99',
-               '#b15928',
-               '#67001f',
-               '#b2182b',
-               '#d6604d',
-               '#f4a582',
-               '#fddbc7',
-               '#f7f7f7',
-               '#d1e5f0',
-               '#92c5de',
-               '#4393c3',
-               '#2166ac',
-               '#053061']
-dashes_styles = [[3, 1],
-                [1000, 1],
-                [2, 1, 10, 1],
-                [4, 1, 1, 1, 1, 1]]
+color_wheel = [
+    "#329932",
+    "#ff6961",
+    "b",
+    "#6a3d9a",
+    "#fb9a99",
+    "#e31a1c",
+    "#fdbf6f",
+    "#ff7f00",
+    "#cab2d6",
+    "#6a3d9a",
+    "#ffff99",
+    "#b15928",
+    "#67001f",
+    "#b2182b",
+    "#d6604d",
+    "#f4a582",
+    "#fddbc7",
+    "#f7f7f7",
+    "#d1e5f0",
+    "#92c5de",
+    "#4393c3",
+    "#2166ac",
+    "#053061",
+]
+dashes_styles = [[3, 1], [1000, 1], [2, 1, 10, 1], [4, 1, 1, 1, 1, 1]]
+
+plt.style.use(
+    {
+        "xtick.labelsize": 16,
+        "ytick.labelsize": 16,
+        "font.size": 15,
+        "figure.autolayout": True,
+        "figure.figsize": (7.2, 4.45),
+        "axes.titlesize": 16,
+        "axes.labelsize": 17,
+        "lines.linewidth": 4,
+        "lines.markersize": 6,
+        "legend.fontsize": 13,
+        "mathtext.fontset": "stix",
+        "font.family": "STIXGeneral",
+    }
+)
 
 
-# ===========================================================
-# Directory and filename; style file open
-# ===========================================================
-def configure_plot():
-    dirFile = os.path.dirname(os.path.realpath(__file__))
-    # Load style file
-    plt.style.use(os.path.join(dirFile, 'PaperDoubleFig.mplstyle'))
-
-
-
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     if len(sys.argv) == 2:
         output_path = None
@@ -170,7 +179,7 @@ if __name__ == '__main__':
     root_dir = os.path.dirname(os.path.abspath(yaml_path))
 
     # load the config
-    with open(yaml_path, 'rb') as f:
+    with open(yaml_path, "rb") as f:
         cfg = yaml.load(f)
 
     if output_path is None and cfg.get("output_file", None) is not None:
@@ -182,14 +191,12 @@ if __name__ == '__main__':
                 ext = ext.lstrip(".")
                 output_path.append(base_output_path + "." + ext)
 
-    configure_plot()
-
     output_paths = [output_path] if type(output_path) == list() else output_path
 
     fig = generate_figure(cfg, root_dir)
     if fig is not None:
         # Save plot
         xprint("saving to", output_path)
-        # fig.show()
+        fig.show()
         for output_path in output_paths:
-            fig.savefig(output_path,  clip_on=False, transparent=True)
+            fig.savefig(output_path, clip_on=False, transparent=False)

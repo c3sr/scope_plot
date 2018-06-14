@@ -37,7 +37,7 @@ ifeq (0, $(words $(findstring $(MAKECMDGOALS), $(NODEPS))))
     -include $(DEPFILES)
 endif
 
-TARGETS := $(FIGURES)
+TARGETS=$(FIGURES)
 
 $(info SOURCES:  $(SOURCES))
 $(info DEPFILES: $(DEPFILES))
@@ -46,15 +46,17 @@ $(info TARGETS:  $(TARGETS))
 
 MICROBENCH_ARGS= -I data
 
+# Since all may not be the first target (because of included deps)
+.DEFAULT_GOAL := all
+all: $(TARGETS)
+
 #This is the rule for creating the dependency files
 deps/%.d: specs/%.yml
-	python -m microbench_plot $(MICROBENCH_ARGS) -s $^ -t '$(patsubst specs/%.yml,generated/%.pdf,$<)' -o $@ --deps
+	python -m microbench_plot $(MICROBENCH_ARGS) -s $^ -t '$(patsubst specs/%.yml,generated/%.pdf,$^)' -o $@ --deps
 
 # This is the rule for creating the figure
 generated/%.pdf : specs/%.yml deps/%.d
 	python -m microbench_plot $(MICROBENCH_ARGS) -s $< -o $@
-
-all: $(TARGETS)
 
 clean:
 	rm -f $(TARGETS) $(DEPFILES)

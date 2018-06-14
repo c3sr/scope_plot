@@ -175,6 +175,74 @@ def generator_errorbar(fig, plot_cfg):
 
     return fig
 
+def generator_regplot(fig, plot_cfg):
+
+    ax = fig.add_subplot(111)
+
+    series_cfgs = plot_cfg["series"]
+    for s_cfg in series_cfgs:
+        file_path = s_cfg["file"]
+        label = s_cfg["label"]
+        regex = s_cfg.get("regex", ".*")
+        print("Using regex:", regex)
+        print("reading", file_path)
+        with open(file_path, "rb") as f:
+            j = json.loads(f.read().decode('utf-8'))
+        
+        pattern = re.compile(regex)
+        matches = [b for b in j["benchmarks"] if pattern == None or pattern.search(b["name"])]
+        means = [b for b in matches if b["name"].endswith("_mean")]
+        stddevs = [b for b in matches if b["name"].endswith("_stddev")]
+        x = np.array([float(b["strides"]) for b in means])
+        y = np.array([float(b["real_time"]) for b in means])
+        e = np.array([float(b["real_time"]) for b in stddevs])
+
+        # Rescale
+        x *= float(s_cfg.get("xscale", 1.0))
+        y *= float(s_cfg.get("yscale", 1.0))
+        e *= float(s_cfg.get("yscale", 1.0))
+
+        color = s_cfg.get("color", "black")
+        style = s_cfg.get("style", "-")
+
+        ## Draw scatter plot of values
+        ax.errorbar(x, y, e, capsize=3, ecolor=color, linestyle='None')
+
+        ## compute a fit line
+        z, cov = np.polyfit(x, y, 1, w=1./e, cov=True)
+        print(z)
+        slope, intercept = z[0], z[1]
+        ax.plot(x, x * slope + intercept, label=label + ": {:.2f}".format(slope) + " us/fault", color=color)
+
+        # ax = sns.regplot(ax=ax, x=x_col, y=col, data=df,
+        #                  ci=68, label=label, color=color, line_kws={"linestyle": style})
+
+
+    yaxis_cfg = plot_cfg.get("yaxis", {})
+    xaxis_cfg = plot_cfg.get("xaxis", {})
+
+    # Set limits
+    if "lim" in yaxis_cfg:
+        lim = yaxis_cfg["lim"]
+        print("setting ylim", lim)
+        ax.set_ylim(lim)
+
+    # Set labels
+    ylabel = yaxis_cfg.get("label", "")
+    print ("set ylabel to:", ylabel)
+    ax.set_ylabel(ylabel)
+    xlabel = xaxis_cfg.get("label", "")
+    print ("set xlabel to:", xlabel)
+    ax.set_xlabel(xlabel)
+
+    title = plot_cfg.get("title", "")
+    print("set title to: ", title)
+    ax.set_title(title)
+
+    ax.legend()
+
+    return fig
+
 def generate(figure_spec):
 
     fig = plt.figure()
@@ -191,6 +259,8 @@ def generate(figure_spec):
         fig = generator_bar(fig, figure_spec)
     elif generator_str == "errorbar":
         fig = generator_errorbar(fig, figure_spec)
+    elif generator_str == "regplot":
+        fig = generator_regplot(fig, figure_spec)
     else:
         print("Unepxected generator:", generator_str)
         sys.exit(1)

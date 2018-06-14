@@ -109,7 +109,10 @@ def generator_bar(fig, yaml_dir, plot_cfg):
 
 def generator_errorbar(fig, plot_cfg):
     ax = fig.add_subplot(111)
-    
+
+    default_x_field = plot_cfg.get("xaxis", {}).get("field", "bytes")
+    default_y_field = plot_cfg.get("yaxis", {}).get("field", "bytes_per_second")
+
     for s in plot_cfg["series"]:
         file_path = s["file"]
         label = s["label"]
@@ -125,9 +128,9 @@ def generator_errorbar(fig, plot_cfg):
         matches = [b for b in j["benchmarks"] if pattern == None or pattern.search(b["name"])]
         means = [b for b in matches if b["name"].endswith("_mean")]
         stddevs = [b for b in matches if b["name"].endswith("_stddev")]
-        x = np.array([float(b["bytes"]) for b in means])
-        y = np.array([float(b["bytes_per_second"]) for b in means])
-        e = np.array([float(b["bytes_per_second"]) for b in stddevs])
+        x = np.array([float(b[default_x_field]) for b in means])
+        y = np.array([float(b[default_y_field]) for b in means])
+        e = np.array([float(b[default_y_field]) for b in stddevs])
 
         # Rescale
         x *= xscale
@@ -168,7 +171,7 @@ def generator_errorbar(fig, plot_cfg):
         print("setting title", title)
         ax.set_title(title)
 
-    ax.legend()
+    ax.legend(loc="best")
 
     return fig
 
@@ -177,6 +180,11 @@ def generate(figure_spec):
     fig = plt.figure()
     fig.set_tight_layout(True)
     fig.autofmt_xdate()
+
+    if "size" in figure_spec:
+        figsize = figure_spec["size"]
+        print("Using figsize:", figsize)
+        fig.set_size_inches(figsize)
 
     generator_str = figure_spec.get("generator", None)
     if generator_str == "bar":
@@ -227,7 +235,7 @@ plt.style.use(
         "figure.figsize": (7.2, 4.45),
         "axes.titlesize": 16,
         "axes.labelsize": 17,
-        "lines.linewidth": 4,
+        "lines.linewidth": 2,
         "lines.markersize": 6,
         "legend.fontsize": 13,
         "mathtext.fontset": "stix",
@@ -267,7 +275,5 @@ if __name__ == "__main__":
     fig = generate_figure(cfg, root_dir)
     if fig is not None:
         # Save plot
-        xprint("saving to", output_path)
-        fig.show()
         for output_path in output_paths:
             fig.savefig(output_path, clip_on=False, transparent=False)

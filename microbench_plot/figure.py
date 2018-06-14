@@ -107,14 +107,85 @@ def generator_bar(fig, yaml_dir, plot_cfg):
 
     return fig
 
+def generator_errorbar(fig, plot_cfg):
+    ax = fig.add_subplot(111)
+    
+    for s in plot_cfg["series"]:
+        file_path = s["file"]
+        label = s["label"]
+        regex = s.get("regex", ".*")
+        print("Using regex:", regex)
+        yscale = float(s.get("yscale", 1.0))
+        xscale = float(s.get("xscale", 1.0))
+        print("reading", file_path)
+        with open(file_path, "rb") as f:
+            j = json.loads(f.read().decode('utf-8'))
+        
+        pattern = re.compile(regex)
+        matches = [b for b in j["benchmarks"] if pattern == None or pattern.search(b["name"])]
+        means = [b for b in matches if b["name"].endswith("_mean")]
+        stddevs = [b for b in matches if b["name"].endswith("_stddev")]
+        x = np.array([float(b["bytes"]) for b in means])
+        y = np.array([float(b["bytes_per_second"]) for b in means])
+        e = np.array([float(b["bytes_per_second"]) for b in stddevs])
 
-def generate_figure(plot_cfg, root_dir):
+        # Rescale
+        x *= xscale
+        y *= yscale
+        e *= yscale
+
+        # pp.pprint(means)
+
+        ax.errorbar(x, y, e, capsize=3, label=label)
+
+    ax.yaxis.tick_right()
+    ax.yaxis.set_label_position("right")
+
+    if "yaxis" in plot_cfg:
+        axis_cfg = plot_cfg["yaxis"]
+        if axis_cfg and "lim" in axis_cfg:
+            lim = axis_cfg["lim"]
+            print("setting ylim", lim)
+            ax.set_ylim(lim)
+        if axis_cfg and "label" in axis_cfg:
+            label = axis_cfg["label"]
+            print("setting ylabel", label)
+            ax.set_ylabel(label)
+
+    if "xaxis" in plot_cfg:
+        axis_cfg = plot_cfg["xaxis"]
+        if axis_cfg and "scale" in axis_cfg:
+            scale = axis_cfg["scale"]
+            print("setting xscale", scale)
+            ax.set_xscale(scale, basex=2)
+        if axis_cfg and "label" in axis_cfg:
+            label = axis_cfg["label"]
+            print("setting xlabel", label)
+            ax.set_xlabel(label)
+
+    if "title" in plot_cfg:
+        title = plot_cfg["title"]
+        print("setting title", title)
+        ax.set_title(title)
+
+    ax.legend()
+
+    return fig
+
+def generate(figure_spec):
 
     fig = plt.figure()
     fig.set_tight_layout(True)
     fig.autofmt_xdate()
 
-    fig = generator_bar(fig, root_dir, plot_cfg)
+    generator_str = figure_spec.get("generator", None)
+    if generator_str == "bar":
+        fig = generator_bar(fig, figure_spec)
+    elif generator_str == "errorbar":
+        fig = generator_errorbar(fig, figure_spec)
+    else:
+        print("Unepxected generator:", generator_str)
+        sys.exit(1)
 
     return fig
 

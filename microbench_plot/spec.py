@@ -1,6 +1,8 @@
 import yaml
 import os.path
 
+import utils
+
 def load(yaml_path):
     with open(yaml_path, "rb") as f:
         cfg = yaml.load(f)
@@ -11,16 +13,19 @@ def use_search_dirs(figure_spec, data_search_dirs):
 
     new_spec = dict(figure_spec)
 
-    for series in new_spec.get("series", []):
-        if os.path.isfile(series["file"]):
+    for d in utils.find_dictionary("file", new_spec):
+        f = d["file"]
+        if os.path.isfile(f):
             continue
         else:
             for dir in data_search_dirs:
                 if not os.path.isdir(dir):
                     raise OSError
-                check_path = os.path.join(dir, series["file"])
+                check_path = os.path.join(dir, f)
                 if os.path.isfile(check_path):
-                    series["file"] = check_path
+                    d["file"] = check_path
                     break
 
+    print(new_spec)
     return new_spec
+

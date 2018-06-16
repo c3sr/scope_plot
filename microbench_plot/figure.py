@@ -16,8 +16,7 @@ def xprint(*args):
     return
 
 
-def generator_bar(fig, yaml_dir, plot_cfg):
-    ax = fig.add_subplot(1, 1, 1)
+def generator_bar(ax, yaml_dir, plot_cfg):
     bar_width = plot_cfg.get("bar_width", 0.8)
     num_series = len(plot_cfg["series"])
 
@@ -105,15 +104,14 @@ def generator_bar(fig, yaml_dir, plot_cfg):
     # ax.legend(loc='upper left')
     ax.legend(loc="best")
 
-    return fig
+    return ax
 
-def generator_errorbar(fig, plot_cfg):
-    ax = fig.add_subplot(111)
+def generator_errorbar(ax, ax_cfg):
 
-    default_x_field = plot_cfg.get("xaxis", {}).get("field", "bytes")
-    default_y_field = plot_cfg.get("yaxis", {}).get("field", "bytes_per_second")
+    default_x_field = ax_cfg.get("xaxis", {}).get("field", "bytes")
+    default_y_field = ax_cfg.get("yaxis", {}).get("field", "bytes_per_second")
 
-    for s in plot_cfg["series"]:
+    for s in ax_cfg["series"]:
         file_path = s["file"]
         label = s["label"]
         regex = s.get("regex", ".*")
@@ -138,52 +136,24 @@ def generator_errorbar(fig, plot_cfg):
         e *= yscale
 
         # pp.pprint(means)
-
         ax.errorbar(x, y, e, capsize=3, label=label)
 
-    ax.yaxis.tick_right()
-    ax.yaxis.set_label_position("right")
-
-    if "yaxis" in plot_cfg:
-        axis_cfg = plot_cfg["yaxis"]
-        if axis_cfg and "lim" in axis_cfg:
-            lim = axis_cfg["lim"]
-            print("setting ylim", lim)
-            ax.set_ylim(lim)
-        if axis_cfg and "label" in axis_cfg:
-            label = axis_cfg["label"]
-            print("setting ylabel", label)
-            ax.set_ylabel(label)
-
-    if "xaxis" in plot_cfg:
-        axis_cfg = plot_cfg["xaxis"]
-        if axis_cfg and "scale" in axis_cfg:
-            scale = axis_cfg["scale"]
-            print("setting xscale", scale)
-            ax.set_xscale(scale, basex=2)
-        if axis_cfg and "label" in axis_cfg:
-            label = axis_cfg["label"]
-            print("setting xlabel", label)
-            ax.set_xlabel(label)
-
-    if "title" in plot_cfg:
-        title = plot_cfg["title"]
+    if "title" in ax_cfg:
+        title = ax_cfg["title"]
         print("setting title", title)
         ax.set_title(title)
 
     ax.legend(loc="best")
 
-    return fig
+    return ax
 
-def generator_regplot(fig, plot_cfg):
+def generator_regplot(ax, ax_spec):
 
-    ax = fig.add_subplot(111)
-
-    series_cfgs = plot_cfg["series"]
-    for s_cfg in series_cfgs:
-        file_path = s_cfg["file"]
-        label = s_cfg["label"]
-        regex = s_cfg.get("regex", ".*")
+    series_specs = ax_spec["series"]
+    for series_spec in series_specs:
+        file_path = series_spec["file"]
+        label = series_spec["label"]
+        regex = series_spec.get("regex", ".*")
         print("Using regex:", regex)
         print("reading", file_path)
         with open(file_path, "rb") as f:
@@ -198,12 +168,12 @@ def generator_regplot(fig, plot_cfg):
         e = np.array([float(b["real_time"]) for b in stddevs])
 
         # Rescale
-        x *= float(s_cfg.get("xscale", 1.0))
-        y *= float(s_cfg.get("yscale", 1.0))
-        e *= float(s_cfg.get("yscale", 1.0))
+        x *= float(series_spec.get("xscale", 1.0))
+        y *= float(series_spec.get("yscale", 1.0))
+        e *= float(series_spec.get("yscale", 1.0))
 
-        color = s_cfg.get("color", "black")
-        style = s_cfg.get("style", "-")
+        color = series_spec.get("color", "black")
+        style = series_spec.get("style", "-")
 
         ## Draw scatter plot of values
         ax.errorbar(x, y, e, capsize=3, ecolor=color, linestyle='None')
@@ -214,38 +184,57 @@ def generator_regplot(fig, plot_cfg):
         slope, intercept = z[0], z[1]
         ax.plot(x, x * slope + intercept, label=label + ": {:.2f}".format(slope) + " us/fault", color=color)
 
-        # ax = sns.regplot(ax=ax, x=x_col, y=col, data=df,
-        #                  ci=68, label=label, color=color, line_kws={"linestyle": style})
 
-
-    yaxis_cfg = plot_cfg.get("yaxis", {})
-    xaxis_cfg = plot_cfg.get("xaxis", {})
-
-    # Set limits
-    if "lim" in yaxis_cfg:
-        lim = yaxis_cfg["lim"]
-        print("setting ylim", lim)
-        ax.set_ylim(lim)
-
-    # Set labels
-    ylabel = yaxis_cfg.get("label", "")
-    print ("set ylabel to:", ylabel)
-    ax.set_ylabel(ylabel)
-    xlabel = xaxis_cfg.get("label", "")
-    print ("set xlabel to:", xlabel)
-    ax.set_xlabel(xlabel)
-
-    title = plot_cfg.get("title", "")
+    title = ax_spec.get("title", "")
     print("set title to: ", title)
     ax.set_title(title)
 
     ax.legend()
 
-    return fig
+    return ax
+
+def generate_axes(ax, ax_spec):
+
+    generator_str = ax_spec.get("generator", None)
+    if generator_str == "bar":
+        ax = generator_bar(ax, ax_spec)
+    elif generator_str == "errorbar":
+        ax = generator_errorbar(ax, ax_spec)
+    elif generator_str == "regplot":
+        ax = generator_regplot(ax, ax_spec)
+    else:
+        print("Unepxected axes generator:", generator_str)
+        sys.exit(1)
+
+    return ax
+
 
 def generate(figure_spec):
 
-    fig = plt.figure()
+    # If there are subplots, apply the generator to each subplot axes
+    if "subplots" in figure_spec:
+        ax_specs = figure_spec["subplots"]
+
+        # Figure out the size of the figure
+        num_x = max([int(spec["pos"][0]) for spec in ax_specs])
+        num_y = max([int(spec["pos"][1]) for spec in ax_specs])
+
+        fig, axs = plt.subplots(num_y, num_x, sharex='col')
+
+        for i in range(len(ax_specs)):
+            ax_spec = ax_specs[i]
+            subplot_x = int(ax_spec["pos"][0]) - 1
+            subplot_y = int(ax_spec["pos"][1]) - 1
+            ax = axs[subplot_y,subplot_x]
+
+            plt.setp(ax.get_xticklabels(), visible=False)
+            generate_axes(ax, ax_spec)
+    else:
+        # otherwise, apply generator to the single figure axes
+        fig = plt.figure()
+        ax = fig.add_subplot(111)
+        generate_axes(fig.axes[0], figure_spec)
+
     fig.set_tight_layout(True)
     fig.autofmt_xdate()
 
@@ -254,16 +243,30 @@ def generate(figure_spec):
         print("Using figsize:", figsize)
         fig.set_size_inches(figsize)
 
-    generator_str = figure_spec.get("generator", None)
-    if generator_str == "bar":
-        fig = generator_bar(fig, figure_spec)
-    elif generator_str == "errorbar":
-        fig = generator_errorbar(fig, figure_spec)
-    elif generator_str == "regplot":
-        fig = generator_regplot(fig, figure_spec)
-    else:
-        print("Unepxected generator:", generator_str)
-        sys.exit(1)
+    # ax.yaxis.tick_right()
+    # ax.yaxis.set_label_position("right")
+
+    if "yaxis" in figure_spec:
+        axis_cfg = figure_spec["yaxis"]
+        if axis_cfg and "lim" in axis_cfg:
+            lim = axis_cfg["lim"]
+            print("setting ylim", lim)
+            ax.set_ylim(lim)
+        if axis_cfg and "label" in axis_cfg:
+            label = axis_cfg["label"]
+            print("setting ylabel", label)
+            ax.set_ylabel(label)
+
+    if "xaxis" in figure_spec:
+        axis_cfg = figure_spec["xaxis"]
+        if axis_cfg and "scale" in axis_cfg:
+            scale = axis_cfg["scale"]
+            print("setting xscale", scale)
+            ax.set_xscale(scale, basex=2)
+        if axis_cfg and "label" in axis_cfg:
+            label = axis_cfg["label"]
+            print("setting xlabel", label)
+            ax.set_xlabel(label)
 
     return fig
 
@@ -298,16 +301,16 @@ dashes_styles = [[3, 1], [1000, 1], [2, 1, 10, 1], [4, 1, 1, 1, 1, 1]]
 
 plt.style.use(
     {
-        "xtick.labelsize": 16,
-        "ytick.labelsize": 16,
-        "font.size": 15,
+        # "xtick.labelsize": 16,
+        # "ytick.labelsize": 16,
+        # "font.size": 15,
         "figure.autolayout": True,
-        "figure.figsize": (7.2, 4.45),
-        "axes.titlesize": 16,
-        "axes.labelsize": 17,
+        # "figure.figsize": (7.2, 4.45),
+        # "axes.titlesize": 16,
+        # "axes.labelsize": 17,
         "lines.linewidth": 2,
-        "lines.markersize": 6,
-        "legend.fontsize": 13,
+        # "lines.markersize": 6,
+        # "legend.fontsize": 13,
         "mathtext.fontset": "stix",
         "font.family": "STIXGeneral",
     }

@@ -1,4 +1,21 @@
 
+def find_dictionary(key, dictionary):
+    """yield all dictionaries in a dictionary of nested iterables and dictionaries that contain "key" """
+    for k, v in dictionary.iteritems():
+        if k == key:
+            yield dictionary
+        elif isinstance(v, dict):
+            for result in find_dictionary(key, v):
+                yield result
+        else:
+            try:
+                _ = (e for e in v)
+            except TypeError: # not iterable
+                continue
+            for e in v:
+                if isinstance(e, dict):
+                    for result in find_dictionary(key, e):
+                        yield result
 
 def find_longest_name(benchmark_list):
     """

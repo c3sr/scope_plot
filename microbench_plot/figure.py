@@ -130,7 +130,7 @@ def generator_errorbar(ax, ax_cfg):
     default_x_field = ax_cfg.get("xaxis", {}).get("field", "bytes")
     default_y_field = ax_cfg.get("yaxis", {}).get("field", "bytes_per_second")
 
-    for s in ax_cfg["series"]:
+    for i,s in enumerate(ax_cfg["series"]):
         file_path = s["file"]
         label = s["label"]
         regex = s.get("regex", ".*")
@@ -155,7 +155,11 @@ def generator_errorbar(ax, ax_cfg):
         e *= yscale
 
         # pp.pprint(means)
-        ax.errorbar(x, y, e, capsize=3, label=label)
+        if "color" in s:
+            color = s["color"]
+        else:
+            color = color_wheel[i]
+        ax.errorbar(x, y, e, capsize=3, label=label, color=color)
 
     if "title" in ax_cfg:
         title = ax_cfg["title"]
@@ -284,6 +288,14 @@ def generate(figure_spec):
 
 # Make some style choices for plotting
 color_wheel = [
+    "#e9d043",
+    "#83c995",
+    "#859795",
+    "#d7369e",
+    "#c4c9d8",
+    "#f37738",
+    "#7b85d4",
+    "#ad5b50",
     "#329932",
     "#ff6961",
     "b",

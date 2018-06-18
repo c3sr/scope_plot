@@ -1,4 +1,4 @@
-
+generator: bar
 title: Reduction 256
 input_file: ex1.json
 output_file: reduction_256

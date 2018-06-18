@@ -1,0 +1,20 @@
+generator: errorbar
+series:
+  - label: GPU0 to GPU1 (local)
+    file: hal000.ncsa.illinois.edu-UM_Coherence_GPUToGPU-0-1.json
+    yscale: 1e-9
+  - label: GPU0 to GPU2 (remote)
+    file: hal000.ncsa.illinois.edu-UM_Coherence_GPUToGPU-0-2.json
+    yscale: 1e-9
+yaxis:
+  label: Transfer Bandwidth (GB/s)
+  # lim:
+  #   - 0
+  #   - 80
+xaxis:
+  label: Transfer Size (B)
+  scale: log
+title: AC922 GPU/GPU Coherence Bandwidth
+size:
+  - 6
+  - 5

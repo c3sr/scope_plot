@@ -1,7 +1,7 @@
 import yaml
 import os.path
 
-import utils
+from microbench_plot import utils
 
 def load(yaml_path):
     with open(yaml_path, "rb") as f:

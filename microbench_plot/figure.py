@@ -247,12 +247,12 @@ def generate(figure_spec):
     if "subplots" in figure_spec:
         ax_specs = figure_spec["subplots"]
 
-        # Figure out the size of the figure
+        # number of subplots in the figure
         num_x = max([int(spec["pos"][0]) for spec in ax_specs])
         num_y = max([int(spec["pos"][1]) for spec in ax_specs])
+        fig, axs = plt.subplots(num_y, num_x, sharex='col', sharey='row', squeeze=False)
 
-        fig, axs = plt.subplots(num_y, num_x, sharex='col', sharey='row', squeeze=True)
-
+        # generate each subplot
         for i in range(len(ax_specs)):
             ax_spec = ax_specs[i]
             subplot_x = int(ax_spec["pos"][0]) - 1
@@ -261,9 +261,9 @@ def generate(figure_spec):
             generate_axes(ax, ax_spec)
     else:
         # otherwise, apply generator to the single figure axes
-        fig = plt.figure()
-        ax = fig.add_subplot(111)
-        generate_axes(fig.axes[0], figure_spec)
+        # and treat the figure spec as an axes spec as well
+        fig, axs = plt.subplots(1, 1, squeeze=False)
+        generate_axes(axs[0,0], figure_spec)
 
     # Apply any global x and y axis configuration to all axes
     default_x_axis_spec = figure_spec.get("xaxis", {})
@@ -273,11 +273,9 @@ def generate(figure_spec):
             configure_yaxis(b, default_y_axis_spec)
             configure_xaxis(b, default_x_axis_spec)
 
-    # Run the axes generators
-
+    # Set the figure size
     fig.set_tight_layout(True)
     fig.autofmt_xdate()
-
     if "size" in figure_spec:
         figsize = figure_spec["size"]
         print("Using figsize:", figsize)

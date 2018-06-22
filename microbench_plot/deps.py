@@ -1,7 +1,5 @@
-import yaml
-import os.path
-
 import utils
+
 
 def generate_deps(figure_spec, data_search_dirs):
     """Look in figure_spec for needed files, and find files in data_search_dirs if they exist
@@ -13,6 +11,7 @@ def generate_deps(figure_spec, data_search_dirs):
         deps += [dep]
     return sorted(list(set(deps)))
 
+
 def save_deps(path, target, dependencies):
     with open(path, 'wb') as f:
         f.write(target)
@@ -20,4 +19,3 @@ def save_deps(path, target, dependencies):
         for d in dependencies:
             f.write(" \\\n\t")
             f.write(d)
-            

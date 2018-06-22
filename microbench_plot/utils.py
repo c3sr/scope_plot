@@ -1,6 +1,7 @@
 
 def find_dictionary(key, dictionary):
-    """yield all dictionaries that contain "key" in a dictionary of nested iterables and dictionaries"""
+    """yield all dictionaries that contain "key" in a dictionary of nested
+    iterables and dictionaries"""
     for (k, v) in dictionary.items():
         if k == key:
             yield dictionary
@@ -9,13 +10,14 @@ def find_dictionary(key, dictionary):
                 yield result
         else:
             try:
-                _ = (e for e in v)
-            except TypeError: # not iterable
+                (e for e in v)
+            except TypeError:  # not iterable
                 continue
             for e in v:
                 if isinstance(e, dict):
                     for result in find_dictionary(key, e):
                         yield result
+
 
 def find_longest_name(benchmark_list):
     """
@@ -38,4 +40,3 @@ def calculate_change(old_val, new_val):
     if old_val == 0:
         return float(new_val - old_val) / (float(old_val + new_val) / 2)
     return float(new_val - old_val) / abs(old_val)
-

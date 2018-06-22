@@ -3,10 +3,12 @@ import os.path
 
 from microbench_plot import utils
 
+
 def load(yaml_path):
     with open(yaml_path, "rb") as f:
         cfg = yaml.load(f)
     return cfg
+
 
 def use_search_dirs(figure_spec, data_search_dirs):
     """ look for files in figure_spec, and if those files do not exist, search data_search_dirs for them"""
@@ -28,4 +30,3 @@ def use_search_dirs(figure_spec, data_search_dirs):
 
     print(new_spec)
     return new_spec
-

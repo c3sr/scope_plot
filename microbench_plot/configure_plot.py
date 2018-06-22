@@ -31,9 +31,9 @@ color_wheel = ['#329932',
                '#2166ac',
                '#053061']
 dashes_styles = [[3, 1],
-                [1000, 1],
-                [2, 1, 10, 1],
-                [4, 1, 1, 1, 1, 1]]
+                 [1000, 1],
+                 [2, 1, 10, 1],
+                 [4, 1, 1, 1, 1, 1]]
 
 
 # ===========================================================
@@ -43,4 +43,3 @@ def configure_plot(fig):
     dirFile = os.path.dirname(os.path.realpath(__file__))
     # Load style file
     fig.style.use(os.path.join(dirFile, 'PaperDoubleFig.mplstyle'))
-

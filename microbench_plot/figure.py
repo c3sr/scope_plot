@@ -15,6 +15,7 @@ pp = pprint.PrettyPrinter(indent=4)
 def xprint(*args):
     return
 
+
 def configure_yaxis(ax, axis_spec):
     if "lim" in axis_spec:
         lim = axis_spec["lim"]
@@ -25,6 +26,7 @@ def configure_yaxis(ax, axis_spec):
     # ax.yaxis.tick_right()
     # ax.yaxis.set_label_position("right")
 
+
 def configure_xaxis(ax, axis_spec):
     if "scale" in axis_spec:
         scale = axis_spec["scale"]
@@ -32,6 +34,7 @@ def configure_xaxis(ax, axis_spec):
     if "label" in axis_spec:
         label = axis_spec["label"]
         ax.set_xlabel(label)
+
 
 def generator_bar(ax, ax_cfg):
     bar_width = ax_cfg.get("bar_width", 0.8)
@@ -59,7 +62,7 @@ def generator_bar(ax, ax_cfg):
 
         pattern = re.compile(regex)
         matches = [
-            b for b in j["benchmarks"] if pattern == None or pattern.search(b["name"])
+            b for b in j["benchmarks"] if pattern is None or pattern.search(b["name"])
         ]
         times = matches
 
@@ -121,6 +124,7 @@ def generator_bar(ax, ax_cfg):
 
     return ax
 
+
 def generator_errorbar(ax, ax_cfg):
 
     ax.grid(True)
@@ -128,7 +132,7 @@ def generator_errorbar(ax, ax_cfg):
     default_x_field = ax_cfg.get("xaxis", {}).get("field", "bytes")
     default_y_field = ax_cfg.get("yaxis", {}).get("field", "bytes_per_second")
 
-    for i,s in enumerate(ax_cfg["series"]):
+    for i, s in enumerate(ax_cfg["series"]):
         file_path = s["input_file"]
         label = s["label"]
         regex = s.get("regex", ".*")
@@ -138,9 +142,9 @@ def generator_errorbar(ax, ax_cfg):
         print("reading", file_path)
         with open(file_path, "rb") as f:
             j = json.loads(f.read().decode('utf-8'))
-        
+
         pattern = re.compile(regex)
-        matches = [b for b in j["benchmarks"] if pattern == None or pattern.search(b["name"])]
+        matches = [b for b in j["benchmarks"] if pattern is None or pattern.search(b["name"])]
         means = [b for b in matches if b["name"].endswith("_mean")]
         stddevs = [b for b in matches if b["name"].endswith("_stddev")]
         x = np.array([float(b[default_x_field]) for b in means])
@@ -175,6 +179,7 @@ def generator_errorbar(ax, ax_cfg):
 
     return ax
 
+
 def generator_regplot(ax, ax_spec):
 
     series_specs = ax_spec["series"]
@@ -186,9 +191,9 @@ def generator_regplot(ax, ax_spec):
         print("reading", file_path)
         with open(file_path, "rb") as f:
             j = json.loads(f.read().decode('utf-8'))
-        
+
         pattern = re.compile(regex)
-        matches = [b for b in j["benchmarks"] if pattern == None or pattern.search(b["name"])]
+        matches = [b for b in j["benchmarks"] if pattern is None or pattern.search(b["name"])]
         means = [b for b in matches if b["name"].endswith("_mean")]
         stddevs = [b for b in matches if b["name"].endswith("_stddev")]
         x = np.array([float(b["strides"]) for b in means])
@@ -201,17 +206,15 @@ def generator_regplot(ax, ax_spec):
         e *= float(series_spec.get("yscale", 1.0))
 
         color = series_spec.get("color", "black")
-        style = series_spec.get("style", "-")
 
-        ## Draw scatter plot of values
+        # Draw scatter plot of values
         ax.errorbar(x, y, e, capsize=3, ecolor=color, linestyle='None')
 
-        ## compute a fit line
-        z, cov = np.polyfit(x, y, 1, w=1./e, cov=True)
-        print(z)
+        # compute a fit line
+        z, _ = np.polyfit(x, y, 1, w=1./e, cov=True)
         slope, intercept = z[0], z[1]
-        ax.plot(x, x * slope + intercept, label=label + ": {:.2f}".format(slope) + " us/fault", color=color)
-
+        ax.plot(x, x * slope + intercept, color=color,
+                label=label + ": {:.2f}".format(slope) + " us/fault")
 
     title = ax_spec.get("title", "")
     print("set title to: ", title)
@@ -221,8 +224,8 @@ def generator_regplot(ax, ax_spec):
 
     return ax
 
-def generate_axes(ax, ax_spec):
 
+def generate_axes(ax, ax_spec):
     generator_str = ax_spec.get("generator", None)
     if generator_str == "bar":
         ax = generator_bar(ax, ax_spec)
@@ -238,8 +241,6 @@ def generate_axes(ax, ax_spec):
 
 
 def generate(figure_spec):
-
-
     # If there are subplots, apply the generator to each subplot axes
     if "subplots" in figure_spec:
         ax_specs = figure_spec["subplots"]
@@ -254,13 +255,13 @@ def generate(figure_spec):
             ax_spec = ax_specs[i]
             subplot_x = int(ax_spec["pos"][0]) - 1
             subplot_y = int(ax_spec["pos"][1]) - 1
-            ax = axs[subplot_y,subplot_x]
+            ax = axs[subplot_y, subplot_x]
             generate_axes(ax, ax_spec)
     else:
         # otherwise, apply generator to the single figure axes
         # and treat the figure spec as an axes spec as well
         fig, axs = plt.subplots(1, 1, squeeze=False)
-        generate_axes(axs[0,0], figure_spec)
+        generate_axes(axs[0, 0], figure_spec)
 
     # Apply any global x and y axis configuration to all axes
     default_x_axis_spec = figure_spec.get("xaxis", {})
@@ -335,6 +336,7 @@ plt.style.use(
 )
 
 
+"""
 if __name__ == "__main__":
 
     if len(sys.argv) == 2:
@@ -363,8 +365,9 @@ if __name__ == "__main__":
 
     output_paths = [output_path] if type(output_path) == list() else output_path
 
-    fig = generate_figure(cfg, root_dir)
+    fig = generate(cfg, root_dir)
     if fig is not None:
         # Save plot
         for output_path in output_paths:
             fig.savefig(output_path, clip_on=False, transparent=False)
+"""

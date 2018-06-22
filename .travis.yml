@@ -3,9 +3,9 @@ sudo: false
 
 matrix:
   include:
-    # Flake8 Style Checking
+    # pycodestyle Style Checking
     - python: 3.5
-      env: TOXENV=flake8
+      env: TOXENV=pycodestyle
 
     # Flake8 Linter
     - python: 3.5

@@ -161,7 +161,6 @@ def generator_errorbar(ax, ax_cfg):
 
     if "title" in ax_cfg:
         title = ax_cfg["title"]
-        print("setting title", title)
         ax.set_title(title)
 
     if "yaxis" in ax_cfg:

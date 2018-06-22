@@ -1,6 +1,8 @@
 generator: bar
 title: Reduction 256
 input_file: ex1.json
+yscale: 1e-9
+xscale: 1.0/1000
 output_file: reduction_256
 output_format:
   - pdf
@@ -10,14 +12,12 @@ bar_width: 0.1
 yaxis:
   label: TFlops
   field: Flops
-  scale: 1e-9
   lim:
     - 0
     - 200
 xaxis:
   label: Number of 256 Segments (in thousands)
   field: num_segments
-  scale: 1.0/1000
   lim:
     - 2
     - 8.6

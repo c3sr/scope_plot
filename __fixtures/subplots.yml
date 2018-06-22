@@ -5,10 +5,10 @@ subplots:
       - 1
     series:
       - label: GPU0 to GPU1 (local)
-        file: hal000.ncsa.illinois.edu-UM_Coherence_GPUToGPU-0-1.json
+        input_file: hal000.ncsa.illinois.edu-UM_Coherence_GPUToGPU-0-1.json
         yscale: 1e-9
       - label: GPU0 to GPU2 (remote)
-        file: hal000.ncsa.illinois.edu-UM_Coherence_GPUToGPU-0-2.json
+        input_file: hal000.ncsa.illinois.edu-UM_Coherence_GPUToGPU-0-2.json
         yscale: 1e-9
     title: (a) TEST AC922 Coherence
   - generator: errorbar
@@ -17,10 +17,10 @@ subplots:
       - 1
     series:
       - label: GPU0 to GPU1 (local)
-        file: hal000.ncsa.illinois.edu-UM_Coherence_GPUToGPU-0-2.json
+        input_file: hal000.ncsa.illinois.edu-UM_Coherence_GPUToGPU-0-2.json
         yscale: 1e-9
       - label: GPU0 to GPU2 (remote)
-        file: hal000.ncsa.illinois.edu-UM_Coherence_GPUToGPU-0-1.json
+        input_file: hal000.ncsa.illinois.edu-UM_Coherence_GPUToGPU-0-1.json
         yscale: 1e-9
     title: (b) TEST AC922 Coherence
   - generator: errorbar
@@ -29,10 +29,10 @@ subplots:
       - 2
     series:
       - label: GPU0 to GPU1 (local)
-        file: hal000.ncsa.illinois.edu-UM_Coherence_GPUToGPU-0-1.json
+        input_file: hal000.ncsa.illinois.edu-UM_Coherence_GPUToGPU-0-1.json
         yscale: 1e-9
       - label: GPU0 to GPU2 (remote)
-        file: hal000.ncsa.illinois.edu-UM_Coherence_GPUToGPU-0-1.json
+        input_file: hal000.ncsa.illinois.edu-UM_Coherence_GPUToGPU-0-1.json
         yscale: 1e-9
     title: (c) TEST AC922 Coherence
   - generator: errorbar
@@ -41,10 +41,10 @@ subplots:
       - 2
     series:
       - label: GPU0 to GPU1 (local)
-        file: hal000.ncsa.illinois.edu-UM_Coherence_GPUToGPU-0-2.json
+        input_file: hal000.ncsa.illinois.edu-UM_Coherence_GPUToGPU-0-2.json
         yscale: 1e-9
       - label: GPU0 to GPU2 (remote)
-        file: hal000.ncsa.illinois.edu-UM_Coherence_GPUToGPU-0-2.json
+        input_file: hal000.ncsa.illinois.edu-UM_Coherence_GPUToGPU-0-2.json
         yscale: 1e-9
     title: (d) TEST AC922 Coherence
 yaxis:

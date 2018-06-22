@@ -1,6 +1,6 @@
 
 def find_dictionary(key, dictionary):
-    """yield all dictionaries in a dictionary of nested iterables and dictionaries that contain "key" """
+    """yield all dictionaries that contain "key" in a dictionary of nested iterables and dictionaries"""
     for (k, v) in dictionary.items():
         if k == key:
             yield dictionary

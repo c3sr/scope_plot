@@ -13,8 +13,8 @@ def use_search_dirs(figure_spec, data_search_dirs):
 
     new_spec = dict(figure_spec)
 
-    for d in utils.find_dictionary("file", new_spec):
-        f = d["file"]
+    for d in utils.find_dictionary("input_file", new_spec):
+        f = d["input_file"]
         if os.path.isfile(f):
             continue
         else:
@@ -23,7 +23,7 @@ def use_search_dirs(figure_spec, data_search_dirs):
                     raise OSError
                 check_path = os.path.join(dir, f)
                 if os.path.isfile(check_path):
-                    d["file"] = check_path
+                    d["input_file"] = check_path
                     break
 
     print(new_spec)

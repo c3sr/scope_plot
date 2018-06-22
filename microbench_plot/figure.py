@@ -33,19 +33,19 @@ def configure_xaxis(ax, axis_spec):
         label = axis_spec["label"]
         ax.set_xlabel(label)
 
-def generator_bar(ax, yaml_dir, plot_cfg):
-    bar_width = plot_cfg.get("bar_width", 0.8)
-    num_series = len(plot_cfg["series"])
+def generator_bar(ax, ax_cfg):
+    bar_width = ax_cfg.get("bar_width", 0.8)
+    num_series = len(ax_cfg["series"])
 
-    default_file = plot_cfg.get("input_file", "not_found")
+    default_file = ax_cfg.get("input_file", "not_found")
 
-    default_x_scale = eval(str(plot_cfg.get("xaxis", {}).get("scale", 1.0)))
-    default_y_scale = eval(str(plot_cfg.get("yaxis", {}).get("scale", 1.0)))
+    default_x_scale = eval(str(ax_cfg.get("xaxis", {}).get("scale", 1.0)))
+    default_y_scale = eval(str(ax_cfg.get("yaxis", {}).get("scale", 1.0)))
 
-    default_x_field = plot_cfg.get("xaxis", {}).get("field", "real_time")
-    default_y_field = plot_cfg.get("yaxis", {}).get("field", "real_time")
+    default_x_field = ax_cfg.get("xaxis", {}).get("field", "real_time")
+    default_y_field = ax_cfg.get("yaxis", {}).get("field", "real_time")
 
-    for c, s in enumerate(plot_cfg["series"]):
+    for c, s in enumerate(ax_cfg["series"]):
         file_path = s.get("input_file", default_file)
         label = s["label"]
         xprint(label)
@@ -53,8 +53,6 @@ def generator_bar(ax, yaml_dir, plot_cfg):
         xprint("Using regex:", regex)
         yscale = eval(str(s.get("yscale", default_y_scale)))
         xscale = eval(str(s.get("xscale", default_x_scale)))
-        if not os.path.isabs(file_path):
-            file_path = os.path.join(yaml_dir, file_path)
         xprint("reading", file_path)
         with open(file_path, "rb") as f:
             j = json.loads(f.read().decode("utf-8"))
@@ -87,8 +85,8 @@ def generator_bar(ax, yaml_dir, plot_cfg):
             ax.set_xticklabels((x + c * bar_width).round(1))
         # ax.bar(x , y, width=bar_width, label=label, align='center')
 
-    if "yaxis" in plot_cfg:
-        axis_cfg = plot_cfg["yaxis"]
+    if "yaxis" in ax_cfg:
+        axis_cfg = ax_cfg["yaxis"]
         if axis_cfg and "lim" in axis_cfg:
             lim = axis_cfg["lim"]
             xprint("setting ylim", lim)
@@ -98,8 +96,8 @@ def generator_bar(ax, yaml_dir, plot_cfg):
             xprint("setting ylabel", label)
             ax.set_ylabel(label)
 
-    if "xaxis" in plot_cfg:
-        axis_cfg = plot_cfg["xaxis"]
+    if "xaxis" in ax_cfg:
+        axis_cfg = ax_cfg["xaxis"]
         if axis_cfg and "lim" in axis_cfg:
             lim = axis_cfg["lim"]
             xprint("setting xlim", lim)
@@ -113,8 +111,8 @@ def generator_bar(ax, yaml_dir, plot_cfg):
             xprint("setting xlabel", label)
             ax.set_xlabel(label)
 
-    if "title" in plot_cfg:
-        title = plot_cfg["title"]
+    if "title" in ax_cfg:
+        title = ax_cfg["title"]
         xprint("setting title", title)
         ax.set_title(title)
 
@@ -131,7 +129,7 @@ def generator_errorbar(ax, ax_cfg):
     default_y_field = ax_cfg.get("yaxis", {}).get("field", "bytes_per_second")
 
     for i,s in enumerate(ax_cfg["series"]):
-        file_path = s["file"]
+        file_path = s["input_file"]
         label = s["label"]
         regex = s.get("regex", ".*")
         print("Using regex:", regex)
@@ -182,7 +180,7 @@ def generator_regplot(ax, ax_spec):
 
     series_specs = ax_spec["series"]
     for series_spec in series_specs:
-        file_path = series_spec["file"]
+        file_path = series_spec["input_file"]
         label = series_spec["label"]
         regex = series_spec.get("regex", ".*")
         print("Using regex:", regex)

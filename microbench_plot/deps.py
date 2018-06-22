@@ -8,8 +8,8 @@ def generate_deps(figure_spec, data_search_dirs):
     otherwise, just use the raw files needed in figure_spec
     """
     deps = []
-    for d in utils.find_dictionary("file", figure_spec):
-        dep = d["file"]
+    for d in utils.find_dictionary("input_file", figure_spec):
+        dep = d["input_file"]
         deps += [dep]
     return sorted(list(set(deps)))
 

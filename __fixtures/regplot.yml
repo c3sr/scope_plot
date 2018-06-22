@@ -1,10 +1,10 @@
 generator: regplot
 series:
   - label: CPU0 to GPU0
-    file: hal000.ncsa.illinois.edu-UM_Latency_GPUToGPU-0-1.json
+    input_file: hal000.ncsa.illinois.edu-UM_Latency_GPUToGPU-0-1.json
     yscale: 1e-3
   - label: GPU0 to CPU0
-    file: hal000.ncsa.illinois.edu-UM_Latency_GPUToGPU-0-2.json
+    input_file: hal000.ncsa.illinois.edu-UM_Latency_GPUToGPU-0-2.json
     yscale: 1e-3
     color: "0.25"
 yaxis:

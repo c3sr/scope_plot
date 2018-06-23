@@ -1,6 +1,7 @@
 language: python
 sudo: false
 
+env: # needed for allow-failures to work?
 matrix:
   include:
     # pycodestyle Style Checking
@@ -20,6 +21,8 @@ matrix:
       env: TOXENV=py35
     - python: 3.6-dev
       env: TOXENV=py36
+    - python: nightly
+      env: TOXENV=py37
 
     # OSX Builds
     - language: generic

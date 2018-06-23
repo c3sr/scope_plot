@@ -6,6 +6,7 @@ MicrobenchPlot
     :maxdepth: 2
 
     api_reference/index
+    makefiles
     changelog
     contributing
     about
@@ -13,7 +14,7 @@ MicrobenchPlot
 plot microbenchmarks
 
 Getting Started with MicrobenchPlot
-----------------------------
+-----------------------------------
 
 MicrobenchPlot is available on PyPI can be installed with `pip <https://pip.pypa.io>`_.::
 

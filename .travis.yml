@@ -34,7 +34,6 @@ matrix:
     - language: generic
       os: osx
       env: TOXENV=py36
-
   allow_failures:
     - python: nightly
       env: TOXENV=py37

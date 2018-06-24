@@ -16,7 +16,6 @@ if [[ "$(uname -s)" == 'Darwin' ]]; then
             pyenv global 2.6.9
             ;;
         py27)
-            export PATH="/Users/travis/Library/Python/2.7/bin:$PATH"
             curl -O https://bootstrap.pypa.io/get-pip.py
             python get-pip.py --user
             ;;

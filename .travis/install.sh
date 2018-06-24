@@ -17,7 +17,7 @@ if [[ "$(uname -s)" == 'Darwin' ]]; then
             ;;
         py27)
             curl -O https://bootstrap.pypa.io/get-pip.py
-            python get-pip.py --user
+            python get-pip.py --prefix=/usr/local
             ;;
         py34)
             pyenv install 3.4.5

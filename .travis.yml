@@ -1,7 +1,6 @@
 language: python
 sudo: false
 
-env: # needed for allow-failures to work?
 matrix:
   include:
     # pycodestyle Style Checking

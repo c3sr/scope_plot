@@ -37,7 +37,7 @@ if [[ "$(uname -s)" == 'Darwin' ]]; then
     pip install --user -U setuptools
     pip install --user virtualenv
 else
-    pip install virtualenv
+    pip install --user virtualenv
 fi
 
-pip install tox
+pip install --user tox

@@ -16,8 +16,9 @@ if [[ "$(uname -s)" == 'Darwin' ]]; then
             pyenv global 2.6.9
             ;;
         py27)
+            export PATH="/Users/travis/Library/Python/2.7/bin:$PATH"
             curl -O https://bootstrap.pypa.io/get-pip.py
-            python get-pip.py --prefix=/usr/local
+            python get-pip.py --user
             ;;
         py34)
             pyenv install 3.4.5
@@ -35,8 +36,17 @@ if [[ "$(uname -s)" == 'Darwin' ]]; then
     pyenv rehash
     pip install --user -U setuptools
     pip install --user virtualenv
+    case "${TOXENV}" in
+        py27)
+            pip install --user tox
+            ;;
+        *)
+            pip install tox
+            ;;
+    esac
 else
     pip install virtualenv
+    pip install tox
 fi
 
-pip install tox
+

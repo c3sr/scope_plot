@@ -21,7 +21,7 @@ def main():
     args = parser.parse_args()
 
     figure_spec = spec.load(args.spec)
-    figure_spec = spec.use_search_dirs(figure_spec, args.data_search_dirs)
+    figure_spec = spec.apply_search_dirs(figure_spec, args.data_search_dirs)
     output_path = args.output
 
     # Decide output path

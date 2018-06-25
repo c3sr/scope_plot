@@ -53,10 +53,8 @@ def generator_bar(ax, ax_cfg):
         label = s["label"]
         xprint(label)
         regex = s.get("regex", ".*")
-        xprint("Using regex:", regex)
         yscale = eval(str(s.get("yscale", default_y_scale)))
         xscale = eval(str(s.get("xscale", default_x_scale)))
-        xprint("reading", file_path)
         with open(file_path, "rb") as f:
             j = json.loads(f.read().decode("utf-8"))
 
@@ -136,10 +134,8 @@ def generator_errorbar(ax, ax_cfg):
         file_path = s["input_file"]
         label = s["label"]
         regex = s.get("regex", ".*")
-        print("Using regex:", regex)
         yscale = float(s.get("yscale", 1.0))
         xscale = float(s.get("xscale", 1.0))
-        print("reading", file_path)
         with open(file_path, "rb") as f:
             j = json.loads(f.read().decode('utf-8'))
 
@@ -187,8 +183,6 @@ def generator_regplot(ax, ax_spec):
         file_path = series_spec["input_file"]
         label = series_spec["label"]
         regex = series_spec.get("regex", ".*")
-        print("Using regex:", regex)
-        print("reading", file_path)
         with open(file_path, "rb") as f:
             j = json.loads(f.read().decode('utf-8'))
 

@@ -1,4 +1,5 @@
 import utils
+from microbench_plot.error import NoInputFilesError
 
 
 def generate_deps(figure_spec, data_search_dirs):
@@ -9,6 +10,8 @@ def generate_deps(figure_spec, data_search_dirs):
     for d in utils.find_dictionary("input_file", figure_spec):
         dep = d["input_file"]
         deps += [dep]
+    if len(deps) == 0:
+        raise NoInputFilesError(figure_spec)
     return sorted(list(set(deps)))
 
 

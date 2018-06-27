@@ -23,8 +23,6 @@ def configure_yaxis(ax, axis_spec):
     if "label" in axis_spec:
         label = axis_spec["label"]
         ax.set_ylabel(label)
-    # ax.yaxis.tick_right()
-    # ax.yaxis.set_label_position("right")
 
 
 def configure_xaxis(ax, axis_spec):
@@ -34,6 +32,9 @@ def configure_xaxis(ax, axis_spec):
     if "label" in axis_spec:
         label = axis_spec["label"]
         ax.set_xlabel(label)
+    if "lim" in axis_spec:
+        lim = axis_spec["lim"]
+        ax.set_xlim(lim)
 
 
 def generator_bar(ax, ax_cfg):
@@ -210,6 +211,14 @@ def generator_regplot(ax, ax_spec):
         ax.plot(x, x * slope + intercept, color=color,
                 label=label + ": {:.2f}".format(slope) + " us/fault")
 
+    if "yaxis" in ax_spec:
+        axis_cfg = ax_spec["yaxis"]
+        configure_yaxis(ax, axis_cfg)
+
+    if "xaxis" in ax_spec:
+        axis_cfg = ax_spec["xaxis"]
+        configure_xaxis(ax, axis_cfg)
+
     title = ax_spec.get("title", "")
     print("set title to: ", title)
     ax.set_title(title)
@@ -311,6 +320,17 @@ color_wheel = [
     "#053061",
 ]
 dashes_styles = [[3, 1], [1000, 1], [2, 1, 10, 1], [4, 1, 1, 1, 1, 1]]
+
+color_wheel2 = [
+    "#000000",
+    "#009E73",
+    "#e79f00",
+    "#9ad0f3",
+    "#0072B2",
+    "#D55E00",
+    "#CC79A7",
+    "#F0E442",
+]
 
 plt.style.use(
     {

@@ -1,7 +1,22 @@
 language: python
 sudo: false
 
-matrix:
+cache:
+  - pip
+  - directories:
+    - ${HOME}/.cache
+
+install:
+  - chmod a+x ./.travis/install.sh ./.travis/run.sh ./.travis/upload_coverage.sh
+  - ./.travis/install.sh
+
+script:
+  - ./.travis/run.sh
+
+after_success:
+  - ./.travis/upload_coverage.sh
+
+jobs:
   include:
     # pycodestyle Style Checking
     - python: 3.5
@@ -36,31 +51,6 @@ matrix:
     - language: generic
       os: osx
       env: TOXENV=py36
-  allow_failures:
-    - python: nightly
-      env: TOXENV=py37
-    - python: 3.5
-      env: TOXENV=docs
-    - python: 3.5
-      env: TOXENV=pycodestyle
-
-cache:
-  - pip
-  - directories:
-    - ${HOME}/.cache
-
-install:
-  - chmod a+x ./.travis/install.sh ./.travis/run.sh ./.travis/upload_coverage.sh
-  - ./.travis/install.sh
-
-script:
-  - ./.travis/run.sh
-
-after_success:
-  - ./.travis/upload_coverage.sh
-
-jobs:
-  include:
     - stage: deploy
       deploy:
         provider: pypi
@@ -70,6 +60,14 @@ jobs:
           secure: ${PYPI_PASSWORD}
         on:
           branch: master
+  allow_failures:
+    - python: nightly
+      env: TOXENV=py37
+    - python: 3.5
+      env: TOXENV=docs
+    - python: 3.5
+      env: TOXENV=pycodestyle
+
 
 notifications:
   email: false

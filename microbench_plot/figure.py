@@ -14,10 +14,6 @@ from microbench_plot import utils
 pp = pprint.PrettyPrinter(indent=4)
 
 
-def xprint(*args):
-    return
-
-
 def configure_yaxis(ax, axis_spec):
     if "lim" in axis_spec:
         lim = axis_spec["lim"]
@@ -30,6 +26,7 @@ def configure_yaxis(ax, axis_spec):
 def configure_xaxis(ax, axis_spec):
     if "scale" in axis_spec:
         scale = axis_spec["scale"]
+        utils.debug("seting x axis scale: {}".format(scale))
         ax.set_xscale(scale, basex=2)
     if "label" in axis_spec:
         label = axis_spec["label"]
@@ -46,87 +43,64 @@ def generator_bar(ax, ax_cfg):
 
     default_file = ax_cfg.get("input_file", "not_found")
 
-    default_x_scale = eval(str(ax_cfg.get("xaxis", {}).get("scale", 1.0)))
-    default_y_scale = eval(str(ax_cfg.get("yaxis", {}).get("scale", 1.0)))
+    default_x_scale = eval(str(ax_cfg.get("xscale", 1.0)))
+    default_y_scale = eval(str(ax_cfg.get("yscale", 1.0)))
 
-    default_x_field = ax_cfg.get("xaxis", {}).get("field", "real_time")
-    default_y_field = ax_cfg.get("yaxis", {}).get("field", "real_time")
-    utils.debug("xaxis field: {}".format(default_x_field))
-    utils.debug("yaxis field: {}".format(default_y_field))
+    default_x_field = ax_cfg.get("xfield", "real_time")
+    default_y_field = ax_cfg.get("yfield", "real_time")
 
     series_cfgs = ax_cfg.get("series", [])
-
     for c, s in enumerate(series_cfgs):
         file_path = s.get("input_file", default_file)
         label = s.get("label", "")
         regex = s.get("regex", ".*")
         yscale = eval(str(s.get("yscale", default_y_scale)))
         xscale = eval(str(s.get("xscale", default_x_scale)))
-        utils.debug("Opening {} for series {}".format(file_path, c))
+        utils.debug("series {}: Opening {}".format(c, file_path))
         with open(file_path, "rb") as f:
             j = json.loads(f.read().decode("utf-8"))
 
+        utils.debug("series {}: filter regex is {}".format(c, regex))
         pattern = re.compile(regex)
         matches = [
             b for b in j["benchmarks"] if pattern is None or pattern.search(b["name"])
         ]
-        times = matches
-        utils.debug("{} datapoints matched {}".format(len(times), regex))
+        utils.debug("{} datapoints matched {}".format(len(matches), regex))
 
-        if len(times) == 0:
+        if len(matches) == 0:
             continue
 
         xfield = s.get("xfield", default_x_field)
-        x = np.array([float(b[xfield]) for b in times])
-        ind = np.arange(len(x))
-        
         yfield = s.get("yfield", default_y_field)
-        y = np.array([float(b[yfield]) for b in times])
+        utils.debug("series {}: x field: {}".format(c, xfield))
+        utils.debug("series {}: y field: {}".format(c, yfield))
 
-        utils.debug("{}".format(ind))
-        utils.debug("{}".format(x))
-        utils.debug("{}".format(y))
+        x = np.array([float(b[xfield]) for b in matches])
+        ind = np.arange(len(x))        
+        y = np.array([float(b[yfield]) for b in matches])
 
         # Rescale
         x *= xscale
         y *= yscale
+        utils.debug("series {}: x scale={} yscale={}".format(c, xscale, yscale))
+
+        utils.debug("ind: {}".format(ind))
+        utils.debug("x: {}".format(x))
+        utils.debug("y: {}".format(y))
 
         # pp.pprint(y)
 
         ax.bar(ind + bar_width * c, y, width=bar_width, label=label, align="center")
 
-    ax.set_xticks(ind - bar_width * (len(series_cfgs) - 1) / 2)
-    ax.set_xticklabels((x + bar_width * len(series_cfgs)).round(1))
+    ax.set_xticks(ind + bar_width * (len(series_cfgs) - 1) / 2)
+    # ax.set_xticklabels((x + bar_width * len(series_cfgs)).round(1))
+    ax.set_xticklabels(x.round(2))
 
-    if "yaxis" in ax_cfg:
-        axis_cfg = ax_cfg["yaxis"]
-        if axis_cfg and "lim" in axis_cfg:
-            lim = axis_cfg["lim"]
-            xprint("setting ylim", lim)
-            ax.set_ylim(lim)
-        if axis_cfg and "label" in axis_cfg:
-            label = axis_cfg["label"]
-            xprint("setting ylabel", label)
-            ax.set_ylabel(label)
-
-    if "xaxis" in ax_cfg:
-        axis_cfg = ax_cfg["xaxis"]
-        if axis_cfg and "lim" in axis_cfg:
-            lim = axis_cfg["lim"]
-            xprint("setting xlim", lim)
-            ax.set_xlim(lim)
-        if axis_cfg and "scaling_function" in axis_cfg:
-            scale = axis_cfg["scaling_function"]
-            xprint("setting xscale", scale)
-            ax.set_xscale(scale, basex=2)
-        if axis_cfg and "label" in axis_cfg:
-            label = axis_cfg["label"]
-            xprint("setting xlabel", label)
-            ax.set_xlabel(label)
+    configure_yaxis(ax, ax_cfg.get("yaxis", {}))
+    configure_xaxis(ax, ax_cfg.get("xaxis", {}))
 
     if "title" in ax_cfg:
         title = ax_cfg["title"]
-        xprint("setting title", title)
         ax.set_title(title)
 
     # ax.legend(loc='upper left')

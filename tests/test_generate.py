@@ -1,13 +1,13 @@
 import os
-from microbench_plot import spec
+from microbench_plot import specification
 from microbench_plot import figure
 
 FIXTURES_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "__fixtures")
 
 
 def generate_fixture(name):
-    figure_spec = spec.load(os.path.join(FIXTURES_DIR, name))
-    figure_spec = spec.apply_search_dirs(figure_spec, [FIXTURES_DIR])
+    figure_spec = specification.load(os.path.join(FIXTURES_DIR, name))
+    figure_spec = specification.apply_search_dirs(figure_spec, [FIXTURES_DIR])
     fig = figure.generate(figure_spec)
 
 

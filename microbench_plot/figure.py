@@ -9,6 +9,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import yaml
 
+from microbench_plot import utils
+
 pp = pprint.PrettyPrinter(indent=4)
 
 
@@ -40,6 +42,7 @@ def configure_xaxis(ax, axis_spec):
 def generator_bar(ax, ax_cfg):
     bar_width = ax_cfg.get("bar_width", 0.8)
     num_series = len(ax_cfg["series"])
+    utils.debug("Number of series: {}".format(num_series))
 
     default_file = ax_cfg.get("input_file", "not_found")
 
@@ -48,14 +51,18 @@ def generator_bar(ax, ax_cfg):
 
     default_x_field = ax_cfg.get("xaxis", {}).get("field", "real_time")
     default_y_field = ax_cfg.get("yaxis", {}).get("field", "real_time")
+    utils.debug("xaxis field: {}".format(default_x_field))
+    utils.debug("yaxis field: {}".format(default_y_field))
 
-    for c, s in enumerate(ax_cfg["series"]):
+    series_cfgs = ax_cfg.get("series", [])
+
+    for c, s in enumerate(series_cfgs):
         file_path = s.get("input_file", default_file)
-        label = s["label"]
-        xprint(label)
+        label = s.get("label", "")
         regex = s.get("regex", ".*")
         yscale = eval(str(s.get("yscale", default_y_scale)))
         xscale = eval(str(s.get("xscale", default_x_scale)))
+        utils.debug("Opening {} for series {}".format(file_path, c))
         with open(file_path, "rb") as f:
             j = json.loads(f.read().decode("utf-8"))
 
@@ -64,15 +71,21 @@ def generator_bar(ax, ax_cfg):
             b for b in j["benchmarks"] if pattern is None or pattern.search(b["name"])
         ]
         times = matches
+        utils.debug("{} datapoints matched {}".format(len(times), regex))
 
         if len(times) == 0:
             continue
 
         xfield = s.get("xfield", default_x_field)
         x = np.array([float(b[xfield]) for b in times])
-
+        ind = np.arange(len(x))
+        
         yfield = s.get("yfield", default_y_field)
         y = np.array([float(b[yfield]) for b in times])
+
+        utils.debug("{}".format(ind))
+        utils.debug("{}".format(x))
+        utils.debug("{}".format(y))
 
         # Rescale
         x *= xscale
@@ -80,12 +93,10 @@ def generator_bar(ax, ax_cfg):
 
         # pp.pprint(y)
 
-        ax.bar(x + bar_width * c, y, width=bar_width, label=label, align="center")
-        ax.set_xticks(x + 1.5 * bar_width)
+        ax.bar(ind + bar_width * c, y, width=bar_width, label=label, align="center")
 
-        if c == 0:
-            ax.set_xticklabels((x + c * bar_width).round(1))
-        # ax.bar(x , y, width=bar_width, label=label, align='center')
+    ax.set_xticks(ind - bar_width * (len(series_cfgs) - 1) / 2)
+    ax.set_xticklabels((x + bar_width * len(series_cfgs)).round(1))
 
     if "yaxis" in ax_cfg:
         axis_cfg = ax_cfg["yaxis"]

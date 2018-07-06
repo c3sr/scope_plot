@@ -1,3 +1,11 @@
+import click
+
+DEBUG = False
+VERBOSE = False
+
+def debug(msg):
+    if DEBUG:
+        click.echo(click.style("[DEBU] " + msg, fg="yellow"), err=True)
 
 def find_dictionary(key, dictionary):
     """yield all dictionaries that contain "key" in a dictionary of nested

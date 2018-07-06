@@ -52,6 +52,10 @@ jobs:
       os: osx
       env: TOXENV=py36
     - stage: deploy
+      python: 3.6
+      install: true
+      script: python setup.py sdist
+      after_success: true
       deploy:
         provider: pypi
         user: ${PYPI_USER}

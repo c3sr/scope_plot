@@ -22,6 +22,10 @@ def configure_yaxis(ax, axis_spec):
     if "label" in axis_spec:
         label = axis_spec["label"]
         ax.set_ylabel(label)
+    if "scale" in axis_spec:
+        scale = axis_spec["scale"]
+        utils.debug("seting y axis scale: {}".format(scale))
+        ax.set_yscale(scale, basey=10)
 
 
 def configure_xaxis(ax, axis_spec):

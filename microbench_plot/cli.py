@@ -47,11 +47,14 @@ def bar(ctx, benchmark, name_regex, output, x_field, y_field):
     }
 
     if x_field:
-        default_spec["xaxis"] = {"field": x_field}
+        default_spec["series"][0]["xfield"] = x_field
+        default_spec["xaxis"] = {"label": x_field}
     if y_field:
-        default_spec["yaxis"] = {"field": y_field}
+        default_spec["series"][0]["yfield"] = y_field
+        default_spec["yaxis"] = {"label": y_field, "scale": "log"}
     if name_regex:
         default_spec["series"][0]["regex"] = name_regex
+        default_spec["title"] = name_regex
 
     fig = figure.generate(default_spec)
     fig.savefig(output, clip_on=False, transparent=False)

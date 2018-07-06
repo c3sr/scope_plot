@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 import yaml
 
 from microbench_plot import utils
+from microbench_plot.error import UnknownGenerator
 
 pp = pprint.PrettyPrinter(indent=4)
 
@@ -122,6 +123,7 @@ def generator_errorbar(ax, ax_cfg):
         regex = s.get("regex", ".*")
         yscale = float(s.get("yscale", 1.0))
         xscale = float(s.get("xscale", 1.0))
+        utils.debug("series {}: opening {}".format(i, file_path))
         with open(file_path, "rb") as f:
             j = json.loads(f.read().decode('utf-8'))
 
@@ -205,7 +207,7 @@ def generator_regplot(ax, ax_spec):
         configure_xaxis(ax, axis_cfg)
 
     title = ax_spec.get("title", "")
-    print("set title to: ", title)
+    utils.debug("set title to {}".format(title))
     ax.set_title(title)
 
     ax.legend()
@@ -222,8 +224,7 @@ def generate_axes(ax, ax_spec):
     elif generator_str == "regplot":
         ax = generator_regplot(ax, ax_spec)
     else:
-        print("Unepxected axes generator:", generator_str)
-        sys.exit(1)
+        raise UnknownGenerator(generator_str)
 
     return ax
 
@@ -264,7 +265,7 @@ def generate(figure_spec):
     fig.autofmt_xdate()
     if "size" in figure_spec:
         figsize = figure_spec["size"]
-        print("Using figsize:", figsize)
+        utils.debug("Using figsize {}".format(figsize))
         fig.set_size_inches(figsize)
 
     return fig

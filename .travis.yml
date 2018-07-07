@@ -62,6 +62,7 @@ jobs:
         server: https://testpypi.python.org/pypi # Remove for deployment to official PyPi repo
         password:
           secure: ${PYPI_PASSWORD}
+        skip_cleanup: true
         on:
           branch: develop
   allow_failures:

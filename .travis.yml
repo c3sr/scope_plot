@@ -63,7 +63,7 @@ jobs:
         password:
           secure: ${PYPI_PASSWORD}
         on:
-          branch: master
+          branch: develop
   allow_failures:
     - python: nightly
       env: TOXENV=py37

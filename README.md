@@ -25,6 +25,26 @@ Here's a very simple example:
 python -m microbench_plot bar benchmark.json
 ```
 
+There are multiple subcommands available
+
+```
+$ python -m microbench_plot --help
+
+Usage: __main__.py [OPTIONS] COMMAND [ARGS]...
+
+Options:
+  --debug / --no-debug  print debug messages to stderr.
+  --include DIRECTORY   Search location for input_file in spec.
+  --help                Show this message and exit.
+
+Commands:
+  bar   Create a bar graph from BENCHMARK and write...
+  deps  Create a Makefile dependence
+  spec  Create a figure from a spec file
+```
+
+More information about the subcommands can be accessed with `python -m microbench_plot COMMAND --help`, and also in the documentation: [bar](docs/bar.md), [spec](docs/spec.md), [deps](docs/makefiles.md).
+
 API Reference
 -------------
 

@@ -1,5 +1,4 @@
-microbench_plot bar
-=========
+# microbench_plot bar
 
 MicrobenchPlot can be used to generate bar graphs without a full spec file.
 For example

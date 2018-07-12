@@ -13,6 +13,7 @@ from microbench_plot import utils
 from microbench_plot.error import UnknownGenerator
 
 pp = pprint.PrettyPrinter(indent=4)
+plt.switch_backend('agg')
 
 
 def configure_yaxis(ax, axis_spec):

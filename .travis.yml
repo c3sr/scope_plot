@@ -59,11 +59,12 @@ jobs:
       deploy:
         provider: pypi
         user: ${PYPI_USER}
-        server: https://testpypi.python.org/pypi # Remove for deployment to official PyPi repo
+        server: https://test.pypi.org/legacy/ # Remove for deployment to official PyPi repo
         password:
           secure: ${PYPI_PASSWORD}
+        skip_cleanup: true
         on:
-          branch: master
+          branch: develop
   allow_failures:
     - python: nightly
       env: TOXENV=py37

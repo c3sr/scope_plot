@@ -98,7 +98,7 @@ def spec(ctx, output, spec):
 @click.option('--debug/--no-debug', help="print debug messages to stderr.", default=False)
 @click.option('--include', help="Search location for input_file in spec.",
               multiple=True, type=click.Path(exists=True, file_okay=False, readable=True, resolve_path=True))
-@lick.option('--strict/--no-strict', help="error on unrecognized spec contents", default=False)
+@click.option('--strict/--no-strict', help="error on unrecognized spec contents", default=False)
 @click.pass_context
 def main(ctx, debug, include):
     ctx.obj["INCLUDE"] = include

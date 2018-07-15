@@ -1,31 +1,84 @@
 import argparse
+import json
 import os.path
 import sys
+import click
 
-from microbench_plot import spec
-from microbench_plot import deps
+from microbench_plot import specification
 from microbench_plot import figure
+from microbench_plot.benchmark import GoogleBenchmark
+from microbench_plot import utils
 
 """ If the module has a command line interface then this
 file should be the entry point for that interface. """
 
 
-def main():
-    parser = argparse.ArgumentParser(description='Plot rai-project/microbench results')
-    parser.add_argument('-s', '--spec', required=True, type=str,
-                        help='a yml spec file describing a figure')
-    parser.add_argument('-o', '--output', required=True, type=str, help='output path')
-    parser.add_argument('-t', '--target', type=str, help="target for deps")
-    parser.add_argument("--deps", action='store_true', help='generate a dep file instead of a figure')
-    parser.add_argument("-I", dest="data_search_dirs", nargs="+", help="search directory for data files mentioned in spec")
-    args = parser.parse_args()
+@click.command()
+@click.argument('output', type=click.Path(dir_okay=False, resolve_path=True))
+@click.argument('spec', type=click.Path(exists=True, dir_okay=False, resolve_path=True))
+@click.argument('target')
+@click.pass_context
+def deps(ctx, output, spec, target):
+    """Create a Makefile dependence"""
 
-    figure_spec = spec.load(args.spec)
-    figure_spec = spec.apply_search_dirs(figure_spec, args.data_search_dirs)
-    output_path = args.output
+    utils.debug("Loading {}".format(spec))
+    figure_spec = specification.load(spec)
+    figure_spec = specification.apply_search_dirs(figure_spec, ctx.obj.get("INCLUDE", []))
+    figure_deps = specification.get_deps(figure_spec)
+    utils.debug("Saving to {}".format(output))
+    specification.save_makefile_deps(output, target, figure_deps)
+
+
+@click.command()
+@click.argument('benchmark', type=click.Path(exists=True, dir_okay=False, resolve_path=True))
+@click.argument('output', type=click.Path(dir_okay=False, resolve_path=True))
+@click.option('--name-regex', help="a YAML spec for a figure")
+@click.option('--x-field', help="field for X axis")
+@click.option('--y-field', help="field for Y axis")
+@click.pass_context
+def bar(ctx, benchmark, name_regex, output, x_field, y_field):
+    """Create a bar graph from BENCHMARK and write to OUTPUT"""
+    default_spec = {
+        "generator": "bar",
+        "series": [
+            {
+                "input_file": benchmark,
+            }
+        ],
+    }
+
+    if x_field:
+        default_spec["series"][0]["xfield"] = x_field
+        default_spec["xaxis"] = {"label": x_field}
+    if y_field:
+        default_spec["series"][0]["yfield"] = y_field
+        default_spec["yaxis"] = {"label": y_field, "scale": "log"}
+    if name_regex:
+        default_spec["series"][0]["regex"] = name_regex
+        default_spec["title"] = name_regex
+
+    fig = figure.generate(default_spec)
+    fig.savefig(output, clip_on=False, transparent=False)
+
+
+@click.command()
+@click.argument('spec', type=click.Path(exists=True, dir_okay=False, resolve_path=True))
+@click.option('-o', '--output', help="Output path.", type=click.Path(dir_okay=False, resolve_path=True))
+@click.pass_context
+def spec(ctx, output, spec):
+    """Create a figure from a spec file"""
+    include = ctx.obj.get("INCLUDE", [])
+
+    figure_spec = specification.load(spec)
+    if include:
+        for d in include:
+            utils.debug("searching dir {}".format(d))
+        figure_spec = specification.apply_search_dirs(figure_spec, include)
+
+        fig = figure.generate(figure_spec)
 
     # Decide output path
-    if output_path is None and figure_spec.get("output_file", None) is not None:
+    if output is None and figure_spec.get("output_file", None) is not None:
         script_dir = os.path.dirname(os.path.realpath(__file__))
         output_path = os.path.join(script_dir, figure_spec.get("output_file"))
         if not output_path.endswith(".pdf") and not output_path.endswith(".png"):
@@ -35,17 +88,22 @@ def main():
                 ext = ext.lstrip(".")
                 output_path.append(base_output_path + "." + ext)
 
-    # Generate make dependencies files
-    if args.deps:
-        assert args.target
-        figure_deps = deps.generate_deps(figure_spec, args.data_search_dirs)
-        deps.save_deps(output_path, args.target, figure_deps)
-        sys.exit(0)
-
-    fig = figure.generate(figure_spec)
     if fig is not None:
-        # Save plot
-        fig.show()
-        fig.savefig(output_path, clip_on=False, transparent=False)
+        # fig.show()
+        utils.debug("writing to {}".format(output))
+        fig.savefig(output, clip_on=False, transparent=False)
 
-    sys.exit(0)
+
+@click.group()
+@click.option('--debug/--no-debug', help="print debug messages to stderr.", default=False)
+@click.option('--include', help="Search location for input_file in spec.",
+              multiple=True, type=click.Path(exists=True, file_okay=False, readable=True, resolve_path=True))
+@click.pass_context
+def main(ctx, debug, include):
+    ctx.obj["INCLUDE"] = include
+    utils.DEBUG = debug
+
+
+main.add_command(deps)
+main.add_command(bar)
+main.add_command(spec)

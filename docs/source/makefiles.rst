@@ -1,9 +1,7 @@
 Makefiles
 =========
 
-Here is an exmaple makefile for a directory organized in this way
-
-.. code-block::
+Here is an exmaple makefile for a directory organized in this way::
 
     .
     ├── data

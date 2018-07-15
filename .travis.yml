@@ -1,13 +1,28 @@
 language: python
 sudo: false
 
-matrix:
+cache:
+  - pip
+  - directories:
+    - ${HOME}/.cache
+
+install:
+  - chmod a+x ./.travis/install.sh ./.travis/run.sh ./.travis/upload_coverage.sh
+  - ./.travis/install.sh
+
+script:
+  - ./.travis/run.sh
+
+after_success:
+  - ./.travis/upload_coverage.sh
+
+jobs:
   include:
     # pycodestyle Style Checking
     - python: 3.5
       env: TOXENV=pycodestyle
 
-    # Flake8 Linter
+    # Documentation
     - python: 3.5
       env: TOXENV=docs
 
@@ -36,24 +51,28 @@ matrix:
     - language: generic
       os: osx
       env: TOXENV=py36
+    - stage: deploy
+      python: 3.6
+      install: true
+      script: python setup.py sdist
+      after_success: true
+      deploy:
+        provider: pypi
+        user: ${PYPI_USER}
+        server: https://test.pypi.org/legacy/ # Remove for deployment to official PyPi repo
+        password:
+          secure: ${PYPI_PASSWORD}
+        skip_cleanup: true
+        on:
+          branch: develop
   allow_failures:
     - python: nightly
       env: TOXENV=py37
+    - python: 3.5
+      env: TOXENV=docs
+    - python: 3.5
+      env: TOXENV=pycodestyle
 
-cache:
-  - pip
-  - directories:
-    - ${HOME}/.cache
-
-install:
-  - chmod a+x ./.travis/install.sh ./.travis/run.sh ./.travis/upload_coverage.sh
-  - ./.travis/install.sh
-
-script:
-  - ./.travis/run.sh
-
-after_success:
-  - ./.travis/upload_coverage.sh
 
 notifications:
   email: false
@@ -63,3 +82,5 @@ branches:
   - master
   - release
   - develop
+  - ci
+

@@ -1,4 +1,4 @@
-import utils
+from microbench_plot import utils
 from microbench_plot.error import NoInputFilesError
 
 

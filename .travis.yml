@@ -76,10 +76,3 @@ jobs:
 notifications:
   email: false
 
-branches:
-  only:
-  - master
-  - release
-  - develop
-  - ci
-

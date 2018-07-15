@@ -1,7 +1,7 @@
 Steps to Release MicrobenchPlot
 =========================
 
-These are the steps to take to create a release of the module ``microbench_plot``:
+These are the steps to take to create a release of the module ``scope_plot``:
 
 1. Switch to the release branch
 
@@ -12,7 +12,7 @@ These are the steps to take to create a release of the module ``microbench_plot`
 
 2. Update the following files with the correct version.
 
-    - ``microbench_plot/__init__.py``
+    - ``scope_plot/__init__.py``
     - ``CHANGELOG.rst``
     
 3. Add and commit the changes.

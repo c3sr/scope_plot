@@ -18,7 +18,7 @@ import os
 import sys
 sys.path.insert(0, os.path.abspath('../..'))
 
-import microbench_plot
+import scope_plot
 
 # -- General configuration ------------------------------------------------
 
@@ -51,11 +51,11 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # Releases changelog extension
-releases_release_uri = "https://github.com/rai-project/microbench_plot/tree/%s"
-releases_issue_uri = "https://github.com/rai-project/microbench_plot/issues/%s"
+releases_release_uri = "https://github.com/rai-project/scope_plot/tree/%s"
+releases_issue_uri = "https://github.com/rai-project/scope_plot/issues/%s"
 
 # General information about the project.
-project = 'MicrobenchPlot'
+project = 'ScopePlot'
 copyright = '%d Abdul Dakkak' % year
 author = 'Abdul Dakkak'
 
@@ -64,7 +64,7 @@ author = 'Abdul Dakkak'
 # built documents.
 #
 # The short X.Y version.
-version = microbench_plot.__version__
+version = scope_plot.__version__
 # The full version, including alpha/beta/rc tags.
 release = version
 
@@ -98,7 +98,7 @@ html_theme_path = [alabaster.get_path()]
 html_theme_options = {
     'description': 'plot microbenchmarks',
     'github_user': 'abduld',
-    'github_repo': 'microbench_plot',
+    'github_repo': 'scope_plot',
     'github_button': False,
     'github_banner': True,
     'font_family': "'Roboto', Georgia, sans",
@@ -130,6 +130,7 @@ def autodoc_skip_member(app, what, name, obj, skip, options):
 
 def setup(app):
     app.connect('autodoc-skip-member', autodoc_skip_member)
+
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,

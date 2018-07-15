@@ -7,12 +7,12 @@ Thank you for considering contributing. ❤️
 Adding Features / Fixing Bugs
 -----------------------------
 
-#. `Check for open issues <https://github.com/rai-project/microbench_plot/issues>`_ or open
+#. `Check for open issues <https://github.com/rai-project/scope_plot/issues>`_ or open
    a new issue to start a discussion around a new feature or a bug.  Issues labeled with
    *Contributor Friendly* are for issues that are great for new contributors that are
    new to the project or not as familiar with the codebase.
 
-#. Fork the `MicrobenchPlot repository on Github <https://github.com/rai-project/microbench_plot>`_
+#. Fork the `MicrobenchPlot repository on Github <https://github.com/rai-project/scope_plot>`_
    to start making changes.
 
 #. Write a test which shows that the bug was fixed or that the feature works as expected.

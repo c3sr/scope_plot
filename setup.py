@@ -2,11 +2,11 @@ import os
 import re
 from setuptools import setup, find_packages
 
-base_package = 'microbench_plot'
+base_package = 'scope_plot'
 
 # Get the version (borrowed from SQLAlchemy)
 base_path = os.path.dirname(__file__)
-with open(os.path.join(base_path, 'microbench_plot', '__init__.py')) as f:
+with open(os.path.join(base_path, 'scope_plot', '__init__.py')) as f:
     module_content = f.read()
     VERSION = re.compile(r'.*__version__ = \'(.*?)\'', re.S).match(module_content).group(1)
     LICENSE = re.compile(r'.*__license__ = \'(.*?)\'', re.S).match(module_content).group(1)
@@ -29,11 +29,11 @@ if base_package not in packages:
 
 if __name__ == '__main__':
     setup(
-        name='microbench_plot',
-        description='plot microbenchmarks',
+        name='scope_plot',
+        description='Plot Google Benchmark results',
         long_description='\n\n'.join([readme, changes]),
         license=LICENSE,
-        url='http://microbench_plot.readthedocs.io',
+        url='http://scope_plot.readthedocs.io',
         version=VERSION,
         author='Abdul Dakkak',
         author_email='dakkak@illinois.edu',
@@ -41,11 +41,11 @@ if __name__ == '__main__':
         maintainer_email='dakkak@illinois.edu',
         entry_points={
             'console_scripts': [
-                'microbench_plot = microbench_plot.cli:main'
+                'scope_plot = scope_plot.cli:main'
             ]
         },
         install_requires=requirements,
-        keywords=['microbench_plot'],
+        keywords=['scope_plot'],
         packages=packages,
         zip_safe=False,
         classifiers=['Intended Audience :: Developers',

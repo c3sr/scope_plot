@@ -7,8 +7,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import yaml
 
-from microbench_plot import utils
-from microbench_plot.error import UnknownGenerator
+from scope_plot import utils
+from scope_plot.error import UnknownGenerator
 
 pp = pprint.PrettyPrinter(indent=4)
 plt.switch_backend('agg')

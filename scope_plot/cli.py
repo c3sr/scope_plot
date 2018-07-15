@@ -4,10 +4,10 @@ import os.path
 import sys
 import click
 
-from microbench_plot import specification
-from microbench_plot import figure
-from microbench_plot.benchmark import GoogleBenchmark
-from microbench_plot import utils
+from scope_plot import specification
+from scope_plot import figure
+from scope_plot.benchmark import GoogleBenchmark
+from scope_plot import utils
 
 """ If the module has a command line interface then this
 file should be the entry point for that interface. """

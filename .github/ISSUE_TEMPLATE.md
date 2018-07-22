@@ -1,5 +1,5 @@
 #### Version / Platform Info
-- MicrobenchPlot Version:
+- ScopePlot Version:
 - Happens in latest version? (Yes/No): 
 - Known Operating System(s) affected__:
   - [ ] Windows
@@ -21,7 +21,7 @@ This will significantly speed up the amount of time it
 takes to debug and resolve the issue for our contributors.
 
 ```python
-import microbench_plot
+import scope_plot
 
 # Please show the smallest possible example where
 # the issue occurs. This will drastically decrease

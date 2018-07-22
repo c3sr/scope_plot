@@ -1,10 +1,10 @@
-# microbench_plot bar
+# scope_plot bar
 
-MicrobenchPlot can be used to generate bar graphs without a full spec file.
+ScopePlot can be used to generate bar graphs without a full spec file.
 For example
 
 ```
-$ python -m microbench_plot bar --help
+$ python -m scope_plot bar --help
 
 Usage: __main__.py bar [OPTIONS] BENCHMARK OUTPUT
 
@@ -20,5 +20,5 @@ Options:
 The options allow you to plot only certain entries in the file, and to select specific fields from those benchmark entries to work as the x and y axis of the plot.
 
 ```bash
-python -m microbench_plot bar benchmark.json results.pdf --name-regex "NUMAUM_Prefetch_GPUToHost/.*/0/0" --y-field "bytes_per_second" --x-field=bytes
+python -m scope_plot bar benchmark.json results.pdf --name-regex "NUMAUM_Prefetch_GPUToHost/.*/0/0" --y-field "bytes_per_second" --x-field=bytes
 ```

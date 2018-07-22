@@ -19,7 +19,7 @@ after_success:
 jobs:
   include:
     # pycodestyle Style Checking
-    - python: 3.5
+    - python: 3.6
       env: TOXENV=pycodestyle
 
     # Documentation
@@ -59,11 +59,11 @@ jobs:
       deploy:
         provider: pypi
         user: ${PYPI_USER}
-        server: https://testpypi.python.org/pypi # Remove for deployment to official PyPi repo
         password:
           secure: ${PYPI_PASSWORD}
+        skip_cleanup: true
         on:
-          branch: master
+          tags: true
   allow_failures:
     - python: nightly
       env: TOXENV=py37
@@ -75,11 +75,4 @@ jobs:
 
 notifications:
   email: false
-
-branches:
-  only:
-  - master
-  - release
-  - develop
-  - ci
 

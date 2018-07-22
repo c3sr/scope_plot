@@ -5,6 +5,7 @@ class NoInputFilesError(Exception):
     def __str__(self):
         return repr(self.spec_path) + " has no input_file fields"
 
+
 class UnknownGenerator(Exception):
     def __init__(self, generator):
         self.generator = generator

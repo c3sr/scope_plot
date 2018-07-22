@@ -1,34 +1,33 @@
-MicrobenchPlot
-=======
+# ScopePlot
 
-[![Build Status](https://travis-ci.com/rai-project/microbench_plot.svg?branch=master)](https://travis-ci.com/rai-project/microbench_plot)
+[![Build Status](https://travis-ci.com/rai-project/scope_plot.svg?branch=master)](https://travis-ci.com/rai-project/scope_plot)
+
 
 Plot Google Benchmark results
 
-Getting Started with MicrobenchPlot
-----------------------------
+## Getting Started with ScopePlot
 
-MicrobenchPlot is available on TestPyPI can be installed with [pip](https://pip.pypa.io).
+ScopePlot is available on [PyPI](https://pypi.org/project/scope-plot/) can be installed with `pip`
 
-    $ python -m pip install --user --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple microbench_plot
+    $ python -m pip install scope_plot
 
-To install the latest development version from [Github](https://github.com/rai-project/microbench_plot).
+To install the latest development version from [Github](https://github.com/rai-project/scope_plot)
 
-    $ python -m pip install git+git://github.com/rai-project/microbench_plot.git
+    $ python -m pip install git+git://github.com/rai-project/scope_plot.git
 
-If your current Python installation doesn't have pip available, try `get-pip.py <bootstrap.pypa.io>`
+If your current Python installation doesn't have pip available, try [get-pip.py](bootstrap.pypa.io)
 
-After installing MicrobenchPlot you can use it like any other Python module.
+After installing ScopePlot you can use it like any other Python module.
 Here's a very simple example:
 
-```python
-python -m microbench_plot bar benchmark.json
+```bash
+$ python -m scope_plot bar data.json
 ```
 
 There are multiple subcommands available
 
 ```
-$ python -m microbench_plot --help
+$ python -m scope_plot --help
 
 Usage: __main__.py [OPTIONS] COMMAND [ARGS]...
 
@@ -43,27 +42,27 @@ Commands:
   spec  Create a figure from a spec file
 ```
 
-More information about the subcommands can be accessed with `python -m microbench_plot COMMAND --help`, and also in the documentation: [bar](docs/bar.md), [spec](docs/spec.md), [deps](docs/makefiles.md).
+More information about the subcommands can be accessed with `python -m scope_plot COMMAND --help`, and also in the documentation: [bar](docs/bar.md), [spec](docs/spec.md), [deps](docs/makefiles.md).
 
 API Reference
 -------------
 
-More coming soon...
+coming soon...
 
 Support / Report Issues
 -----------------------
 
 All support requests and issue reports should be
-[filed on Github as an issue](https://github.com/rai-project/microbench_plot/issues)
+[filed on Github as an issue](https://github.com/rai-project/scope_plot/issues).
 Make sure to follow the template so your request may be as handled as quickly as possible.
 Please respect contributors by not using personal contacts for support requests.
 
 Contributing
 ------------
 
-Guidance coming soon...
+We happily welcome contributions, please see [our guide for Contributors](CONTRIBUTORS.md) for the best places to start and help.
 
 License
 -------
 
-microbench_plot is made available under the MIT License. For more details, see [LICENSE.txt]( <https://github.com/rai-project/microbench_plot/blob/master/LICENSE.txt).
+scope_plot is made available under the MIT License. For more details, see [LICENSE.txt](https://github.com/rai-project/scope_plot/blob/master/LICENSE.txt).

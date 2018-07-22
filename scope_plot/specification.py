@@ -1,8 +1,8 @@
 import yaml
 import os.path
 
-from microbench_plot import utils
-from microbench_plot.error import NoInputFilesError
+from scope_plot import utils
+from scope_plot.error import NoInputFilesError
 
 
 def load(yaml_path):
@@ -35,7 +35,6 @@ def apply_search_dirs(figure_spec, data_search_dirs):
                 raise OSError
 
     return new_spec
-
 
 
 def get_deps(figure_spec):

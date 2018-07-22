@@ -4,13 +4,14 @@ import os.path
 import sys
 import click
 
-from microbench_plot import specification
-from microbench_plot import figure
-from microbench_plot.benchmark import GoogleBenchmark
-from microbench_plot import utils
+from scope_plot import specification
+from scope_plot import figure
+from scope_plot.benchmark import GoogleBenchmark
+from scope_plot import utils
 
 """ If the module has a command line interface then this
 file should be the entry point for that interface. """
+
 
 @click.command()
 @click.argument('output', type=click.Path(dir_okay=False, resolve_path=True))
@@ -59,13 +60,14 @@ def bar(ctx, benchmark, name_regex, output, x_field, y_field):
     fig = figure.generate(default_spec)
     fig.savefig(output, clip_on=False, transparent=False)
 
+
 @click.command()
 @click.argument('spec', type=click.Path(exists=True, dir_okay=False, resolve_path=True))
 @click.option('-o', '--output', help="Output path.", type=click.Path(dir_okay=False, resolve_path=True))
 @click.pass_context
 def spec(ctx, output, spec):
     """Create a figure from a spec file"""
-    include = ctx.obj.get("INCLUDE", []) 
+    include = ctx.obj.get("INCLUDE", [])
 
     figure_spec = specification.load(spec)
     if include:
@@ -91,15 +93,16 @@ def spec(ctx, output, spec):
         utils.debug("writing to {}".format(output))
         fig.savefig(output, clip_on=False, transparent=False)
 
+
 @click.group()
 @click.option('--debug/--no-debug', help="print debug messages to stderr.", default=False)
-@click.option('--include', help="Search location for input_file in spec.", multiple=True, type=click.Path(exists=True, file_okay=False, readable=True, resolve_path=True))
-
+@click.option('--include', help="Search location for input_file in spec.",
+              multiple=True, type=click.Path(exists=True, file_okay=False, readable=True, resolve_path=True))
+@click.option('--strict/--no-strict', help="error on unrecognized spec contents", default=False)
 @click.pass_context
 def main(ctx, debug, include):
     ctx.obj["INCLUDE"] = include
     utils.DEBUG = debug
-
 
 
 main.add_command(deps)

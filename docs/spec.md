@@ -1,9 +1,9 @@
-# microbench_plot spec
+# ScopePlot spec
 
-MicrobenchPlot can be used to generate graphs defined by a spec file
+ScopePlot can be used to generate graphs defined by a spec file
 
 ```
-$ python -m microbench_plot spec --help
+$ python -m scope_plot spec --help
 
 Usage: __main__.py spec [OPTIONS] SPEC
 
@@ -14,10 +14,10 @@ Options:
   --help             Show this message and exit.
 ```
 
-Additionally, `--include` inherited from base microbench_plot command allows you to set a search directory for the `input_file`s specified in the spec, if they are relative paths.
+Additionally, `--include` inherited from base `scope_plot` command allows you to set a search directory for the `input_file`s specified in the spec, if they are relative paths.
 
 ```bash
-python -m microbench_plot spec --include data spec.yml -o figure.pdf
+python -m scope_plot spec --include data spec.yml -o figure.pdf
 ```
 
 The spec file controls the data present in the figure, the kind of figure generated, and the sytling of the figure.

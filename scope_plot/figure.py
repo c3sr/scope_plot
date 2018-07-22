@@ -1,5 +1,3 @@
-#! /usr/bin/env python3
-
 import json
 import sys
 import pprint
@@ -9,10 +7,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 import yaml
 
-from microbench_plot import utils
-from microbench_plot.error import UnknownGenerator
+from scope_plot import utils
+from scope_plot.error import UnknownGenerator
 
 pp = pprint.PrettyPrinter(indent=4)
+plt.switch_backend('agg')
 
 
 def configure_yaxis(ax, axis_spec):
@@ -81,7 +80,7 @@ def generator_bar(ax, ax_cfg):
         utils.debug("series {}: y field: {}".format(c, yfield))
 
         x = np.array([float(b[xfield]) for b in matches])
-        ind = np.arange(len(x))        
+        ind = np.arange(len(x))
         y = np.array([float(b[yfield]) for b in matches])
 
         # Rescale

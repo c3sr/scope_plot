@@ -93,6 +93,7 @@ class GoogleBenchmarkJsonParser(object):
             table.append([record[x] for x in table[0]])
         return table
 
+
 class GoogleBenchmark(object):
     def __init__(self, json_string):
         json_obj = json.loads(json_string)

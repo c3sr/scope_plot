@@ -1,6 +1,6 @@
 [run]
 include =
-    microbench_plot/*
+    scope_plot/*
 
 [report]
 exclude_lines =

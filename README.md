@@ -6,14 +6,13 @@ Plot Google Benchmark results
 
 ## Getting Started with ScopePlot
 
-ScopePlot is available on PyPI can be installed with `pip`
+ScopePlot is available on [PyPI](https://pypi.org/project/scope-plot/) can be installed with `pip`
 
     $ python -m pip install scope_plot
 
 To install the latest development version from [Github](https://github.com/rai-project/scope_plot)
 
     $ python -m pip install git+git://github.com/rai-project/scope_plot.git
-
 
 If your current Python installation doesn't have pip available, try [get-pip.py](bootstrap.pypa.io)
 
@@ -40,9 +39,9 @@ Please respect contributors by not using personal contacts for support requests.
 Contributing
 ------------
 
-We happily welcome contributions, please see [our guide for Contributors](http://scope_plot.readthedocs.io/en/latest/contributing.html) for the best places to start and help.
+We happily welcome contributions, please see [our guide for Contributors](CONTRIBUTORS.md) for the best places to start and help.
 
 License
 -------
 
-scope_plot is made available under the MIT License. For more details, see [LICENSE.txt](https://github.com/rai-project/scope_plot/blob/master/LICENSE.txt>).
+scope_plot is made available under the MIT License. For more details, see [LICENSE.txt](https://github.com/rai-project/scope_plot/blob/master/LICENSE.txt).

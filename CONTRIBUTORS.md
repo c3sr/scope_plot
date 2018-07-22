@@ -11,11 +11,7 @@ Contributors
 In chronological order:
 
 * Abdul Dakkak <dakkak@illinois.edu>
-    * Started the project
 * Carl Pearson <pearson@illinois.edu>
-    * Added CUDA communication benchmarks
-* Sarah Hashash <hashash2@illinois.edu>
-    * Added full-duplex CUDA memcpy benchmarks
 
 ## Generating a Release
 

@@ -3,6 +3,7 @@ import json
 import os.path
 import sys
 import click
+import glob
 
 from scope_plot import specification
 from scope_plot import figure
@@ -100,11 +101,44 @@ def spec(ctx, output, spec):
               multiple=True, type=click.Path(exists=True, file_okay=False, readable=True, resolve_path=True))
 @click.option('--strict/--no-strict', help="error on unrecognized spec contents", default=False)
 @click.pass_context
-def main(ctx, debug, include):
+def main(ctx, debug, include, strict):
     ctx.obj["INCLUDE"] = include
+    ctx.obj["STRICT"] = strict
     utils.DEBUG = debug
+
+
+@click.command()
+@click.option('-o', '--output', help="Output path (- for stdout)", type=click.File(mode='w'), default="-")
+@click.argument('inputs', nargs=-1, type=click.Path(exists=True, dir_okay=True, resolve_path=True))
+@click.pass_context
+def merge(ctx, output, inputs):
+    """merge Google Benchmark output files"""
+
+    files = []
+    merged = None
+
+    # collect all json files
+    for path in inputs:
+        if os.path.isdir(path):
+            search_path = os.path.join(path, "*.json")
+            files += glob.glob(search_path)
+        else:
+            files += [path]
+
+    # merge all json files
+    for path in files:
+        utils.debug("Working on {}".format(path))
+        with open(path, "rb") as f:
+            j = json.loads(f.read().decode("utf-8"))
+            if merged is None:
+                merged = j
+            else:
+                merged["benchmarks"] += j["benchmarks"]
+
+    json.dump(merged, output, indent=4)
 
 
 main.add_command(deps)
 main.add_command(bar)
 main.add_command(spec)
+main.add_command(merge)

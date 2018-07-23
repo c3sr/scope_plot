@@ -103,9 +103,13 @@ def spec(ctx, output, spec):
 @click.option('--strict/--no-strict', help="error on unrecognized spec contents", default=False)
 @click.pass_context
 def main(ctx, debug, include, strict):
+    # This is needed if main is called via setuptools entrypoint
+    if ctx.obj is None:
+        ctx.obj = {}
+
+    utils.DEBUG = debug
     ctx.obj["INCLUDE"] = include
     ctx.obj["STRICT"] = strict
-    utils.DEBUG = debug
 
 
 @click.command()
@@ -114,7 +118,6 @@ def main(ctx, debug, include, strict):
 @click.pass_context
 def merge(ctx, output, inputs):
     """merge Google Benchmark output files"""
-
     files = []
     merged = None
 
@@ -135,7 +138,6 @@ def merge(ctx, output, inputs):
                 merged = j
             else:
                 merged["benchmarks"] += j["benchmarks"]
-
     json.dump(merged, output, indent=4)
 
 

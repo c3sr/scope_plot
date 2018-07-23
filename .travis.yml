@@ -22,10 +22,6 @@ jobs:
     - python: 3.6
       env: TOXENV=pycodestyle
 
-    # Documentation
-    - python: 3.5
-      env: TOXENV=docs
-
     # Linux Builds
     - python: 2.7
       env: TOXENV=py27
@@ -67,8 +63,6 @@ jobs:
   allow_failures:
     - python: nightly
       env: TOXENV=py37
-    - python: 3.5
-      env: TOXENV=docs
     - python: 3.5
       env: TOXENV=pycodestyle
 

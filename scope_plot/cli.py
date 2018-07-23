@@ -9,6 +9,7 @@ from scope_plot import specification
 from scope_plot import figure
 from scope_plot.benchmark import GoogleBenchmark
 from scope_plot import utils
+from scope_plot.__init__ import __version__
 
 """ If the module has a command line interface then this
 file should be the entry point for that interface. """
@@ -137,8 +138,15 @@ def merge(ctx, output, inputs):
 
     json.dump(merged, output, indent=4)
 
+@click.command()
+@click.pass_context
+def version(ctx):
+    """merge Google Benchmark output files"""
 
-main.add_command(deps)
+    click.echo("ScopePlot {}".format(__version__))
+
 main.add_command(bar)
-main.add_command(spec)
+main.add_command(deps)
 main.add_command(merge)
+main.add_command(spec)
+main.add_command(version)

@@ -41,7 +41,7 @@ if __name__ == '__main__':
         maintainer_email='dakkak@illinois.edu',
         entry_points={
             'console_scripts': [
-                'scope_plot = scope_plot.cli:main'
+                'scope_plot=scope_plot.cli:main'
             ]
         },
         install_requires=requirements,

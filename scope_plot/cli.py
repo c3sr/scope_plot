@@ -138,12 +138,14 @@ def merge(ctx, output, inputs):
 
     json.dump(merged, output, indent=4)
 
+
 @click.command()
 @click.pass_context
 def version(ctx):
     """merge Google Benchmark output files"""
 
     click.echo("ScopePlot {}".format(__version__))
+
 
 main.add_command(bar)
 main.add_command(deps)

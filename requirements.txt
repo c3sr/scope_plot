@@ -1,4 +1,5 @@
 click
+future
 matplotlib
 numpy
 pyyaml

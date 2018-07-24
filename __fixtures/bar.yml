@@ -1,10 +1,6 @@
 generator: bar
 title: Reduction 256
 input_file: ex1.json
-output_file: reduction_256
-output_format:
-  - pdf
-  - png
 bar_width: 0.1
 yscale: 1e-9
 xscale: 1.0/1000

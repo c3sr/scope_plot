@@ -8,7 +8,7 @@ FIXTURES_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "
 def generate_fixture(name):
     figure_spec = specification.load(os.path.join(FIXTURES_DIR, name))
     figure_spec = specification.apply_search_dirs(figure_spec, [FIXTURES_DIR])
-    fig = figure.generate(figure_spec)
+    fig = figure.generate(figure_spec, strict=True)
 
 
 def test_generate_errorbar():

@@ -77,7 +77,7 @@ def spec(ctx, output, spec):
             utils.debug("searching dir {}".format(d))
         figure_spec = specification.apply_search_dirs(figure_spec, include)
 
-        fig = figure.generate(figure_spec)
+        fig = figure.generate(figure_spec, strict=ctx.obj["STRICT"])
 
     # Decide output path
     if output is None and figure_spec.get("output_file", None) is not None:
@@ -100,7 +100,7 @@ def spec(ctx, output, spec):
 @click.option('--debug/--no-debug', help="print debug messages to stderr.", default=False)
 @click.option('--include', help="Search location for input_file in spec.",
               multiple=True, type=click.Path(exists=True, file_okay=False, readable=True, resolve_path=True))
-@click.option('--strict/--no-strict', help="error on unrecognized spec contents", default=False)
+@click.option('--strict/--no-strict', help="require recognized spec contents", default=True)
 @click.pass_context
 def main(ctx, debug, include, strict):
     # This is needed if main is called via setuptools entrypoint

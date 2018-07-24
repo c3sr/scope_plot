@@ -6,6 +6,7 @@ import re
 import numpy as np
 import matplotlib.pyplot as plt
 import yaml
+from future.utils import iteritems
 
 from scope_plot import utils
 from scope_plot.error import UnknownGenerator
@@ -15,54 +16,120 @@ pp = pprint.PrettyPrinter(indent=4)
 plt.switch_backend('agg')
 
 
-def configure_yaxis(ax, axis_spec, strict=False):
-    for key in axis_spec:
+def configure_yaxis(ax, axis_spec, strict):
+    for key, value in iteritems(axis_spec):
         if "lim" == key:
-            lim = axis_spec["lim"]
-            ax.set_ylim(lim)
+            ax.set_ylim(value)
         elif "label" == key:
-            label = axis_spec["label"]
-            ax.set_ylabel(label)
+            ax.set_ylabel(value)
         elif "scale" == key:
-            scale = axis_spec["scale"]
-            utils.debug("seting y axis scale: {}".format(scale))
-            ax.set_yscale(scale, basey=10)
+            utils.debug("seting y axis scale: {}".format(value))
+            ax.set_yscale(value, basey=10)
         elif strict:
             utils.halt("unrecognized key {} in yaxis spec: {}".format(key, axis_spec))
         else:
             utils.debug("unrecognized key {} in yaxis spec: {}".format(key, axis_spec))
 
-def configure_xaxis(ax, axis_spec):
-    if "scale" in axis_spec:
-        scale = axis_spec["scale"]
-        utils.debug("seting x axis scale: {}".format(scale))
-        ax.set_xscale(scale, basex=2)
-    if "label" in axis_spec:
-        label = axis_spec["label"]
-        ax.set_xlabel(label)
-    if "lim" in axis_spec:
-        lim = axis_spec["lim"]
-        ax.set_xlim(lim)
+
+def configure_xaxis(ax, axis_spec, strict):
+    for key, value in iteritems(axis_spec):
+        if "scale" == key:
+            utils.debug("seting x axis scale: {}".format(value))
+            ax.set_xscale(value, basex=2)
+        elif "label" in axis_spec:
+            ax.set_xlabel(value)
+        elif "lim" in axis_spec:
+            ax.set_xlim(value)
+        elif strict:
+            utils.halt("unrecognized key {} in xaxis spec: {}".format(key, axis_spec))
+        else:
+            utils.debug("unrecognized key {} in xaxis spec: {}".format(key, axis_spec))
 
 
-def generator_bar(ax, ax_cfg):
-    bar_width = ax_cfg.get("bar_width", 0.8)
-    num_series = len(ax_cfg["series"])
+def generator_bar(ax, ax_cfg, strict):
+
+    # set defaults
+    bar_width = 0.8
+    default_file = "not_found"
+    default_x_scale = 1.0
+    default_y_scale = 1.0
+    default_x_field = "real_time"
+    default_y_field = "real_time"
+    series_cfgs = []
+    title = None
+    yaxis_cfg = {}
+    xaxis_cfg = {}
+
+    # Parse config
+    consume_keys = []
+    for key, value in iteritems(ax_cfg):
+        if key == "bar_width":
+            bar_width = value
+        elif key == "series":
+            series_cfgs = value
+        elif key == "input_file":
+            default_file = value
+        elif key == "xscale":
+            default_x_scale = eval(str(value))
+        elif key == "yscale":
+            default_y_scale = eval(str(value))
+        elif key == "xfield":
+            default_x_field = value
+        elif key == "yfield":
+            default_y_field = value
+        elif key == "title":
+            title = value
+        elif key == "yaxis":
+            yaxis_cfg = value
+        elif key == "xaxis":
+            xaxis_cfg = value
+        elif strict:
+            utils.halt("unrecognized key {} in bar ax_cfg".format(key))
+        else:
+            utils.debug("unrecognized key {} in bar ax_cfg".format(key))
+        consume_keys += [key]
+
+    # consume config entries
+    for key in consume_keys:
+        del ax_cfg[key]
+
+    # Generate figure
+
+    num_series = len(series_cfgs)
     utils.debug("Number of series: {}".format(num_series))
 
-    default_file = ax_cfg.get("input_file", "not_found")
-
-    default_x_scale = eval(str(ax_cfg.get("xscale", 1.0)))
-    default_y_scale = eval(str(ax_cfg.get("yscale", 1.0)))
-
-    default_x_field = ax_cfg.get("xfield", "real_time")
-    default_y_field = ax_cfg.get("yfield", "real_time")
-
-    series_cfgs = ax_cfg.get("series", [])
     for c, s in enumerate(series_cfgs):
-        file_path = s.get("input_file", default_file)
-        label = s.get("label", "")
-        regex = s.get("regex", ".*")
+        # defaults
+        file_path = default_file
+        label = ""
+        regex = ".*"
+        xfield = default_x_field
+        yfield = default_y_field
+        xscale = default_x_scale
+        yscale = default_y_scale
+
+        # parse config
+        for key, value in iteritems(s):
+            if key == "input_file":
+                file_path = value
+            elif key == "label":
+                label = value
+            elif key == "regex":
+                regex = value
+            elif key == "xfield":
+                xfield = value
+            elif key == "yfield":
+                yfield = value
+            elif key == "xscale":
+                xscale = eval(str(value))
+            elif key == "yscale":
+                yscale = eval(str(value))
+            elif strict:
+                utils.halt("unrecognized key {} in bar ax_cfg".format(key))
+            else:
+                utils.debug("unrecognized key {} in bar ax_cfg".format(key))
+
+        # generate series
 
         utils.debug("series {}: Opening {}".format(c, file_path))
         with open(file_path, "rb") as f:
@@ -78,8 +145,6 @@ def generator_bar(ax, ax_cfg):
         if len(matches) == 0:
             continue
 
-        xfield = s.get("xfield", default_x_field)
-        yfield = s.get("yfield", default_y_field)
         utils.debug("series {}: x field: {}".format(c, xfield))
         utils.debug("series {}: y field: {}".format(c, yfield))
 
@@ -88,14 +153,12 @@ def generator_bar(ax, ax_cfg):
         y = np.array([float(b[yfield]) for b in matches])
 
         # Rescale
-        yscale = eval(str(s.get("yscale", default_y_scale)))
-        xscale = eval(str(s.get("xscale", default_x_scale)))
         utils.debug("series {}: x scale={} yscale={}".format(c, xscale, yscale))
         x *= xscale
         y *= yscale
 
         # sort by x
-        x,y = zip(*sorted(zip(x.tolist(),y.tolist())))
+        x, y = zip(*sorted(zip(x.tolist(), y.tolist())))
         x = np.array(x)
         y = np.array(y)
 
@@ -110,11 +173,10 @@ def generator_bar(ax, ax_cfg):
     # ax.set_xticklabels((x + bar_width * len(series_cfgs)).round(1))
     ax.set_xticklabels(x.round(2))
 
-    configure_yaxis(ax, ax_cfg.get("yaxis", {}))
-    configure_xaxis(ax, ax_cfg.get("xaxis", {}))
+    configure_yaxis(ax, yaxis_cfg, strict)
+    configure_xaxis(ax, xaxis_cfg, strict)
 
-    if "title" in ax_cfg:
-        title = ax_cfg["title"]
+    if title:
         ax.set_title(title)
 
     # ax.legend(loc='upper left')
@@ -123,14 +185,44 @@ def generator_bar(ax, ax_cfg):
     return ax
 
 
-def generator_errorbar(ax, ax_cfg):
+def generator_errorbar(ax, ax_cfg, strict):
 
     ax.grid(True)
 
-    default_x_field = ax_cfg.get("xaxis", {}).get("field", "bytes")
-    default_y_field = ax_cfg.get("yaxis", {}).get("field", "bytes_per_second")
+    # defaults
+    default_x_field = "bytes"
+    default_y_field = "bytes_per_second"
+    xaxis_spec = {}
+    yaxis_spec = {}
+    series = None
+    title = None
 
-    for i, s in enumerate(ax_cfg["series"]):
+    # parse config
+    consume_keys = []
+    for key, value in iteritems(ax_cfg):
+        if key == "series":
+            series_specs = value
+        elif key == "title":
+            title = value
+        elif key == "xaxis":
+            xaxis_spec = value
+        elif key == "yaxis":
+            yaxis_spec = value
+        elif key == "xfield":
+            default_x_field = value
+        elif key == "yfield":
+            default_y_field = value
+        elif key == "title":
+            title = value
+        elif strict:
+            utils.halt("unrecognized key {} in errorbar ax_cfg".format(key))
+        else:
+            utils.debug("unrecognized key {} in errorbar ax_cfg".format(key))
+        consume_keys += [key]
+    for key in consume_keys:
+        del ax_cfg[key]
+
+    for i, s in enumerate(series_specs):
         file_path = s["input_file"]
         label = s["label"]
         regex = s.get("regex", ".*")
@@ -153,6 +245,12 @@ def generator_errorbar(ax, ax_cfg):
         y *= yscale
         e *= yscale
 
+        # sort by x
+        x, y, e = zip(*sorted(zip(x.tolist(), y.tolist(), e.tolist())))
+        x = np.array(x)
+        y = np.array(y)
+        e = np.array(e)
+
         # pp.pprint(means)
         if "color" in s:
             color = s["color"]
@@ -160,26 +258,44 @@ def generator_errorbar(ax, ax_cfg):
             color = color_wheel[i]
         ax.errorbar(x, y, e, capsize=3, label=label, color=color)
 
-    if "title" in ax_cfg:
-        title = ax_cfg["title"]
+    if title:
         ax.set_title(title)
 
-    if "yaxis" in ax_cfg:
-        axis_cfg = ax_cfg["yaxis"]
-        configure_yaxis(ax, axis_cfg)
-
-    if "xaxis" in ax_cfg:
-        axis_cfg = ax_cfg["xaxis"]
-        configure_xaxis(ax, axis_cfg)
+    configure_yaxis(ax, yaxis_spec, strict)
+    configure_xaxis(ax, xaxis_spec, strict)
 
     ax.legend(loc="best")
 
     return ax
 
 
-def generator_regplot(ax, ax_spec):
+def generator_regplot(ax, ax_spec, strict):
 
-    series_specs = ax_spec["series"]
+    # defaults
+    series_specs = None
+    title = ""
+    xaxis_spec = {}
+    yaxis_spec = {}
+
+    # parse config
+    consume_keys = []
+    for key, value in iteritems(ax_spec):
+        if key == "series":
+            series_specs = value
+        elif key == "title":
+            title = value
+        elif key == "xaxis":
+            xaxis_spec = value
+        elif key == "yaxis":
+            yaxis_spec = value
+        elif strict:
+            utils.halt("unrecognized key {} in regplot ax_spec".format(key))
+        else:
+            utils.debug("unrecognized key {} in regplot ax_spec".format(key))
+        consume_keys += [key]
+    for key in consume_keys:
+        del ax_spec[key]
+
     for series_spec in series_specs:
         file_path = series_spec["input_file"]
         label = series_spec["label"]
@@ -200,6 +316,12 @@ def generator_regplot(ax, ax_spec):
         y *= float(series_spec.get("yscale", 1.0))
         e *= float(series_spec.get("yscale", 1.0))
 
+        # sort by x
+        x, y, e = zip(*sorted(zip(x.tolist(), y.tolist(), e.tolist())))
+        x = np.array(x)
+        y = np.array(y)
+        e = np.array(e)
+
         color = series_spec.get("color", "black")
 
         # Draw scatter plot of values
@@ -211,15 +333,9 @@ def generator_regplot(ax, ax_spec):
         ax.plot(x, x * slope + intercept, color=color,
                 label=label + ": {:.2f}".format(slope) + " us/fault")
 
-    if "yaxis" in ax_spec:
-        axis_cfg = ax_spec["yaxis"]
-        configure_yaxis(ax, axis_cfg)
+    configure_yaxis(ax, yaxis_spec, strict)
+    configure_xaxis(ax, xaxis_spec, strict)
 
-    if "xaxis" in ax_spec:
-        axis_cfg = ax_spec["xaxis"]
-        configure_xaxis(ax, axis_cfg)
-
-    title = ax_spec.get("title", "")
     utils.debug("set title to {}".format(title))
     ax.set_title(title)
 
@@ -228,58 +344,108 @@ def generator_regplot(ax, ax_spec):
     return ax
 
 
-def generate_axes(ax, ax_spec):
+def generate_axes(ax, ax_spec, strict):
     generator_str = ax_spec.get("generator", None)
+
+    if generator_str:
+        del ax_spec["generator"]
+
     if generator_str == "bar":
-        ax = generator_bar(ax, ax_spec)
+        ax = generator_bar(ax, ax_spec, strict)
     elif generator_str == "errorbar":
-        ax = generator_errorbar(ax, ax_spec)
+        ax = generator_errorbar(ax, ax_spec, strict)
     elif generator_str == "regplot":
-        ax = generator_regplot(ax, ax_spec)
+        ax = generator_regplot(ax, ax_spec, strict)
     else:
         raise UnknownGenerator(generator_str)
 
     return ax
 
 
-def generate(figure_spec):
-    # If there are subplots, apply the generator to each subplot axes
-    if "subplots" in figure_spec:
-        ax_specs = figure_spec["subplots"]
+def generate_subplots(figure_spec, strict):
+    # defaults
+    default_x_axis_spec = {}
+    default_y_axis_spec = {}
+    subplots = None
 
-        # number of subplots in the figure
-        num_x = max([int(spec["pos"][0]) for spec in ax_specs])
-        num_y = max([int(spec["pos"][1]) for spec in ax_specs])
-        fig, axs = plt.subplots(num_y, num_x, sharex='col', sharey='row', squeeze=False)
+    # parse figure_spec
+    consume_keys = []
+    for key, value in iteritems(figure_spec):
+        if key == "xaxis":
+            default_x_axis_spec = value
+        elif key == "yaxis":
+            default_y_axis_spec = value
+        elif key == "size":
+            fig_size = value
+        elif key == "subplots":
+            subplots = value
+        elif strict:
+            utils.halt("unrecognized key {} in figure_spec".format(key))
+        else:
+            utils.debug("unrecognized key {} in figure_spec".format(key))
+        consume_keys += [key]
 
-        # generate each subplot
-        for i in range(len(ax_specs)):
-            ax_spec = ax_specs[i]
-            subplot_x = int(ax_spec["pos"][0]) - 1
-            subplot_y = int(ax_spec["pos"][1]) - 1
-            ax = axs[subplot_y, subplot_x]
-            generate_axes(ax, ax_spec)
-    else:
-        # otherwise, apply generator to the single figure axes
-        # and treat the figure spec as an axes spec as well
-        fig, axs = plt.subplots(1, 1, squeeze=False)
-        generate_axes(axs[0, 0], figure_spec)
+    # delete consumed specs
+    for key in consume_keys:
+        del figure_spec[key]
+
+    ax_specs = subplots
+
+    for spec in ax_specs:
+        assert "pos" in spec
+
+    # number of subplots in the figure
+    num_x = max([int(spec["pos"][0]) for spec in ax_specs])
+    num_y = max([int(spec["pos"][1]) for spec in ax_specs])
+    fig, axs = plt.subplots(num_y, num_x, sharex='col', sharey='row', squeeze=False)
+
+    # generate each subplot
+    for i in range(len(ax_specs)):
+        ax_spec = ax_specs[i]
+        subplot_x = int(ax_spec["pos"][0]) - 1
+        subplot_y = int(ax_spec["pos"][1]) - 1
+        ax = axs[subplot_y, subplot_x]
+        del ax_spec["pos"]
+        generate_axes(ax, ax_spec, strict)
 
     # Apply any global x and y axis configuration to all axes
-    default_x_axis_spec = figure_spec.get("xaxis", {})
-    default_y_axis_spec = figure_spec.get("yaxis", {})
     for a in axs:
         for b in a:
-            configure_yaxis(b, default_y_axis_spec)
-            configure_xaxis(b, default_x_axis_spec)
+            configure_yaxis(b, default_y_axis_spec, strict)
+            configure_xaxis(b, default_x_axis_spec, strict)
+
+    return fig
+
+
+def generate(figure_spec, strict):
+
+    fig_size = None
+    if "size" in figure_spec:
+        fig_size = figure_spec["size"]
+        del figure_spec["size"]
+
+    if "subplots" in figure_spec:
+        fig = generate_subplots(figure_spec, strict)
+    else:
+        fig, axs = plt.subplots(1, 1, squeeze=False)
+        generate_axes(axs[0, 0], figure_spec, strict)
+
+    consume_keys = []
+    for key, value in iteritems(figure_spec):
+        if strict:
+            utils.halt("unrecognized key {} in figure_spec".format(key))
+        else:
+            utils.debug("unrecognized key {} in figure_spec".format(key))
+        consume_keys += [key]
+    for key in consume_keys:
+        del figure_spec[key]
 
     # Set the figure size
     fig.set_tight_layout(True)
     fig.autofmt_xdate()
-    if "size" in figure_spec:
-        figsize = figure_spec["size"]
-        utils.debug("Using figsize {}".format(figsize))
-        fig.set_size_inches(figsize)
+    if fig_size:
+        utils.debug("Using figsize {}".format(fig_size))
+        fig.set_size_inches(fig_size)
 
     return fig
 

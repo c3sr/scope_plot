@@ -10,13 +10,16 @@ def debug(msg):
     if DEBUG and not QUIET:
         click.echo(click.style("[DEBU] " + msg, fg="green"), err=True)
 
+
 def error(msg):
     if not QUIET:
         click.echo(click.style("[ERRO] " + msg, fg="red"), err=True)
 
+
 def warn(msg):
     if not QUIET:
         click.echo(click.style("[WARN] " + msg, fg="yellow"), err=True)
+
 
 def halt(msg):
     error(msg)

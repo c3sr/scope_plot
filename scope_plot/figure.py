@@ -143,16 +143,16 @@ def generator_bar(ax, ax_cfg, strict):
         utils.debug("{} datapoints matched {}".format(len(matches), regex))
 
         if len(matches) == 0:
-            utils.debug("no matches for pattern {} in {}".format(regex, file_path))
+            utils.warn("no matches for pattern {} in {}".format(regex, file_path))
             continue
 
         utils.debug("series {}: x field: {}".format(c, xfield))
         utils.debug("series {}: y field: {}".format(c, yfield))
 
         # extract data
-        def show_func(b): 
+        def show_func(b):
             if xfield in b and yfield in b and "error_message" not in b:
-                return True 
+                return True
             else:
                 return False
         x = np.array(list(map(lambda b: float(b[xfield]), filter(show_func, matches))))

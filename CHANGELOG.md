@@ -1,6 +1,13 @@
 Changelog
 =========
 
+Release 0.1.5 (Development)
+---------------------------
+
+* Enable strict checking of spec files by default
+* Sort benchmark data
+* Omit invalid benchmark data
+
 Release 0.1.3 (Development)
 ---------------------------
 

@@ -143,14 +143,20 @@ def generator_bar(ax, ax_cfg, strict):
         utils.debug("{} datapoints matched {}".format(len(matches), regex))
 
         if len(matches) == 0:
+            utils.debug("no matches for pattern {} in {}".format(regex, file_path))
             continue
 
         utils.debug("series {}: x field: {}".format(c, xfield))
         utils.debug("series {}: y field: {}".format(c, yfield))
 
         # extract data
-        x = np.array([float(b[xfield]) for b in matches])
-        y = np.array([float(b[yfield]) for b in matches])
+        def show_func(b): 
+            if xfield in b and yfield in b and "error_message" not in b:
+                return True 
+            else:
+                return False
+        x = np.array(list(map(lambda b: float(b[xfield]), filter(show_func, matches))))
+        y = np.array(list(map(lambda b: float(b[yfield]), filter(show_func, matches))))
 
         # Rescale
         utils.debug("series {}: x scale={} yscale={}".format(c, xscale, yscale))
@@ -236,9 +242,16 @@ def generator_errorbar(ax, ax_cfg, strict):
         matches = [b for b in j["benchmarks"] if pattern is None or pattern.search(b["name"])]
         means = [b for b in matches if b["name"].endswith("_mean")]
         stddevs = [b for b in matches if b["name"].endswith("_stddev")]
-        x = np.array([float(b[default_x_field]) for b in means])
-        y = np.array([float(b[default_y_field]) for b in means])
-        e = np.array([float(b[default_y_field]) for b in stddevs])
+
+        # extract data
+        def show_func(b):
+            if default_x_field in b and default_y_field in b and "error_message" not in b:
+                return True
+            else:
+                return False
+        x = np.array(list(map(lambda b: float(b[default_x_field]), filter(show_func, means))))
+        y = np.array(list(map(lambda b: float(b[default_y_field]), filter(show_func, means))))
+        e = np.array(list(map(lambda b: float(b[default_y_field]), filter(show_func, stddevs))))
 
         # Rescale
         x *= xscale
@@ -307,9 +320,14 @@ def generator_regplot(ax, ax_spec, strict):
         matches = [b for b in j["benchmarks"] if pattern is None or pattern.search(b["name"])]
         means = [b for b in matches if b["name"].endswith("_mean")]
         stddevs = [b for b in matches if b["name"].endswith("_stddev")]
-        x = np.array([float(b["strides"]) for b in means])
-        y = np.array([float(b["real_time"]) for b in means])
-        e = np.array([float(b["real_time"]) for b in stddevs])
+
+        def show_func(b):
+            if "strides" in b and "real_time" in b and "error_message" not in b:
+                return True
+            return False
+        x = np.array(list(map(lambda b: float(b["strides"]), filter(show_func, means))))
+        y = np.array(list(map(lambda b: float(b["real_time"]), filter(show_func, means))))
+        e = np.array(list(map(lambda b: float(b["real_time"]), filter(show_func, stddevs))))
 
         # Rescale
         x *= float(series_spec.get("xscale", 1.0))

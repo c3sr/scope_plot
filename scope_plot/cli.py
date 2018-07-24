@@ -77,7 +77,7 @@ def spec(ctx, output, spec):
             utils.debug("searching dir {}".format(d))
         figure_spec = specification.apply_search_dirs(figure_spec, include)
 
-        fig = figure.generate(figure_spec, strict=ctx.obj["STRICT"])
+    fig = figure.generate(figure_spec, strict=ctx.obj["STRICT"])
 
     # Decide output path
     if output is None and figure_spec.get("output_file", None) is not None:

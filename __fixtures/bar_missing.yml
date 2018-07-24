@@ -1,0 +1,15 @@
+generator: bar
+title: Missing Data
+input_file: missing.json
+bar_width: 0.8
+yfield: bytes_per_second
+xfield: real_time
+
+yaxis:
+  label: The Y-axis Label
+xaxis:
+  label: Number of 256 Segments (in thousands)
+#  scaling_function: log
+series:
+  - label: Thrust
+    regex: UM_Coherence_GPUToGPU

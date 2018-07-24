@@ -1,0 +1,93 @@
+{
+  "context": {
+    "date": "2018-05-24 16:26:46",
+    "num_cpus": 160,
+    "mhz_per_cpu": 3800,
+    "cpu_scaling_enabled": false,
+    "library_build_type": "release"
+  },
+  "benchmarks": [
+    {
+      "name": "UM_Coherence_GPUToGPU/8/0/2/min_time:0.100/manual_time_stddev",
+      "iterations": 1339,
+      "real_time": 8,
+      "cpu_time": 1.0983948437352299e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 8e+04,
+      "bytes": 2.1324805998800180e-06
+    },
+    {
+      "name": "UM_Coherence_GPUToGPU/9/0/2/min_time:0.100/manual_time_stddev",
+      "iterations": 1327,
+      "real_time": 9,
+      "cpu_time": 2.4493949563572918e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 9e+04,
+      "bytes": 4.2649611997600361e-06
+    },
+    {
+      "name": "UM_Coherence_GPUToGPU/16/0/2/min_time:0.100/manual_time_stddev",
+      "iterations": 1360,
+      "real_time": 16,
+      "cpu_time": 1.8576652583859225e+03,
+      "time_unit": "ns",
+      "bytes_per_second": 1.6e+05,
+      "bytes": 1.7059844799040144e-05
+    },
+    {
+      "name": "UM_Coherence_GPUToGPU/10/0/2/min_time:0.100/manual_time_stddev",
+      "iterations": 1283,
+      "real_time": 10,
+      "cpu_time": 3.8231470864286475e+03,
+      "time_unit": "ns",
+      "bytes_per_second": 1.0e+05,
+      "bytes": 8.5299223995200722e-06,
+      "error_message": "fake error!"
+    },
+    {
+      "name": "UM_Coherence_GPUToGPU/12/0/2/min_time:0.100/manual_time_stddev",
+      "iterations": 1360,
+      "real_time": 12,
+      "cpu_time": 1.8576652583859225e+03,
+      "time_unit": "ns",
+      "bytes_per_second": 1.2e+05,
+      "bytes": 1.7059844799040144e-05
+    },
+    {
+      "name": "UM_Coherence_GPUToGPU/11/0/2/min_time:0.100/manual_time_stddev",
+      "iterations": 1360,
+      "real_time": 11,
+      "cpu_time": 1.8576652583859225e+03,
+      "time_unit": "ns",
+      "bytes_per_second": 1.1e+05,
+      "bytes": 1.7059844799040144e-05
+    },
+    {
+      "name": "UM_Coherence_GPUToGPU/13/0/2/min_time:0.100/manual_time_stddev",
+      "iterations": 1360,
+      "real_time": 13,
+      "cpu_time": 1.8576652583859225e+03,
+      "time_unit": "ns",
+      "bytes_per_second": 1.3e+05,
+      "bytes": 1.7059844799040144e-05
+    },
+    {
+      "name": "UM_Coherence_GPUToGPU/14/0/2/min_time:0.100/manual_time_stddev",
+      "iterations": 1360,
+      "real_time": 14,
+      "cpu_time": 1.8576652583859225e+03,
+      "time_unit": "ns",
+      "bytes_per_second": 1.4e+05,
+      "bytes": 1.7059844799040144e-05
+    },
+    {
+      "name": "UM_Coherence_GPUToGPU/15/0/2/min_time:0.100/manual_time_stddev",
+      "iterations": 1360,
+      "real_time": 15,
+      "cpu_time": 1.8576652583859225e+03,
+      "time_unit": "ns",
+      "bytes_per_second": 1.5e+05,
+      "bytes": 1.7059844799040144e-05
+    }
+  ]
+}

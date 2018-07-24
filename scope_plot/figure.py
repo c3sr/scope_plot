@@ -10,22 +10,27 @@ import yaml
 from scope_plot import utils
 from scope_plot.error import UnknownGenerator
 
+
 pp = pprint.PrettyPrinter(indent=4)
 plt.switch_backend('agg')
 
 
-def configure_yaxis(ax, axis_spec):
-    if "lim" in axis_spec:
-        lim = axis_spec["lim"]
-        ax.set_ylim(lim)
-    if "label" in axis_spec:
-        label = axis_spec["label"]
-        ax.set_ylabel(label)
-    if "scale" in axis_spec:
-        scale = axis_spec["scale"]
-        utils.debug("seting y axis scale: {}".format(scale))
-        ax.set_yscale(scale, basey=10)
-
+def configure_yaxis(ax, axis_spec, strict=False):
+    for key in axis_spec:
+        if "lim" == key:
+            lim = axis_spec["lim"]
+            ax.set_ylim(lim)
+        elif "label" == key:
+            label = axis_spec["label"]
+            ax.set_ylabel(label)
+        elif "scale" == key:
+            scale = axis_spec["scale"]
+            utils.debug("seting y axis scale: {}".format(scale))
+            ax.set_yscale(scale, basey=10)
+        elif strict:
+            utils.halt("unrecognized key {} in yaxis spec: {}".format(key, axis_spec))
+        else:
+            utils.debug("unrecognized key {} in yaxis spec: {}".format(key, axis_spec))
 
 def configure_xaxis(ax, axis_spec):
     if "scale" in axis_spec:
@@ -58,8 +63,7 @@ def generator_bar(ax, ax_cfg):
         file_path = s.get("input_file", default_file)
         label = s.get("label", "")
         regex = s.get("regex", ".*")
-        yscale = eval(str(s.get("yscale", default_y_scale)))
-        xscale = eval(str(s.get("xscale", default_x_scale)))
+
         utils.debug("series {}: Opening {}".format(c, file_path))
         with open(file_path, "rb") as f:
             j = json.loads(f.read().decode("utf-8"))
@@ -79,15 +83,21 @@ def generator_bar(ax, ax_cfg):
         utils.debug("series {}: x field: {}".format(c, xfield))
         utils.debug("series {}: y field: {}".format(c, yfield))
 
+        # extract data
         x = np.array([float(b[xfield]) for b in matches])
-        ind = np.arange(len(x))
         y = np.array([float(b[yfield]) for b in matches])
 
         # Rescale
+        yscale = eval(str(s.get("yscale", default_y_scale)))
+        xscale = eval(str(s.get("xscale", default_x_scale)))
+        utils.debug("series {}: x scale={} yscale={}".format(c, xscale, yscale))
         x *= xscale
         y *= yscale
-        utils.debug("series {}: x scale={} yscale={}".format(c, xscale, yscale))
 
+        # sort by x
+        x,y = zip(*sorted(zip(x.tolist(),y.tolist())))
+
+        ind = np.arange(len(x))
         utils.debug("ind: {}".format(ind))
         utils.debug("x: {}".format(x))
         utils.debug("y: {}".format(y))

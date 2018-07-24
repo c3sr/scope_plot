@@ -1,4 +1,5 @@
 import click
+import sys
 
 DEBUG = False
 VERBOSE = False
@@ -8,6 +9,12 @@ def debug(msg):
     if DEBUG:
         click.echo(click.style("[DEBU] " + msg, fg="yellow"), err=True)
 
+def error(msg):
+    click.echo(click.style("[ERRO] " + msg, fg="red"), err=True)
+
+def halt(msg):
+    error(msg)
+    sys.exit(1)
 
 def find_dictionary(key, dictionary):
     """yield all dictionaries that contain "key" in a dictionary of nested

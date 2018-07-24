@@ -100,14 +100,16 @@ def spec(ctx, output, spec):
 @click.option('--debug/--no-debug', help="print debug messages to stderr.", default=False)
 @click.option('--include', help="Search location for input_file in spec.",
               multiple=True, type=click.Path(exists=True, file_okay=False, readable=True, resolve_path=True))
+@click.option('--quiet/--no-quiet', help="don't print messages", default=False)
 @click.option('--strict/--no-strict', help="require recognized spec contents", default=True)
 @click.pass_context
-def main(ctx, debug, include, strict):
+def main(ctx, debug, include, quiet, strict):
     # This is needed if main is called via setuptools entrypoint
     if ctx.obj is None:
         ctx.obj = {}
 
     utils.DEBUG = debug
+    utils.QUIET = quiet
     ctx.obj["INCLUDE"] = include
     ctx.obj["STRICT"] = strict
 

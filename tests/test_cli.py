@@ -25,3 +25,7 @@ def test_scope_plot_version(tmpdir, run):
 def test_scope_plot_merge(tmpdir, run):
     result = run("merge", FIXTURES_DIR)
     assert result.ret == 0
+
+def test_scope_plot_bar(tmpdir, run):
+    result = run("bar", os.path.join(FIXTURES_DIR, "unsorted.json"), os.path.join(FIXTURES_DIR, "temp.pdf"))
+    assert result.ret == 0

@@ -59,7 +59,7 @@ def bar(ctx, benchmark, name_regex, output, x_field, y_field):
         default_spec["series"][0]["regex"] = name_regex
         default_spec["title"] = name_regex
 
-    fig = figure.generate(default_spec)
+    fig = figure.generate(default_spec, ctx.obj["STRICT"])
     fig.savefig(output, clip_on=False, transparent=False)
 
 

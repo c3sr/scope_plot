@@ -96,13 +96,13 @@ def generator_bar(ax, ax_cfg):
 
         # sort by x
         x,y = zip(*sorted(zip(x.tolist(),y.tolist())))
+        x = np.array(x)
+        y = np.array(y)
 
         ind = np.arange(len(x))
         utils.debug("ind: {}".format(ind))
         utils.debug("x: {}".format(x))
         utils.debug("y: {}".format(y))
-
-        # pp.pprint(y)
 
         ax.bar(ind + bar_width * c, y, width=bar_width, label=label, align="center")
 

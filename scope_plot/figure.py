@@ -7,43 +7,52 @@ import numpy as np
 import matplotlib.pyplot as plt
 import yaml
 from future.utils import iteritems
+from voluptuous import Schema, REMOVE_EXTRA, PREVENT_EXTRA
 
 from scope_plot import utils
 from scope_plot.error import UnknownGenerator
+from scope_plot.schema import validate
 
-
-pp = pprint.PrettyPrinter(indent=4)
 plt.switch_backend('agg')
 
 
+AXIS_SCHEMA_DICT = {
+    'lim': list,
+    'label': str,
+    'scale': str,
+}
+
+
 def configure_yaxis(ax, axis_spec, strict):
-    for key, value in iteritems(axis_spec):
-        if "lim" == key:
-            ax.set_ylim(value)
-        elif "label" == key:
-            ax.set_ylabel(value)
-        elif "scale" == key:
-            utils.debug("seting y axis scale: {}".format(value))
-            ax.set_yscale(value, basey=10)
-        elif strict:
-            utils.halt("unrecognized key {} in yaxis spec: {}".format(key, axis_spec))
-        else:
-            utils.debug("unrecognized key {} in yaxis spec: {}".format(key, axis_spec))
+
+    axis_spec, extras = validate(AXIS_SCHEMA_DICT, axis_spec, strict)
+    if extras:
+        utils.warn("extra specs {} in yaxis spec".format(extras))
+
+    if "lim" in axis_spec:
+        ax.set_ylim(axis_spec["lim"])
+    if "label" in axis_spec:
+        ax.set_ylabel(axis_spec["label"])
+    if "scale" in axis_spec:
+        value = axis_spec["scale"]
+        utils.debug("seting y axis scale: {}".format(value))
+        ax.set_yscale(value, basey=10)
 
 
 def configure_xaxis(ax, axis_spec, strict):
-    for key, value in iteritems(axis_spec):
-        if "scale" == key:
-            utils.debug("seting x axis scale: {}".format(value))
-            ax.set_xscale(value, basex=2)
-        elif "label" in axis_spec:
-            ax.set_xlabel(value)
-        elif "lim" in axis_spec:
-            ax.set_xlim(value)
-        elif strict:
-            utils.halt("unrecognized key {} in xaxis spec: {}".format(key, axis_spec))
-        else:
-            utils.debug("unrecognized key {} in xaxis spec: {}".format(key, axis_spec))
+
+    axis_spec, extras = validate(AXIS_SCHEMA_DICT, axis_spec, strict)
+    if extras:
+        utils.warn("extra specs {} in yaxis spec".format(extras))
+
+    if "lim" in axis_spec:
+        ax.set_xlim(axis_spec["lim"])
+    if "label" in axis_spec:
+        ax.set_xlabel(axis_spec["label"])
+    if "scale" in axis_spec:
+        value = axis_spec["scale"]
+        utils.debug("seting y axis scale: {}".format(value))
+        ax.set_xscale(value, basex=2)
 
 
 def generator_bar(ax, ax_cfg, strict):

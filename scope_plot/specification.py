@@ -1,9 +1,9 @@
 import yaml
 import os.path
+from future.utils import iteritems
 
 from scope_plot import utils
 from scope_plot.error import NoInputFilesError
-
 
 def load(yaml_path):
     with open(yaml_path, "rb") as f:

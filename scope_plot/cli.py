@@ -64,14 +64,16 @@ def bar(ctx, benchmark, name_regex, output, x_field, y_field):
 
 
 @click.command()
-@click.argument('spec', type=click.Path(exists=True, dir_okay=False, resolve_path=True))
 @click.option('-o', '--output', help="Output path.", type=click.Path(dir_okay=False, resolve_path=True))
+@click.argument('spec', type=click.Path(exists=True, dir_okay=False, resolve_path=True))
 @click.pass_context
 def spec(ctx, output, spec):
     """Create a figure from a spec file"""
-    include = ctx.obj.get("INCLUDE", [])
+    include = ctx.obj["INCLUDE"]
+    strict = ctx.obj["STRICT"]
 
     figure_spec = specification.load(spec)
+
     if include:
         for d in include:
             utils.debug("searching dir {}".format(d))

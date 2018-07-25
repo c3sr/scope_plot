@@ -1,0 +1,26 @@
+backend: matplotlib
+type: bar
+title: Reduction 256
+input_file: ex1.json
+bar_width: 0.1
+yscale: 1e-9
+xscale: 1.0/1000
+yfield: Flops
+xfield: num_segments
+
+yaxis:
+  label: TFlops
+  lim: [0, 200]
+xaxis:
+  label: Number of 256 Segments (in thousands)
+  lim: [2, 8.6]
+#  scaling_function: log
+series:
+  - label: Thrust
+    regex: THRUST_SEGMENTED_REDUCTION.*segment_size:256.*
+  - label: CUB
+    regex: CUB_BLOCK_SEGMENTED_REDUCTION.*segment_size:256.*
+  - label: Ours<1,8>
+    regex: CUDA_WMMA_SEGMENTED_REDUCTION<1, 8>.*segment_size:256.*
+  - label: Ours<1,8>2
+    regex: CUDA_WMMA_SEGMENTED_REDUCTION<1, 8>.*segment_size:256.*

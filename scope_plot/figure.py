@@ -7,25 +7,21 @@ import numpy as np
 import matplotlib.pyplot as plt
 import yaml
 from future.utils import iteritems
-from voluptuous import Schema, REMOVE_EXTRA, PREVENT_EXTRA
+from voluptuous import Required, Schema
 
 from scope_plot import utils
 from scope_plot.error import UnknownGenerator
 from scope_plot.schema import validate
+from scope_plot import schema
+from scope_plot import backends
+from scope_plot.specification import canonicalize_to_subplot
 
 plt.switch_backend('agg')
 
 
-AXIS_SCHEMA_DICT = {
-    'lim': list,
-    'label': str,
-    'scale': str,
-}
-
-
 def configure_yaxis(ax, axis_spec, strict):
 
-    axis_spec, extras = validate(AXIS_SCHEMA_DICT, axis_spec, strict)
+    axis_spec, extras = validate(schema.AXIS_RAW, axis_spec, strict)
     if extras:
         utils.warn("extra specs {} in yaxis spec".format(extras))
 
@@ -446,6 +442,18 @@ def generate_subplots(figure_spec, strict):
 
 def generate(figure_spec, strict):
 
+    # verify that info for backend configuration is present
+    if "backend" not in figure_spec:
+        utils.halt("Expected to find backend in specification")
+    backend_str = figure_spec["backend"]
+    del figure_spec["backend"]
+
+    if backend_str == "bokeh":
+        figure_spec = canonicalize_to_subplot(figure_spec)
+        print(figure_spec)
+        backends.bokeh.generate(figure_spec, strict)
+        return
+
     fig_size = None
     if "size" in figure_spec:
         fig_size = figure_spec["size"]
@@ -540,40 +548,3 @@ plt.style.use(
         "font.family": "STIXGeneral",
     }
 )
-
-
-"""
-if __name__ == "__main__":
-
-    if len(sys.argv) == 2:
-        output_path = None
-        yaml_path = sys.argv[1]
-    elif len(sys.argv) == 3:
-        output_path = sys.argv[1]
-        yaml_path = sys.argv[2]
-    else:
-        sys.exit(1)
-
-    root_dir = os.path.dirname(os.path.abspath(yaml_path))
-
-    # load the config
-    with open(yaml_path, "rb") as f:
-        cfg = yaml.load(f)
-
-    if output_path is None and cfg.get("output_file", None) is not None:
-        output_path = os.path.join(root_dir, cfg.get("output_file"))
-        if not output_path.endswith(".pdf") and not output_path.endswith(".png"):
-            base_output_path = output_path
-            output_path = []
-            for ext in cfg.get("output_format", ["pdf"]):
-                ext = ext.lstrip(".")
-                output_path.append(base_output_path + "." + ext)
-
-    output_paths = [output_path] if type(output_path) == list() else output_path
-
-    fig = generate(cfg, root_dir)
-    if fig is not None:
-        # Save plot
-        for output_path in output_paths:
-            fig.savefig(output_path, clip_on=False, transparent=False)
-"""

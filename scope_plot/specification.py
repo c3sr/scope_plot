@@ -10,6 +10,21 @@ def load(yaml_path):
         cfg = yaml.load(f)
     return cfg
 
+def canonicalize_to_subplot(orig_spec):
+    if 'subplots' in orig_spec:
+        return orig_spec
+    else:
+        new_spec = {
+            "subplots": [
+                {"pos": [1, 1]},
+            ]
+        }
+        for key,value in iteritems(orig_spec):
+            if key in ["size"]:
+                new_spec[key] = value
+            else:
+                new_spec["subplots"][0][key] = value
+        return new_spec
 
 def apply_search_dirs(figure_spec, data_search_dirs):
     """ look for files in figure_spec, and if those files do not exist, search data_search_dirs for them"""

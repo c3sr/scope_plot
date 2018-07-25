@@ -1,11 +1,23 @@
-from voluptuous import Schema, REMOVE_EXTRA, PREVENT_EXTRA   
-   
-def validate(schema_dict, orig_spec, strict):
+from voluptuous import Any, Schema, Optional, ALLOW_EXTRA, REMOVE_EXTRA, PREVENT_EXTRA   
 
-    if strict:
-        extra = PREVENT_EXTRA
+SCALE_RAW = Any(float, int, basestring)
+
+AXIS_RAW = {
+    Optional('lim'): list,
+    Optional('label'): basestring,
+    Optional('scale'): SCALE_RAW,
+}
+
+def validate(schema_dict, orig_spec, strict, allow_extra=False):
+    """validate and return the validated orig_spec"""
+
+    if allow_extra:
+        extra = ALLOW_EXTRA
     else:
-        extra = REMOVE_EXTRA
+        if strict:
+            extra = PREVENT_EXTRA
+        else:
+            extra = REMOVE_EXTRA
 
     schema = Schema(
         schema_dict,

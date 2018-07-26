@@ -153,8 +153,18 @@ def version(ctx):
     click.echo("ScopePlot {}".format(__version__))
 
 
+@click.command()
+@click.pass_context
+@click.argument("regex")
+@click.option('-i', '--input', help="Input file (- for stdin)", type=click.File(mode='rb'), default="-")
+@click.option('-o', '--output', help="Output path (- for stdout)", type=click.File(mode='wb'), default="-")
+def filter_name(ctx, regex, input, output):
+    with GoogleBenchmark(stream=input) as b:
+        output.write(b.filter_name(regex).json())
+
 main.add_command(bar)
 main.add_command(deps)
 main.add_command(merge)
 main.add_command(spec)
 main.add_command(version)
+main.add_command(filter_name)

@@ -21,14 +21,18 @@ import copy
 import pandas as pd
 
 class GoogleBenchmark(object):
-    def __init__(self, path):
-        self.path = path
+    def __init__(self, path=None, stream=None):
+        if path:
+            with open(path, "rb") as f:
+                j = json.loads(f.read().decode("utf-8"))
+            self.context = j["context"]
+            self.benchmarks = j["benchmarks"]
+        elif stream:
+            j = json.loads(stream.read().decode("utf-8"))
+            self.context = j["context"]
+            self.benchmarks = j["benchmarks"]
     
     def __enter__(self):
-        with open(self.path, "rb") as f:
-            j = json.loads(f.read().decode("utf-8"))
-        self.context = j["context"]
-        self.benchmarks = j["benchmarks"]
         return self
 
     def __exit__(self, exception_type, exception_value, traceback):
@@ -45,6 +49,12 @@ class GoogleBenchmark(object):
         filtered.benchmarks = [b for b in filtered.benchmarks if field_name in b]
         return filtered
 
+    def json(self):
+        return json.dumps({
+            "context": self.context,
+            "benchmarks": self.benchmarks,
+        })
+
     def fields(self, *field_names):
         """for each field_name, return a list corresponding to that """
         def show_func(b):
@@ -60,13 +70,14 @@ class GoogleBenchmark(object):
         return tuple(data)
 
     def dataframe(self, x_field, y_field):
-        def show_func(b):
+        """produce a dataframe with a y_field column indexed by x_field"""
+        def valid_func(b):
             if "error_message" in b or x_field not in b or y_field not in b:
                 return False
             return True
         data = {}
-        data[x_field] = list(map(lambda b: float(b[x_field]), filter(show_func, self.benchmarks)))
-        data[y_field] = list(map(lambda b: float(b[y_field]), filter(show_func, self.benchmarks)))
+        data[x_field] = list(map(lambda b: float(b[x_field]), filter(valid_func, self.benchmarks)))
+        data[y_field] = list(map(lambda b: float(b[y_field]), filter(valid_func, self.benchmarks)))
 
         df = pd.DataFrame.from_dict(data)
         df = df.set_index(x_field)

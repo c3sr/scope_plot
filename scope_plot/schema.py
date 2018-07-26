@@ -1,11 +1,37 @@
 from voluptuous import Any, Schema, Optional, ALLOW_EXTRA, REMOVE_EXTRA, PREVENT_EXTRA   
 
+try:
+    unicode = unicode
+except NameError:
+    # 'unicode' is undefined, must be Python 3
+    str = str
+    unicode = str
+    bytes = bytes
+    basestring = str
+else:
+    # 'unicode' exists, must be Python 2
+    str = str
+    unicode = unicode
+    bytes = str
+    basestring = basestring
+
 SCALE_RAW = Any(float, int, basestring)
 
 AXIS_RAW = {
     Optional('lim'): list,
     Optional('label'): basestring,
     Optional('scale'): SCALE_RAW,
+}
+
+SERIES_RAW = {
+    Optional("label", default=""): basestring,
+    "label": basestring,
+    "input_file": Any(float, int),
+    "regex": basestring,
+    "xfield": basestring,
+    "yfield": basestring,
+    "xscale": SCALE_RAW,
+    "yscale": SCALE_RAW,
 }
 
 def validate(schema_dict, orig_spec, strict, allow_extra=False):

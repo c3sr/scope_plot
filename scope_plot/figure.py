@@ -13,7 +13,7 @@ from scope_plot import utils
 from scope_plot.error import UnknownGenerator
 from scope_plot.schema import validate
 from scope_plot import schema
-from scope_plot import backends
+import scope_plot.backends.bokeh as bokeh_backend
 from scope_plot.specification import canonicalize_to_subplot
 
 plt.switch_backend('agg')
@@ -450,8 +450,7 @@ def generate(figure_spec, strict):
 
     if backend_str == "bokeh":
         figure_spec = canonicalize_to_subplot(figure_spec)
-        print(figure_spec)
-        backends.bokeh.generate(figure_spec, strict)
+        bokeh_backend.generate(figure_spec, strict)
         return
 
     fig_size = None

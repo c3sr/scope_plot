@@ -18,6 +18,8 @@ import json
 import re
 import copy
 
+import pandas as pd
+
 class GoogleBenchmark(object):
     def __init__(self, path):
         self.path = path
@@ -57,3 +59,15 @@ class GoogleBenchmark(object):
             data += [list(map(lambda b: float(b[name]), filter(show_func, self.benchmarks)))]
         return tuple(data)
 
+    def dataframe(self, x_field, y_field):
+        def show_func(b):
+            if "error_message" in b or x_field not in b or y_field not in b:
+                return False
+            return True
+        data = {}
+        data[x_field] = list(map(lambda b: float(b[x_field]), filter(show_func, self.benchmarks)))
+        data[y_field] = list(map(lambda b: float(b[y_field]), filter(show_func, self.benchmarks)))
+
+        df = pd.DataFrame.from_dict(data)
+        df = df.set_index(x_field)
+        return df

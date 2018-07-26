@@ -22,5 +22,5 @@ series:
     regex: CUB_BLOCK_SEGMENTED_REDUCTION.*segment_size:256.*
   - label: Ours<1,8>
     regex: CUDA_WMMA_SEGMENTED_REDUCTION<1, 8>.*segment_size:256.*
-  - label: Ours<1,8>2
-    regex: CUDA_WMMA_SEGMENTED_REDUCTION<1, 8>.*segment_size:256.*
+  # - label: Ours<1,8>2
+  #   regex: CUDA_WMMA_SEGMENTED_REDUCTION<1, 8>.*segment_size:256.*

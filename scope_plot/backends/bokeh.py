@@ -5,8 +5,10 @@ from __future__ import absolute_import
 from scope_plot import utils
 from scope_plot.schema import validate
 from scope_plot import schema
+from scope_plot.benchmark import GoogleBenchmark
 from voluptuous import Any, Schema, Optional
 from bokeh.plotting import figure
+from bokeh.io import show
 # from bokeh.models import Range1d, Label
 # from bokeh.models import scales
 
@@ -17,7 +19,7 @@ def generate_bar(bar_spec, strict):
         Optional("title", default=""): basestring,
         "input_file": basestring,
         "bar_width": Any(float, int),
-        "yfield": basestring,
+        Optional("yfield", default="real_time"): basestring,
         Optional("xfield", default="real_time"): basestring,
         "yaxis": schema.AXIS_RAW,
         "xaxis": schema.AXIS_RAW,
@@ -56,6 +58,37 @@ def generate_bar(bar_spec, strict):
                  toolbar_location='above',
                  sizing_mode='scale_width'
     )
+
+    for i, series_spec in enumerate(bar_spec["series"]):
+
+        # validate series_spec
+        series_schema = {
+            Optional("label", default=""): basestring,
+            "label": basestring,
+            "input_file": Any(float, int),
+            "regex": basestring,
+            "xfield": basestring,
+            "yfield": basestring,
+            "xscale": basestring,
+            "yscale": basestring,
+        }
+
+        input_path = series_spec.get("input_file", bar_spec.get("input_file", None))
+        if not input_path:
+            utils.halt("Expected input_file in bar_spec or series_spec")
+
+        regex = series_spec.get("regex", ".*")
+        x_field = series_spec.get("xfield", bar_spec["xfield"])
+        y_field = series_spec.get("yfield", bar_spec["yfield"])
+
+        utils.debug("Opening {}".format(input_path))
+        with GoogleBenchmark(input_path) as b:
+            x, y = b.filter_name(regex).fields(x_field, y_field)
+            utils.debug("found {} values with regex={} && xfield={} && yfield={}".format(len(x), regex, x_field, y_field))
+
+        fig.vbar(x=x, top=y, width=0.9)
+
+    show(fig)
 
 def generate_plot(plot_spec, strict):
 

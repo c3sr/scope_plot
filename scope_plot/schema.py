@@ -34,6 +34,36 @@ SERIES_RAW = {
     "yscale": SCALE_RAW,
 }
 
+BAR_RAW = {
+    Optional("title", default=""): basestring,
+    "input_file": basestring,
+    "bar_width": Any(float, int),
+    Optional("yfield", default="real_time"): basestring,
+    Optional("xfield", default="real_time"): basestring,
+    "yaxis": AXIS_RAW,
+    "xaxis": AXIS_RAW,
+    "series": list,
+    "yscale": SCALE_RAW,
+    "xscale": SCALE_RAW,
+    "xtype": basestring,
+    "ytype": basestring,
+}
+
+ERRORBAR_RAW = {
+    Optional("title", default=""): basestring,
+    "input_file": basestring,
+    "bar_width": Any(float, int),
+    Optional("yfield", default="real_time"): basestring,
+    Optional("xfield", default="real_time"): basestring,
+    "yaxis": AXIS_RAW,
+    "xaxis": AXIS_RAW,
+    "series": list,
+    "yscale": SCALE_RAW,
+    "xscale": SCALE_RAW,
+    "xtype": basestring,
+    "ytype": basestring,
+}
+
 def validate(schema_dict, orig_spec, strict, allow_extra=False):
     """validate and return the validated orig_spec"""
 

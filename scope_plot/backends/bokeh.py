@@ -29,27 +29,97 @@ else:
    bytes = str
    basestring = basestring
 
+def generate_errorbar(errorbar_spec, strict):
+
+    errorbar_spec, extras = validate(schema.ERRORBAR_RAW, errorbar_spec, strict)
+    if not strict:
+        utils.warn("Found extras {} in errorbar_spec".format(extras))
+
+    x_axis_label = errorbar_spec.get("xaxis", {}).get("label", "")
+    y_axis_label = errorbar_spec.get("yaxis", {}).get("label", "")
+    x_type = errorbar_spec.get("xtype", "auto")
+    y_type = errorbar_spec.get("ytype", "auto")
+
+
+    # Read all the series data
+    series_x_data = []
+    series_y_data = []
+    df = pd.DataFrame()
+    for i, series_spec in enumerate(errorbar_spec["series"]):
+
+        schema.validate(schema.SERIES_RAW, series_spec, strict)
+
+        input_path = series_spec.get("input_file", errorbar_spec.get("input_file", None))
+        regex = series_spec.get("regex", ".*")
+        x_field = series_spec.get("xfield", errorbar_spec["xfield"])
+        y_field = series_spec.get("yfield", errorbar_spec["yfield"])
+        label = series_spec.get("label", str(i))
+
+        utils.debug("Opening {}".format(input_path))
+        with GoogleBenchmark(input_path) as b:
+            mean_df = b.keep_name_regex(regex) \
+                    .keep_name_endswith("_mean") \
+                    .xy_dataframe(x_field, y_field)
+            err_df = b.keep_name_regex(regex) \
+                    .keep_name_endswith("_stddev") \
+                    .xy_dataframe(x_field, y_field)
+            raw_df = b.keep_name_regex(regex) \
+                    .remove_name_endswith("_mean") \
+                    .remove_name_endswith("_median") \
+                    .remove_name_endswith("_stddev") \
+                    .xy_dataframe(x_field, y_field)
+            # new_df = new_df.rename(columns={y_field: label})
+            print(y_df)
+            print(e_df)
+            # df = pd.concat([df, new_df], axis=1, sort=True)
+
+
+    df.index = df.index.map(str)
+    print(df)
+    source = ColumnDataSource(data=df)
+    print(source)
+    print(source.data)
+
+    # Figure out the union of the x fields we want:
+
+    x_range = list(df.index)
+    utils.debug("x_range contains {} unique values".format(len(x_range)))
+    # x_range = [str(e) for e in sorted(list(x_range))]
+
+    # Create the figure
+    fig = figure(title=errorbar_spec["title"],
+                 x_axis_label=x_axis_label,
+                 y_axis_label=y_axis_label,
+                 x_axis_type=x_type,
+                 y_axis_type=y_type,
+                 x_range=x_range,
+                 plot_width=808,
+                 plot_height=int(500/2.0),
+                 toolbar_location='above',
+                 sizing_mode='scale_width'
+    )
+
+    # offset each series
+    lane_width = 1 / (len(errorbar_spec["series"]) + 1) # each group of bars is 1 wide, leave 1 bar-width between groups
+    bar_width = lane_width * 0.95 # small gap between bars
+
+    dodge_each = lane_width
+    dodge_total = len(series_x_data) * dodge_each
+
+    # plot the bars
+    for i, series_spec in enumerate(errorbar_spec["series"]):
+        dodge_amount = -0.5 + (i+1) * lane_width
+        fig.vbar(x=dodge('num_segments', dodge_amount, range=fig.x_range), top=series_spec["label"], width=bar_width, source=source)
+
+    return fig
+
+
 
 def generate_bar(bar_spec, strict):
 
     bar_width = 0.2
 
-    # validate bar_spec
-    bar_schema = {
-        Optional("title", default=""): basestring,
-        "input_file": basestring,
-        "bar_width": Any(float, int),
-        Optional("yfield", default="real_time"): basestring,
-        Optional("xfield", default="real_time"): basestring,
-        "yaxis": schema.AXIS_RAW,
-        "xaxis": schema.AXIS_RAW,
-        "series": list,
-        "yscale": schema.SCALE_RAW,
-        "xscale": schema.SCALE_RAW,
-        "xtype": basestring,
-        "ytype": basestring,
-    }
-    bar_spec, extras = validate(bar_schema, bar_spec, strict)
+    bar_spec, extras = validate(schema.BAR_RAW, bar_spec, strict)
     if not strict:
         utils.warn("Found extras {} in bar_spec".format(extras))
 
@@ -83,13 +153,10 @@ def generate_bar(bar_spec, strict):
 
         utils.debug("Opening {}".format(input_path))
         with GoogleBenchmark(input_path) as b:
-            new_df = b.filter_name(regex).xy_dataframe(x_field, y_field)
+            new_df = b.keep_name_regex(regex).xy_dataframe(x_field, y_field)
             new_df = new_df.rename(columns={y_field: label})
             print(new_df)
             df = pd.concat([df, new_df], axis=1, sort=True)
-            # utils.debug("found {} values with regex={} && xfield={} && yfield={}".format(len(x), regex, x_field, y_field))
-            # series_x_data += [x]
-            # series_y_data += [y]
 
 
     df.index = df.index.map(str)
@@ -118,15 +185,14 @@ def generate_bar(bar_spec, strict):
     )
 
     # offset each series
-    lane_width = 1 / (len(bar_spec["series"]) + 1) # bar width plus spacing
-    bar_width = lane_width * 0.95
+    lane_width = 1 / (len(bar_spec["series"]) + 1) # each group of bars is 1 wide, leave 1 bar-width between groups
+    bar_width = lane_width * 0.95 # small gap between bars
 
     dodge_each = lane_width
     dodge_total = len(series_x_data) * dodge_each
 
     # plot the bars
     for i, series_spec in enumerate(bar_spec["series"]):
-        # fig.vbar(x=[str(e) for e in series_x_data[i]], top=y, width=bar_width)
         dodge_amount = -0.5 + (i+1) * lane_width
         fig.vbar(x=dodge('num_segments', dodge_amount, range=fig.x_range), top=series_spec["label"], width=bar_width, source=source)
 
@@ -141,8 +207,10 @@ def generate_plot(plot_spec, strict):
     type_str = plot_spec['type']
     del plot_spec['type']
 
-    if type_str == "bar":
+    if "bar" == type_str:
         fig = generate_bar(plot_spec, strict)
+    elif "errorbar" == type_str:
+        fig = generate_errorbar(plot_spec, strict)
     else:
         utils.halt("Unrecognized type: {}".format(type_str))
 

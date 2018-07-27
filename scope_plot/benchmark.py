@@ -28,17 +28,31 @@ class GoogleBenchmark(object):
     def __exit__(self, exception_type, exception_value, traceback):
         pass
 
-    def filter_name(self, regex):
+    def keep_name_regex(self, regex):
+        """retain benchmarks whose name matches regex"""
         filtered = copy.deepcopy(self)
         pattern = re.compile(regex)
         filtered.benchmarks = [b for b in filtered.benchmarks if pattern.search(b["name"])]
         return filtered
 
-    def filter_field(self, field_name):
+    def keep_name_endswith(self, substr):
+        """retain benchmarks whose name ends with substr"""
+        filtered = copy.deepcopy(self)
+        filtered.benchmarks = [b for b in filtered.benchmarks if b["name"].endswith(substr)]
+        return filtered
+
+    def remove_name_endswith(self, substr):
+        """remove benchmarks whose name ends with substr"""
+        filtered = copy.deepcopy(self)
+        filtered.benchmarks = [b for b in filtered.benchmarks if not b["name"].endswith(substr)]
+        return filtered
+
+    def keep_field(self, field_name):
+        """retain benchmarks with field_name"""
         self.filter_fields(field_name)
 
-    def filter_fields(self, *field_names):
-        """filter out benchmarks missing any field in field_names"""
+    def keep_fields(self, *field_names):
+        """retain benchmarks with all field_names"""
         filtered = copy.deepcopy(self)
         def allow(b):
             for name in field_names:

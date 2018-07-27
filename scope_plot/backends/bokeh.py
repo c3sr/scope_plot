@@ -83,7 +83,7 @@ def generate_bar(bar_spec, strict):
 
         utils.debug("Opening {}".format(input_path))
         with GoogleBenchmark(input_path) as b:
-            new_df = b.filter_name(regex).dataframe(x_field, y_field)
+            new_df = b.filter_name(regex).xy_dataframe(x_field, y_field)
             new_df = new_df.rename(columns={y_field: label})
             print(new_df)
             df = pd.concat([df, new_df], axis=1, sort=True)

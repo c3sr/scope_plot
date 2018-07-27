@@ -39,7 +39,7 @@ def deps(ctx, output, spec, target):
 @click.option('--y-field', help="field for Y axis")
 @click.pass_context
 def bar(ctx, benchmark, name_regex, output, x_field, y_field):
-    """Create a bar graph from BENCHMARK and write to OUTPUT"""
+    """Create a bar graph."""
     default_spec = {
         "generator": "bar",
         "series": [
@@ -68,7 +68,7 @@ def bar(ctx, benchmark, name_regex, output, x_field, y_field):
 @click.argument('spec', type=click.Path(exists=True, dir_okay=False, resolve_path=True))
 @click.pass_context
 def spec(ctx, output, spec):
-    """Create a figure from a spec file"""
+    """Create a figure from a spec file."""
     include = ctx.obj["INCLUDE"]
     strict = ctx.obj["STRICT"]
 
@@ -117,41 +117,18 @@ def main(ctx, debug, include, quiet, strict):
 
 
 @click.command()
-@click.option('-o', '--output', help="Output path (- for stdout)", type=click.File(mode='w'), default="-")
-@click.argument('inputs', nargs=-1, type=click.Path(exists=True, dir_okay=True, resolve_path=True))
 @click.pass_context
-def merge(ctx, output, inputs):
-    """merge Google Benchmark output files"""
-    files = []
-    merged = None
-
-    # collect all json files
-    for path in inputs:
-        if os.path.isdir(path):
-            search_path = os.path.join(path, "*.json")
-            files += glob.glob(search_path)
-        else:
-            files += [path]
-
-    # merge all json files
-    for path in files:
-        utils.debug("Working on {}".format(path))
-        with open(path, "rb") as f:
-            j = json.loads(f.read().decode("utf-8"))
-            if merged is None:
-                merged = j
-            else:
-                merged["benchmarks"] += j["benchmarks"]
-    json.dump(merged, output, indent=4)
+def version(ctx):
+    """Show the ScopePlot version"""
+    click.echo("ScopePlot {}".format(__version__))
 
 
 @click.command()
 @click.pass_context
-def version(ctx):
-    """merge Google Benchmark output files"""
-
-    click.echo("ScopePlot {}".format(__version__))
-
+def help(ctx):
+    """Show this message and exit."""
+    with click.Context(main) as ctx:
+        click.echo(main.get_help(ctx))
 
 @click.command()
 @click.pass_context
@@ -159,12 +136,25 @@ def version(ctx):
 @click.option('-i', '--input', help="Input file (- for stdin)", type=click.File(mode='rb'), default="-")
 @click.option('-o', '--output', help="Output path (- for stdout)", type=click.File(mode='wb'), default="-")
 def filter_name(ctx, regex, input, output):
+    """Filter google benchmark results by name"""
     with GoogleBenchmark(stream=input) as b:
         output.write(b.filter_name(regex).json())
 
+@click.command()
+@click.pass_context
+@click.argument('FILES', nargs=-1, type=click.File(mode='rb'))
+def cat(ctx, files):
+    """cat Benchmark files to standard output."""
+
+    gb = GoogleBenchmark()
+    for file in files:
+        gb += GoogleBenchmark(stream=file)
+    click.echo(gb.json())
+
 main.add_command(bar)
 main.add_command(deps)
-main.add_command(merge)
 main.add_command(spec)
 main.add_command(version)
 main.add_command(filter_name)
+main.add_command(cat)
+main.add_command(help)

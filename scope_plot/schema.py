@@ -21,12 +21,13 @@ AXIS_RAW = {
     Optional('lim'): list,
     Optional('label'): basestring,
     Optional('scale'): SCALE_RAW,
+    Optional('type'): basestring,
 }
 
 SERIES_RAW = {
     Optional("label", default=""): basestring,
     "label": basestring,
-    "input_file": Any(float, int),
+    "input_file": basestring,
     "regex": basestring,
     "xfield": basestring,
     "yfield": basestring,
@@ -45,8 +46,6 @@ BAR_RAW = {
     "series": list,
     "yscale": SCALE_RAW,
     "xscale": SCALE_RAW,
-    "xtype": basestring,
-    "ytype": basestring,
 }
 
 ERRORBAR_RAW = {

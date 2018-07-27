@@ -11,7 +11,7 @@ from bokeh.plotting import figure
 from bokeh.io import show
 from bokeh.layouts import gridplot
 from bokeh.transform import dodge
-from bokeh.models import ColumnDataSource
+from bokeh.models import ColumnDataSource, Whisker
 import pandas as pd
 
 try:
@@ -37,8 +37,8 @@ def generate_errorbar(errorbar_spec, strict):
 
     x_axis_label = errorbar_spec.get("xaxis", {}).get("label", "")
     y_axis_label = errorbar_spec.get("yaxis", {}).get("label", "")
-    x_type = errorbar_spec.get("xtype", "auto")
-    y_type = errorbar_spec.get("ytype", "auto")
+    x_type = errorbar_spec.get("xaxis", {}).get("type", "auto")
+    y_type = errorbar_spec.get("yaxis", {}).get("type", "auto")
 
 
     # Read all the series data
@@ -57,34 +57,29 @@ def generate_errorbar(errorbar_spec, strict):
 
         utils.debug("Opening {}".format(input_path))
         with GoogleBenchmark(input_path) as b:
+            df = b.keep_name_regex(regex) \
+                  .keep_stats() \
+                  .stats_dataframe(x_field, y_field)
+
             mean_df = b.keep_name_regex(regex) \
                     .keep_name_endswith("_mean") \
-                    .xy_dataframe(x_field, y_field)
+                    .dataframe()
             err_df = b.keep_name_regex(regex) \
                     .keep_name_endswith("_stddev") \
-                    .xy_dataframe(x_field, y_field)
+                    .dataframe()
+            err_df.loc[:, "lower"] = mean_df.loc[:, y_field] - err_df.loc[:, y_field]
+            err_df.loc[:, "upper"] = mean_df.loc[:, y_field] + err_df.loc[:, y_field]
             raw_df = b.keep_name_regex(regex) \
                     .remove_name_endswith("_mean") \
                     .remove_name_endswith("_median") \
                     .remove_name_endswith("_stddev") \
-                    .xy_dataframe(x_field, y_field)
+                    .dataframe()
             # new_df = new_df.rename(columns={y_field: label})
-            print(y_df)
-            print(e_df)
+            print(mean_df)
+            print(err_df)
+            print("raw")
+            print(raw_df)
             # df = pd.concat([df, new_df], axis=1, sort=True)
-
-
-    df.index = df.index.map(str)
-    print(df)
-    source = ColumnDataSource(data=df)
-    print(source)
-    print(source.data)
-
-    # Figure out the union of the x fields we want:
-
-    x_range = list(df.index)
-    utils.debug("x_range contains {} unique values".format(len(x_range)))
-    # x_range = [str(e) for e in sorted(list(x_range))]
 
     # Create the figure
     fig = figure(title=errorbar_spec["title"],
@@ -92,19 +87,23 @@ def generate_errorbar(errorbar_spec, strict):
                  y_axis_label=y_axis_label,
                  x_axis_type=x_type,
                  y_axis_type=y_type,
-                 x_range=x_range,
+                #  x_range=x_range,
                  plot_width=808,
                  plot_height=int(500/2.0),
                  toolbar_location='above',
                  sizing_mode='scale_width'
     )
 
-    # offset each series
-    lane_width = 1 / (len(errorbar_spec["series"]) + 1) # each group of bars is 1 wide, leave 1 bar-width between groups
-    bar_width = lane_width * 0.95 # small gap between bars
+    fig.line(x=mean_df.loc[:, x_field], y=mean_df.loc[:, y_field])
 
-    dodge_each = lane_width
-    dodge_total = len(series_x_data) * dodge_each
+    source_error = ColumnDataSource(err_df)
+
+    fig.add_layout(
+        Whisker(source=source_error, base=x_field, upper="upper", lower="lower")
+    )
+
+    show(fig)
+    utils.halt("halt requested")
 
     # plot the bars
     for i, series_spec in enumerate(errorbar_spec["series"]):

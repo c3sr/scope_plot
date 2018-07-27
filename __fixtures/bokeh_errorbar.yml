@@ -14,8 +14,11 @@ yaxis:
   #   - 80
 xaxis:
   label: Transfer Size (B)
-  scale: log
+  type: log
 title: AC922 GPU/GPU Coherence Bandwidth
 size:
   - 6
   - 5
+
+xfield: bytes
+yfield: bytes_per_second

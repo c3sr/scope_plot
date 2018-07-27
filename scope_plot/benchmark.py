@@ -49,7 +49,7 @@ class GoogleBenchmark(object):
 
     def keep_field(self, field_name):
         """retain benchmarks with field_name"""
-        self.filter_fields(field_name)
+        return self.keep_fields(field_name)
 
     def keep_fields(self, *field_names):
         """retain benchmarks with all field_names"""
@@ -60,6 +60,22 @@ class GoogleBenchmark(object):
                     return False
             return True
         filtered.benchmarks = list(filter(allow, filtered.benchmarks))
+        return filtered
+
+    def keep_stats(self):
+        """retain benchmarks that correspond to aggregate stats (mean, median, stddev)"""
+        filtered = copy.deepcopy(self)
+        filtered.benchmark = []
+        for b in self.benchmarks:
+            if any(b["name"].endswith(suffix) for suffix in ("_mean", "_median", "_err")):
+                filtered.benchmarks += [b]
+        return filtered
+
+    def keep_raw(self):
+        """retain benchmarks that do not correspond to aggregate stats"""
+        return self.remove_name_endswith("_mean") \
+                   .remove_name_endswith("_median") \
+                   .remove_name_endswith("_stddev")
 
     def json(self):
         return json.dumps(
@@ -86,6 +102,8 @@ class GoogleBenchmark(object):
 
     def xy_dataframe(self, x_field, y_field):
         """produce a pandas dataframe indexed by x_field with a column for y_field"""
+
+        # both x_field and y_field should be present
         def valid_func(b):
             if "error_message" in b or x_field not in b or y_field not in b:
                 return False
@@ -103,13 +121,32 @@ class GoogleBenchmark(object):
         raise NotImplementedError
 
     def dataframe(self):
-        """return a pandas dataframe containing a row for each benchmark entry"""
+        """return a pandas dataframe containing a row for each benchmark object"""
+        frames = [pd.DataFrame(b, index=[0]) for b in self.benchmarks]
+        return pd.concat(frames, ignore_index=True)
 
-        def make_frame(b):
-            return pd.DataFrame(b)
+    def stats_dataframe(self, x_field, y_field):
+        """return a pandas dataframe containing a row corresponding to each benchmark with x_field, y_field for which aggregate stats can be found"""
 
-        frames = [make_frame(b) for b in self.benchmarks]
-        return pd.concat(frames)
+        stats = {}
+        for b in self.benchmarks:
+
+            if x_field not in b or "error_message" in b:
+                continue
+
+            name = b["name"]
+            if name.endswith("_mean"):
+                stats[x_field]["mean"] = b[y_field]
+            elif name.endswith("_mediean"):
+                stats[x_field]["median"] = b[y_field]
+            elif name.endswith("_stddev"):
+                stats[x_field]["stddev"] = b[y_field]
+            else:
+                continue
+            
+            columns = {"x": [], "mean":[], "median":[], "stddev":[]}
+            for x_value in stats:
+                columns["x"] += [x_value]
 
     def __iadd__(self, other):
         """add other benchmarks into self, without checking context"""

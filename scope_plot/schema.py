@@ -22,6 +22,7 @@ AXIS_RAW = {
     Optional('label'): basestring,
     Optional('scale'): SCALE_RAW,
     Optional('type'): basestring,
+    Optional('tick_rotation'): Any(float, int)
 }
 
 SERIES_RAW = {

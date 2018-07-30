@@ -14,6 +14,7 @@ from bokeh.layouts import gridplot
 from bokeh.transform import dodge
 from bokeh.models import ColumnDataSource, Whisker
 import pandas as pd
+import math
 
 try:
    unicode = unicode
@@ -107,6 +108,11 @@ def generate_bar(bar_spec, strict):
 
     x_axis_label = bar_spec.get("xaxis", {}).get("label", "")
     y_axis_label = bar_spec.get("yaxis", {}).get("label", "")
+    x_axis_tick_rotation = bar_spec.get("xaxis", {}).get("tick_rotation", 90)
+
+    #convert x axis tick rotation to radians
+    x_axis_tick_rotation = x_axis_tick_rotation / 360 * 2 * math.pi
+
     x_type = bar_spec.get("xtype", "auto")
     y_type = bar_spec.get("ytype", "auto")
 
@@ -151,8 +157,11 @@ def generate_bar(bar_spec, strict):
                  plot_width=808,
                  plot_height=int(500/2.0),
                  toolbar_location='above',
-                 sizing_mode='scale_width'
+                 sizing_mode='scale_width',
     )
+ 
+
+    fig.xaxis.major_label_orientation = x_axis_tick_rotation
 
     # offset each series
     group_width = 1 / (len(bar_spec["series"]) + 1) # each group of bars is 1 wide, leave 1 bar-width between groups

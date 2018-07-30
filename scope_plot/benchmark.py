@@ -1,6 +1,7 @@
 import json
 import re
 import copy
+from collections import defaultdict
 
 import pandas as pd
 
@@ -48,11 +49,11 @@ class GoogleBenchmark(object):
         return filtered
 
     def keep_field(self, field_name):
-        """retain benchmarks with field_name"""
+        """retain benchmarks with a field matching regex field_name"""
         return self.keep_fields(field_name)
 
     def keep_fields(self, *field_names):
-        """retain benchmarks with all field_names"""
+        """retain benchmarks with fields matching all field_names regexes"""
         filtered = copy.deepcopy(self)
         def allow(b):
             for name in field_names:
@@ -87,7 +88,7 @@ class GoogleBenchmark(object):
         )
 
     def fields(self, *field_names):
-        """for each field_name, return a list corresponding to that """
+        """return a tuple of lists, where each list contains the benchmark data from the field in field_names"""
         def show_func(b):
             for name in field_names:
                 if name not in b:
@@ -101,7 +102,7 @@ class GoogleBenchmark(object):
         return tuple(data)
 
     def xy_dataframe(self, x_field, y_field):
-        """produce a pandas dataframe indexed by x_field with a column for y_field"""
+        """return a pandas dataframe indexed by x_field with a column for y_field"""
 
         # both x_field and y_field should be present
         def valid_func(b):
@@ -117,7 +118,7 @@ class GoogleBenchmark(object):
         return df
 
     def custom_dataframe(self, index, *columns):
-        """return a pandas dataframe indexed by 'index' with column names 'columns'"""
+        """return a pandas dataframe indexed by field 'index' with a column each for fields 'columns'"""
         raise NotImplementedError
 
     def dataframe(self):
@@ -128,25 +129,52 @@ class GoogleBenchmark(object):
     def stats_dataframe(self, x_field, y_field):
         """return a pandas dataframe containing a row corresponding to each benchmark with x_field, y_field for which aggregate stats can be found"""
 
-        stats = {}
+        # try to collect aggregate stats for each benchmark name.
+        stats = defaultdict(dict)
         for b in self.benchmarks:
 
-            if x_field not in b or "error_message" in b:
+            if x_field not in b or y_field not in b or "error_message" in b:
                 continue
 
             name = b["name"]
+            print(name)
             if name.endswith("_mean"):
-                stats[x_field]["mean"] = b[y_field]
-            elif name.endswith("_mediean"):
-                stats[x_field]["median"] = b[y_field]
+                name = name[:-1*len("_mean")]
+                stats[name]["y_mean"] = b[y_field]
+                stats[name]["x_mean"] = b[x_field]
+            elif name.endswith("_median"):
+                name = name[:-1*len("_median")]
+                stats[name]["y_median"] = b[y_field]
+                stats[name]["x_median"] = b[x_field]
             elif name.endswith("_stddev"):
-                stats[x_field]["stddev"] = b[y_field]
+                name = name[:-1*len("_stddev")]
+                stats[name]["y_stddev"] = b[y_field]
+                stats[name]["x_stddev"] = b[x_field]
             else:
                 continue
-            
-            columns = {"x": [], "mean":[], "median":[], "stddev":[]}
-            for x_value in stats:
-                columns["x"] += [x_value]
+
+        # build columns of data frame.
+        # insert NaN for missing data
+        columns = {
+            "name":[],
+            "x_mean":[],
+            "y_mean":[],
+            "x_median":[],
+            "y_median":[],
+            "x_stddev":[],
+            "y_stddev":[],
+        }
+        for name in stats:
+            columns["name"] += [name]
+            columns["x_mean"] += [stats[name].get("x_mean", float('nan'))]
+            columns["y_mean"] += [stats[name].get("y_mean", float('nan'))]
+            columns["x_median"] += [stats[name].get("x_median", float('nan'))]
+            columns["y_median"] += [stats[name].get("y_median", float('nan'))]
+            columns["x_stddev"] += [stats[name].get("x_stddev", float('nan'))]
+            columns["y_stddev"] += [stats[name].get("y_stddev", float('nan'))]
+
+        df = pd.DataFrame(columns)
+        return df
 
     def __iadd__(self, other):
         """add other benchmarks into self, without checking context"""

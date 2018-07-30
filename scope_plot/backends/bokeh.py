@@ -40,6 +40,18 @@ def generate_errorbar(errorbar_spec, strict):
     x_type = errorbar_spec.get("xaxis", {}).get("type", "auto")
     y_type = errorbar_spec.get("yaxis", {}).get("type", "auto")
 
+    # Create the figure
+    fig = figure(title=errorbar_spec["title"],
+                 x_axis_label=x_axis_label,
+                 y_axis_label=y_axis_label,
+                 x_axis_type=x_type,
+                 y_axis_type=y_type,
+                #  x_range=x_range,
+                 plot_width=808,
+                 plot_height=int(500/2.0),
+                 toolbar_location='above',
+                 sizing_mode='scale_width'
+    )
 
     # Read all the series data
     series_x_data = []
@@ -61,54 +73,20 @@ def generate_errorbar(errorbar_spec, strict):
                   .keep_stats() \
                   .stats_dataframe(x_field, y_field)
 
-            mean_df = b.keep_name_regex(regex) \
-                    .keep_name_endswith("_mean") \
-                    .dataframe()
-            err_df = b.keep_name_regex(regex) \
-                    .keep_name_endswith("_stddev") \
-                    .dataframe()
-            err_df.loc[:, "lower"] = mean_df.loc[:, y_field] - err_df.loc[:, y_field]
-            err_df.loc[:, "upper"] = mean_df.loc[:, y_field] + err_df.loc[:, y_field]
-            raw_df = b.keep_name_regex(regex) \
-                    .remove_name_endswith("_mean") \
-                    .remove_name_endswith("_median") \
-                    .remove_name_endswith("_stddev") \
-                    .dataframe()
-            # new_df = new_df.rename(columns={y_field: label})
-            print(mean_df)
-            print(err_df)
-            print("raw")
-            print(raw_df)
-            # df = pd.concat([df, new_df], axis=1, sort=True)
+            df = df.sort_values(by=['x_mean'])
 
-    # Create the figure
-    fig = figure(title=errorbar_spec["title"],
-                 x_axis_label=x_axis_label,
-                 y_axis_label=y_axis_label,
-                 x_axis_type=x_type,
-                 y_axis_type=y_type,
-                #  x_range=x_range,
-                 plot_width=808,
-                 plot_height=int(500/2.0),
-                 toolbar_location='above',
-                 sizing_mode='scale_width'
-    )
+            fig.line(x=df.loc[:, "x_mean"], y=df.loc[:, "y_mean"])
 
-    fig.line(x=mean_df.loc[:, x_field], y=mean_df.loc[:, y_field])
+            df.loc[:, "lower"] = df.loc[:, 'y_mean'] - df.loc[:, 'y_stddev']
+            df.loc[:, "upper"] = df.loc[:, 'y_mean'] + df.loc[:, 'y_stddev']
+            error_source = ColumnDataSource(df)
 
-    source_error = ColumnDataSource(err_df)
+            fig.add_layout(
+                Whisker(source=error_source, base='x_mean', upper="upper", lower="lower")
+            )
 
-    fig.add_layout(
-        Whisker(source=source_error, base=x_field, upper="upper", lower="lower")
-    )
-
-    show(fig)
-    utils.halt("halt requested")
-
-    # plot the bars
-    for i, series_spec in enumerate(errorbar_spec["series"]):
-        dodge_amount = -0.5 + (i+1) * lane_width
-        fig.vbar(x=dodge('num_segments', dodge_amount, range=fig.x_range), top=series_spec["label"], width=bar_width, source=source)
+            show(fig)
+            utils.halt("halt requested")
 
     return fig
 

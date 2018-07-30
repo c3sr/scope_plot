@@ -137,7 +137,6 @@ class GoogleBenchmark(object):
                 continue
 
             name = b["name"]
-            print(name)
             if name.endswith("_mean"):
                 name = name[:-1*len("_mean")]
                 stats[name]["y_mean"] = b[y_field]

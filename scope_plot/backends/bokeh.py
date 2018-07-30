@@ -6,6 +6,7 @@ from scope_plot import utils
 from scope_plot.schema import validate
 from scope_plot import schema
 from scope_plot.benchmark import GoogleBenchmark
+from scope_plot import styles
 from voluptuous import Any, Schema, Optional
 from bokeh.plotting import figure
 from bokeh.io import show
@@ -46,7 +47,6 @@ def generate_errorbar(errorbar_spec, strict):
                  y_axis_label=y_axis_label,
                  x_axis_type=x_type,
                  y_axis_type=y_type,
-                #  x_range=x_range,
                  plot_width=808,
                  plot_height=int(500/2.0),
                  toolbar_location='above',
@@ -54,12 +54,11 @@ def generate_errorbar(errorbar_spec, strict):
     )
 
     # Read all the series data
-    series_x_data = []
-    series_y_data = []
     df = pd.DataFrame()
     for i, series_spec in enumerate(errorbar_spec["series"]):
-
         schema.validate(schema.SERIES_RAW, series_spec, strict)
+
+        color = series_spec.get("color", styles.colors[i % len(styles.colors)])
 
         input_path = series_spec.get("input_file", errorbar_spec.get("input_file", None))
         regex = series_spec.get("regex", ".*")
@@ -75,18 +74,16 @@ def generate_errorbar(errorbar_spec, strict):
 
             df = df.sort_values(by=['x_mean'])
 
-            fig.line(x=df.loc[:, "x_mean"], y=df.loc[:, "y_mean"])
+            fig.line(x=df.loc[:, "x_mean"], y=df.loc[:, "y_mean"], color=color)
 
             df.loc[:, "lower"] = df.loc[:, 'y_mean'] - df.loc[:, 'y_stddev']
             df.loc[:, "upper"] = df.loc[:, 'y_mean'] + df.loc[:, 'y_stddev']
             error_source = ColumnDataSource(df)
 
-            fig.add_layout(
-                Whisker(source=error_source, base='x_mean', upper="upper", lower="lower")
-            )
-
-            show(fig)
-            utils.halt("halt requested")
+            whisker = Whisker(source=error_source, base='x_mean', upper="upper", lower="lower", line_color=color)
+            whisker.upper_head.line_color = color
+            whisker.lower_head.line_color = color
+            fig.add_layout(whisker)
 
     return fig
 
@@ -137,10 +134,7 @@ def generate_bar(bar_spec, strict):
 
 
     df.index = df.index.map(str)
-    print(df)
     source = ColumnDataSource(data=df)
-    print(source)
-    print(source.data)
 
     # Figure out the union of the x fields we want:
 
@@ -205,6 +199,7 @@ def generate(figure_spec, strict):
     num_y = max([int(spec["pos"][1]) for spec in figure_spec["subplots"]])
 
     grid = [[None for i in range(num_x)] for j in range(num_y)]
+    utils.debug("grid: {}".format(grid))
 
     for plot_spec in figure_spec["subplots"]:
         if "pos" not in plot_spec:

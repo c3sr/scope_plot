@@ -121,6 +121,7 @@ def generate_bar(bar_spec, strict):
 
         input_path = series_spec.get("input_file", bar_spec.get("input_file", None))
         regex = series_spec.get("regex", ".*")
+        utils.debug("Using regex {}".format(regex))
         x_field = series_spec.get("xfield", bar_spec["xfield"])
         y_field = series_spec.get("yfield", bar_spec["yfield"])
         label = series_spec.get("label", str(i))
@@ -129,18 +130,16 @@ def generate_bar(bar_spec, strict):
         with GoogleBenchmark(input_path) as b:
             new_df = b.keep_name_regex(regex).xy_dataframe(x_field, y_field)
             new_df = new_df.rename(columns={y_field: label})
-            print(new_df)
             df = pd.concat([df, new_df], axis=1, sort=True)
 
 
+    # convert index to a string
     df.index = df.index.map(str)
     source = ColumnDataSource(data=df)
 
-    # Figure out the union of the x fields we want:
-
+    # Figure out the unique x values that we'll need to plot
     x_range = list(df.index)
     utils.debug("x_range contains {} unique values".format(len(x_range)))
-    # x_range = [str(e) for e in sorted(list(x_range))]
 
     # Create the figure
     fig = figure(title=bar_spec["title"],
@@ -156,16 +155,16 @@ def generate_bar(bar_spec, strict):
     )
 
     # offset each series
-    lane_width = 1 / (len(bar_spec["series"]) + 1) # each group of bars is 1 wide, leave 1 bar-width between groups
-    bar_width = lane_width * 0.95 # small gap between bars
-
-    dodge_each = lane_width
-    dodge_total = len(series_x_data) * dodge_each
+    group_width = 1 / (len(bar_spec["series"]) + 1) # each group of bars is 1 wide, leave 1 bar-width between groups
+    bar_width = group_width * 0.95 # small gap between bars
 
     # plot the bars
     for i, series_spec in enumerate(bar_spec["series"]):
-        dodge_amount = -0.5 + (i+1) * lane_width
-        fig.vbar(x=dodge('num_segments', dodge_amount, range=fig.x_range), top=series_spec["label"], width=bar_width, source=source)
+
+        color = series_spec.get("color", styles.colors[i % len(styles.colors)])
+
+        dodge_amount = -0.5 + (i+1) * group_width
+        fig.vbar(x=dodge('num_segments', dodge_amount, range=fig.x_range), top=series_spec["label"], width=bar_width, source=source, color=color)
 
     return fig
 

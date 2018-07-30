@@ -1,5 +1,6 @@
 import click
 import sys
+import copy
 
 DEBUG = False
 VERBOSE = False
@@ -45,6 +46,17 @@ def find_dictionary(key, dictionary):
                     for result in find_dictionary(key, e):
                         yield result
 
+
+def propagate_key_if_missing(parent, key, child):
+    """ recursively move kv pairs from parent to child, if child is missing any pairs """
+    value = parent[key]
+    if key not in child:
+        child[key] = copy.deepcopy(value)
+        
+    else:
+        if isinstance(value, dict):
+            for k in value:
+                propagate_key_if_missing(value, k, child[key])
 
 def find_longest_name(benchmark_list):
     """

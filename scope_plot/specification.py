@@ -5,6 +5,68 @@ from future.utils import iteritems
 from scope_plot import utils
 from scope_plot.error import NoInputFilesError
 
+class NestedDict(object):
+    def __init__(self, d, parent=None):
+        self.parent = parent
+        self.d =  {}
+        for k,v in iteritems(d):
+            if isinstance(v, dict):
+                self.d[k] = NestedDict(v, parent=self)
+            else:
+                self.d[k] = v
+
+
+    def __getitem__(self, key):
+        if key in self.d:
+            return self.d[key]
+        else:
+            if self.parent:
+                return self.parent[key]
+
+    def __setitem__(self, key, value):
+        self.d[key] = value
+
+    def __delitem__(self, key):
+        del self.d[key]
+
+    def iter_without(self, omit_keys):
+        for k in self.d:
+            if k not in omit_keys:
+                yield k, self.d[k]
+        if self.parent:
+            return self.parent.iter_without(omit_keys + [k for k in self.d])
+
+    def __iter__(self):
+        return self.iter_without([])
+
+
+class PlotSpecification(object):
+    def __init__(self, parent, spec):
+        self.spec = spec
+
+    def __getitem__(self, key):
+        return self.spec[key]
+    def __setitem__(self, key, value):
+        self.spec[key] = value
+    def __delitem__(self, key):
+        del self.spec[key]
+
+class Specification(object):
+    def __init__(self, spec, parent):
+        self.parent = parent
+        self.size = spec.get("size", None)
+        self.subplots = [PlotSpecification(self, spec) for spec in spec["subplots"]]
+
+    def apply_search_dirs(self, spec):
+        pass
+
+    @staticmethod
+    def load_yaml(path):
+        with open(path, 'rb') as f:
+            spec = yaml.load(f)
+            return Specification(spec)
+
+
 def load(yaml_path):
     with open(yaml_path, "rb") as f:
         cfg = yaml.load(f)

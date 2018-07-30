@@ -3,16 +3,16 @@ from __future__ import absolute_import
 
 
 from scope_plot import utils
-from scope_plot.schema import validate
+from scope_plot.schema import validate, validate_bar, validate_errorbar
 from scope_plot import schema
 from scope_plot.benchmark import GoogleBenchmark
 from scope_plot import styles
-from voluptuous import Any, Schema, Optional
+from voluptuous import Any, Schema, Optional, MultipleInvalid
 from bokeh.plotting import figure
 from bokeh.io import show
 from bokeh.layouts import gridplot
 from bokeh.transform import dodge
-from bokeh.models import ColumnDataSource, Whisker
+from bokeh.models import ColumnDataSource, Whisker, Range1d, LinearAxis
 import pandas as pd
 import math
 
@@ -31,21 +31,31 @@ else:
    bytes = str
    basestring = basestring
 
+def configure_xaxis(fig, axis_spec):
+    if "lim" in axis_spec:
+        lim = axis_spec["lim"]
+        fig.x_range = Range1d(lim[0], lim[1])
+    if "label" in axis_spec:
+        fig.xaxis.axis_label = axis_spec["label"]
+
+def configure_yaxis(fig, axis_spec):
+    if "lim" in axis_spec:
+        lim = axis_spec["lim"]
+        fig.y_range = Range1d(lim[0], lim[1])
+    if "label" in axis_spec:
+        fig.yaxis.axis_label = axis_spec["label"]
+
 def generate_errorbar(errorbar_spec, strict):
 
-    errorbar_spec, extras = validate(schema.ERRORBAR_RAW, errorbar_spec, strict)
-    if not strict:
-        utils.warn("Found extras {} in errorbar_spec".format(extras))
 
-    x_axis_label = errorbar_spec.get("xaxis", {}).get("label", "")
-    y_axis_label = errorbar_spec.get("yaxis", {}).get("label", "")
     x_type = errorbar_spec.get("xaxis", {}).get("type", "auto")
     y_type = errorbar_spec.get("yaxis", {}).get("type", "auto")
 
+    default_x_scale = errorbar_spec.get("xscale", 1.0)
+    default_y_scale = errorbar_spec.get("yscale", 1.0)
+
     # Create the figure
     fig = figure(title=errorbar_spec["title"],
-                 x_axis_label=x_axis_label,
-                 y_axis_label=y_axis_label,
                  x_axis_type=x_type,
                  y_axis_type=y_type,
                  plot_width=808,
@@ -54,10 +64,14 @@ def generate_errorbar(errorbar_spec, strict):
                  sizing_mode='scale_width'
     )
 
+    if "xaxis" in errorbar_spec:
+        configure_xaxis(fig, errorbar_spec["xaxis"])
+    if "yaxis" in errorbar_spec:
+        configure_yaxis(fig, errorbar_spec["yaxis"])        
+
     # Read all the series data
     df = pd.DataFrame()
     for i, series_spec in enumerate(errorbar_spec["series"]):
-        schema.validate(schema.SERIES_RAW, series_spec, strict)
 
         color = series_spec.get("color", styles.colors[i % len(styles.colors)])
 
@@ -65,6 +79,8 @@ def generate_errorbar(errorbar_spec, strict):
         regex = series_spec.get("regex", ".*")
         x_field = series_spec.get("xfield", errorbar_spec["xfield"])
         y_field = series_spec.get("yfield", errorbar_spec["yfield"])
+        x_scale = series_spec.get("xscale", default_x_scale)
+        y_scale = series_spec.get("yscale", default_y_scale)
         label = series_spec.get("label", str(i))
 
         utils.debug("Opening {}".format(input_path))
@@ -72,6 +88,13 @@ def generate_errorbar(errorbar_spec, strict):
             df = b.keep_name_regex(regex) \
                   .keep_stats() \
                   .stats_dataframe(x_field, y_field)
+
+            df.loc[:, 'x_mean'] *= eval(str(x_scale))
+            df.loc[:, 'x_median'] *= eval(str(x_scale))
+            df.loc[:, 'x_stddev'] *= eval(str(x_scale))
+            df.loc[:, 'y_mean'] *= eval(str(y_scale))
+            df.loc[:, 'y_median'] *= eval(str(y_scale))
+            df.loc[:, 'y_stddev'] *= eval(str(y_scale))
 
             df = df.sort_values(by=['x_mean'])
 
@@ -94,18 +117,6 @@ def generate_bar(bar_spec, strict):
 
     bar_width = 0.2
 
-    bar_spec, extras = validate(schema.BAR_RAW, bar_spec, strict)
-    if not strict:
-        utils.warn("Found extras {} in bar_spec".format(extras))
-
-    xaxis_spec, extras = validate(schema.AXIS_RAW, bar_spec["xaxis"], strict)
-    if not strict:
-        utils.warn("Found extras {} in xaxis_spec".format(extras))
-
-    yaxis_spec, extras = validate(schema.AXIS_RAW, bar_spec["yaxis"], strict)
-    if not strict:
-        utils.warn("Found extras {} in yaxis_spec".format(extras))
-
     x_axis_label = bar_spec.get("xaxis", {}).get("label", "")
     y_axis_label = bar_spec.get("yaxis", {}).get("label", "")
     x_axis_tick_rotation = bar_spec.get("xaxis", {}).get("tick_rotation", 90)
@@ -113,17 +124,12 @@ def generate_bar(bar_spec, strict):
     #convert x axis tick rotation to radians
     x_axis_tick_rotation = x_axis_tick_rotation / 360 * 2 * math.pi
 
-    x_type = bar_spec.get("xtype", "auto")
-    y_type = bar_spec.get("ytype", "auto")
-
+    x_type = bar_spec.get("xaxis", {}).get("type", "auto")
+    y_type = bar_spec.get("yaxis", {}).get("type", "auto")
 
     # Read all the series data
-    series_x_data = []
-    series_y_data = []
     df = pd.DataFrame()
     for i, series_spec in enumerate(bar_spec["series"]):
-
-        schema.validate(schema.SERIES_RAW, series_spec, strict)
 
         input_path = series_spec.get("input_file", bar_spec.get("input_file", None))
         regex = series_spec.get("regex", ".*")
@@ -154,10 +160,9 @@ def generate_bar(bar_spec, strict):
                  x_axis_type=x_type,
                  y_axis_type=y_type,
                  x_range=x_range,
-                 plot_width=808,
-                 plot_height=int(500/2.0),
+                 plot_width=800,
+                 plot_height=int(300),
                  toolbar_location='above',
-                 sizing_mode='scale_width',
     )
  
 
@@ -187,8 +192,10 @@ def generate_plot(plot_spec, strict):
     del plot_spec['type']
 
     if "bar" == type_str:
+        utils.debug("Generating bar plot")
         fig = generate_bar(plot_spec, strict)
     elif "errorbar" == type_str:
+        utils.debug("Generating errorbar plot")
         fig = generate_errorbar(plot_spec, strict)
     else:
         utils.halt("Unrecognized type: {}".format(type_str))
@@ -202,6 +209,8 @@ def generate(figure_spec, strict):
     if "subplots" not in figure_spec:
         utils.halt("expected key subplots in spec")
 
+    schema.validate_spec(figure_spec)
+
     # figure out the size of the grid
     num_x = max([int(spec["pos"][0]) for spec in figure_spec["subplots"]])
     num_y = max([int(spec["pos"][1]) for spec in figure_spec["subplots"]])
@@ -210,12 +219,17 @@ def generate(figure_spec, strict):
     utils.debug("grid: {}".format(grid))
 
     for plot_spec in figure_spec["subplots"]:
-        if "pos" not in plot_spec:
-            utils.halt("expected pos key in specification")
+
+        # propagate fields down to children if children don't override
+        for k in ["yaxis", "xaxis"]:
+            if k in figure_spec:
+                utils.propagate_key_if_missing(figure_spec, k, plot_spec)
+
         pos = plot_spec["pos"]
-        del plot_spec["pos"]
+
         fig = generate_plot(plot_spec, strict)
         grid[pos[1]-1][pos[0]-1] = fig
 
-    grid = gridplot(grid)
+    merge_tools = False # don't merge child plot tools
+    grid = gridplot(grid, merge_tools=merge_tools)
     show(grid)

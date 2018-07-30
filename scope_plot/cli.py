@@ -6,6 +6,7 @@ import click
 import glob
 
 from scope_plot import specification
+from scope_plot.specification import Specification
 from scope_plot import figure
 from scope_plot.benchmark import GoogleBenchmark
 from scope_plot import utils
@@ -24,7 +25,7 @@ def deps(ctx, output, spec, target):
     """Create a Makefile dependence"""
 
     utils.debug("Loading {}".format(spec))
-    figure_spec = specification.load(spec)
+    figure_spec = specification.load_yaml(spec)
     figure_spec = specification.apply_search_dirs(figure_spec, ctx.obj.get("INCLUDE", []))
     figure_deps = specification.get_deps(figure_spec)
     utils.debug("Saving to {}".format(output))

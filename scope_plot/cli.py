@@ -7,6 +7,7 @@ import glob
 
 from scope_plot import specification
 from scope_plot.specification import Specification
+from scope_plot import schema
 from scope_plot import figure
 from scope_plot.benchmark import GoogleBenchmark
 from scope_plot import utils
@@ -72,13 +73,19 @@ def spec(ctx, output, spec):
     """Create a figure from a spec file."""
     include = ctx.obj["INCLUDE"]
 
+    # load YAML spec file
     figure_spec = specification.load(spec)
 
+    # validate specification
+    figure_spec = schema.validate(figure_spec)
+
+    # apply include directories
     if include:
         for d in include:
             utils.debug("searching dir {}".format(d))
         figure_spec = specification.apply_search_dirs(figure_spec, include)
 
+    # generate figures
     fig = figure.generate(figure_spec)
 
     # Decide output path

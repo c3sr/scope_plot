@@ -34,10 +34,10 @@ class NestedDict(object):
             if k not in omit_keys:
                 yield k, self.d[k]
         if self.parent:
-            return self.parent.iter_without(omit_keys + [k for k in self.d])
+            self.parent.iter_without(omit_keys + [k for k in self.d])
 
     def __iter__(self):
-        return self.iter_without([])
+        self.iter_without([])
 
 
 class PlotSpecification(object):
@@ -64,7 +64,7 @@ class Specification(object):
     def load_yaml(path):
         with open(path, 'rb') as f:
             spec = yaml.load(f)
-            return Specification(spec)
+            return Specification(spec, parent=None)
 
 
 def load(yaml_path):

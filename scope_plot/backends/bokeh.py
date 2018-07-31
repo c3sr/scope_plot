@@ -3,7 +3,6 @@ from __future__ import absolute_import
 
 
 from scope_plot import utils
-from scope_plot.schema import validate, validate_bar, validate_errorbar
 from scope_plot import schema
 from scope_plot.benchmark import GoogleBenchmark
 from scope_plot import styles
@@ -46,8 +45,6 @@ def configure_yaxis(fig, axis_spec):
         fig.yaxis.axis_label = axis_spec["label"]
 
 def generate_errorbar(errorbar_spec):
-
-
     x_type = errorbar_spec.get("xaxis", {}).get("type", "auto")
     y_type = errorbar_spec.get("yaxis", {}).get("type", "auto")
 
@@ -208,8 +205,6 @@ def generate(figure_spec):
 
     if "subplots" not in figure_spec:
         utils.halt("expected key subplots in spec")
-
-    schema.validate_spec(figure_spec)
 
     # figure out the size of the grid
     num_x = max([int(spec["pos"][0]) for spec in figure_spec["subplots"]])

@@ -18,13 +18,12 @@ from scope_plot.specification import canonicalize_to_subplot
 
 plt.switch_backend('agg')
 
-
 def configure_yaxis(ax, axis_spec):
     if "lim" in axis_spec:
         ax.set_ylim(axis_spec["lim"])
     if "label" in axis_spec:
         ax.set_ylabel(axis_spec["label"])
-    if "scale" in axis_spec:
+    if "type" in axis_spec:
         value = axis_spec["scale"]
         utils.debug("seting y axis scale: {}".format(value))
         ax.set_yscale(value, basey=10)
@@ -35,7 +34,7 @@ def configure_xaxis(ax, axis_spec):
         ax.set_xlim(axis_spec["lim"])
     if "label" in axis_spec:
         ax.set_xlabel(axis_spec["label"])
-    if "scale" in axis_spec:
+    if "type" in axis_spec:
         value = axis_spec["scale"]
         utils.debug("seting y axis scale: {}".format(value))
         ax.set_xscale(value, basex=2)

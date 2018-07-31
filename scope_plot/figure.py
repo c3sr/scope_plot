@@ -17,6 +17,7 @@ import scope_plot.backends.bokeh as bokeh_backend
 import scope_plot.backends.matplotlib as matplotlib_backend
 from scope_plot.specification import canonicalize_to_subplot
 
+
 def generate(figure_spec):
 
     # verify that info for backend configuration is present

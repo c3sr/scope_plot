@@ -17,6 +17,7 @@ def error(msg):
     if not QUIET:
         click.echo(click.style("[ERRO] " + msg, fg="red"), err=True)
 
+
 def warn(msg):
     if not QUIET:
         click.echo(click.style("[WARN] " + msg, fg="yellow"), err=True)
@@ -27,15 +28,16 @@ def halt(msg):
     traceback.print_exc(file=sys.stderr)
     sys.exit(1)
 
+
 def require(pred, msg=None):
     if not pred:
         if not QUIET:
             if msg:
-                click.echo(click.style("[INTERNAL ERROR] " + msg, fg="red"), err=True)
+                click.echo(
+                    click.style("[INTERNAL ERROR] " + msg, fg="red"), err=True)
             else:
                 click.echo(click.style("[INTERNAL ERROR]", fg="red"), err=True)
     assert pred
-        
 
 
 def find_dictionary(key, dictionary):
@@ -59,15 +61,19 @@ def find_dictionary(key, dictionary):
 
 
 def propagate_key_if_missing(parent, key, child):
-    """ recursively move kv pairs from parent to child, if child is missing any pairs """
+    """
+    recursively move kv pairs from parent to child,
+    if child is missing any pairs
+    """
     value = parent[key]
     if key not in child:
         child[key] = copy.deepcopy(value)
-        
+
     else:
         if isinstance(value, dict):
             for k in value:
                 propagate_key_if_missing(value, k, child[key])
+
 
 def find_longest_name(benchmark_list):
     """

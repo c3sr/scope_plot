@@ -5,9 +5,12 @@ from collections import defaultdict
 
 import pandas as pd
 
+
 class ContextMismatchError(Exception):
     def __init__(self, field):
-        super(ContextMismatchError, self).__init__("field {} mismatched".format(field))
+        super(ContextMismatchError,
+              self).__init__("field {} mismatched".format(field))
+
 
 class GoogleBenchmark(object):
     def __init__(self, path=None, stream=None):
@@ -22,7 +25,7 @@ class GoogleBenchmark(object):
             j = json.loads(stream.read().decode("utf-8"))
             self.context = j["context"]
             self.benchmarks = j["benchmarks"]
-    
+
     def __enter__(self):
         return self
 
@@ -33,19 +36,25 @@ class GoogleBenchmark(object):
         """retain benchmarks whose name matches regex"""
         filtered = copy.deepcopy(self)
         pattern = re.compile(regex)
-        filtered.benchmarks = [b for b in filtered.benchmarks if pattern.search(b["name"])]
+        filtered.benchmarks = [
+            b for b in filtered.benchmarks if pattern.search(b["name"])
+        ]
         return filtered
 
     def keep_name_endswith(self, substr):
         """retain benchmarks whose name ends with substr"""
         filtered = copy.deepcopy(self)
-        filtered.benchmarks = [b for b in filtered.benchmarks if b["name"].endswith(substr)]
+        filtered.benchmarks = [
+            b for b in filtered.benchmarks if b["name"].endswith(substr)
+        ]
         return filtered
 
     def remove_name_endswith(self, substr):
         """remove benchmarks whose name ends with substr"""
         filtered = copy.deepcopy(self)
-        filtered.benchmarks = [b for b in filtered.benchmarks if not b["name"].endswith(substr)]
+        filtered.benchmarks = [
+            b for b in filtered.benchmarks if not b["name"].endswith(substr)
+        ]
         return filtered
 
     def keep_field(self, field_name):
@@ -55,11 +64,13 @@ class GoogleBenchmark(object):
     def keep_fields(self, *field_names):
         """retain benchmarks with fields matching all field_names regexes"""
         filtered = copy.deepcopy(self)
+
         def allow(b):
             for name in field_names:
                 if name not in b:
                     return False
             return True
+
         filtered.benchmarks = list(filter(allow, filtered.benchmarks))
         return filtered
 
@@ -68,7 +79,8 @@ class GoogleBenchmark(object):
         filtered = copy.deepcopy(self)
         filtered.benchmark = []
         for b in self.benchmarks:
-            if any(b["name"].endswith(suffix) for suffix in ("_mean", "_median", "_stddev")):
+            if any(b["name"].endswith(suffix)
+                   for suffix in ("_mean", "_median", "_stddev")):
                 filtered.benchmarks += [b]
         return filtered
 
@@ -84,11 +96,11 @@ class GoogleBenchmark(object):
                 "context": self.context,
                 "benchmarks": self.benchmarks,
             },
-            indent=4
-        )
+            indent=4)
 
     def fields(self, *field_names):
         """return a tuple of lists, where each list contains the benchmark data from the field in field_names"""
+
         def show_func(b):
             for name in field_names:
                 if name not in b:
@@ -96,9 +108,14 @@ class GoogleBenchmark(object):
             if "error_message" in b:
                 return False
             return True
+
         data = []
         for name in field_names:
-            data += [list(map(lambda b: float(b[name]), filter(show_func, self.benchmarks)))]
+            data += [
+                list(
+                    map(lambda b: float(b[name]),
+                        filter(show_func, self.benchmarks)))
+            ]
         return tuple(data)
 
     def xy_dataframe(self, x_field, y_field):
@@ -109,9 +126,14 @@ class GoogleBenchmark(object):
             if "error_message" in b or x_field not in b or y_field not in b:
                 return False
             return True
+
         data = {}
-        data[x_field] = list(map(lambda b: float(b[x_field]), filter(valid_func, self.benchmarks)))
-        data[y_field] = list(map(lambda b: float(b[y_field]), filter(valid_func, self.benchmarks)))
+        data[x_field] = list(
+            map(lambda b: float(b[x_field]), filter(valid_func,
+                                                    self.benchmarks)))
+        data[y_field] = list(
+            map(lambda b: float(b[y_field]), filter(valid_func,
+                                                    self.benchmarks)))
 
         df = pd.DataFrame.from_dict(data)
         df = df.set_index(x_field)
@@ -138,15 +160,15 @@ class GoogleBenchmark(object):
 
             name = b["name"]
             if name.endswith("_mean"):
-                name = name[:-1*len("_mean")]
+                name = name[:-1 * len("_mean")]
                 stats[name]["y_mean"] = b[y_field]
                 stats[name]["x_mean"] = b[x_field]
             elif name.endswith("_median"):
-                name = name[:-1*len("_median")]
+                name = name[:-1 * len("_median")]
                 stats[name]["y_median"] = b[y_field]
                 stats[name]["x_median"] = b[x_field]
             elif name.endswith("_stddev"):
-                name = name[:-1*len("_stddev")]
+                name = name[:-1 * len("_stddev")]
                 stats[name]["y_stddev"] = b[y_field]
                 stats[name]["x_stddev"] = b[x_field]
             else:
@@ -155,13 +177,13 @@ class GoogleBenchmark(object):
         # build columns of data frame.
         # insert NaN for missing data
         columns = {
-            "name":[],
-            "x_mean":[],
-            "y_mean":[],
-            "x_median":[],
-            "y_median":[],
-            "x_stddev":[],
-            "y_stddev":[],
+            "name": [],
+            "x_mean": [],
+            "y_mean": [],
+            "x_median": [],
+            "y_median": [],
+            "x_stddev": [],
+            "y_stddev": [],
         }
         for name in stats:
             columns["name"] += [name]
@@ -185,14 +207,16 @@ class GoogleBenchmark(object):
             self.context = other.context
 
         if not ignore_context:
+
             def context_equal_or_raise(field):
                 if self.context[field] != other.context[field]:
                     raise ContextMismatchError(field)
+
             context_equal_or_raise("num_cpus")
             context_equal_or_raise("library_build_type")
             context_equal_or_raise("caches")
             context_equal_or_raise("cpu_scaling_enabled")
 
         self.benchmarks += other.benchmarks
-        
+
         return self

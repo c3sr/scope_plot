@@ -20,6 +20,7 @@ from scope_plot import styles
 
 # plt.switch_backend('agg')
 
+
 def configure_yaxis(ax, axis_spec):
     if "lim" in axis_spec:
         ax.set_ylim(axis_spec["lim"])
@@ -172,13 +173,17 @@ def generator_regplot(ax, ax_spec):
         color = series_spec.get("color", styles.colors[i])
 
         # Draw scatter plot of values
-        ax.errorbar(x, y, e, capsize=3, ecolor=color, linestyle='None', label=None)
+        ax.errorbar(
+            x, y, e, capsize=3, ecolor=color, linestyle='None', label=None)
 
         # compute a fit line and show
-        z, _ = np.polyfit(x, y, 1, w=1./e, cov=True)
+        z, _ = np.polyfit(x, y, 1, w=1. / e, cov=True)
         slope, intercept = z[0], z[1]
-        ax.plot(x, x * slope + intercept, color=color,
-                label=label + ": {:.2f}".format(slope) + " us/fault")
+        ax.plot(
+            x,
+            x * slope + intercept,
+            color=color,
+            label=label + ": {:.2f}".format(slope) + " us/fault")
 
     if "title" in ax_spec:
         ax.set_title(ax_spec["title"])
@@ -195,11 +200,11 @@ def generator_regplot(ax, ax_spec):
 
 def generate_axes(ax, ax_spec):
     ty = ax_spec["type"]
-    if ty== "bar":
+    if ty == "bar":
         ax = generator_bar(ax, ax_spec)
-    elif ty== "errorbar":
+    elif ty == "errorbar":
         ax = generator_errorbar(ax, ax_spec)
-    elif ty== "regplot":
+    elif ty == "regplot":
         ax = generator_regplot(ax, ax_spec)
     else:
         raise UnknownGenerator(ty)
@@ -239,7 +244,8 @@ def generate_subplots(figure_spec):
     # number of subplots in the figure
     num_x = max([int(spec["pos"][0]) for spec in ax_specs])
     num_y = max([int(spec["pos"][1]) for spec in ax_specs])
-    fig, axs = plt.subplots(num_y, num_x, sharex='col', sharey='row', squeeze=False)
+    fig, axs = plt.subplots(
+        num_y, num_x, sharex='col', sharey='row', squeeze=False)
 
     # generate each subplot
     for i in range(len(ax_specs)):

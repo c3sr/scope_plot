@@ -5,16 +5,16 @@ from future.utils import iteritems
 from scope_plot import utils
 from scope_plot.error import NoInputFilesError
 
+
 class NestedDict(object):
     def __init__(self, d, parent=None):
         self.parent = parent
-        self.d =  {}
-        for k,v in iteritems(d):
+        self.d = {}
+        for k, v in iteritems(d):
             if isinstance(v, dict):
                 self.d[k] = NestedDict(v, parent=self)
             else:
                 self.d[k] = v
-
 
     def __getitem__(self, key):
         if key in self.d:
@@ -46,16 +46,21 @@ class PlotSpecification(object):
 
     def __getitem__(self, key):
         return self.spec[key]
+
     def __setitem__(self, key, value):
         self.spec[key] = value
+
     def __delitem__(self, key):
         del self.spec[key]
+
 
 class Specification(object):
     def __init__(self, spec, parent):
         self.parent = parent
         self.size = spec.get("size", None)
-        self.subplots = [PlotSpecification(self, spec) for spec in spec["subplots"]]
+        self.subplots = [
+            PlotSpecification(self, spec) for spec in spec["subplots"]
+        ]
 
     def apply_search_dirs(self, spec):
         pass
@@ -72,24 +77,31 @@ def load(yaml_path):
         cfg = yaml.load(f)
     return cfg
 
+
 def canonicalize_to_subplot(orig_spec):
     if 'subplots' in orig_spec:
         return orig_spec
     else:
         new_spec = {
             "subplots": [
-                {"pos": [1, 1]},
+                {
+                    "pos": [1, 1]
+                },
             ]
         }
-        for key,value in iteritems(orig_spec):
+        for key, value in iteritems(orig_spec):
             if key in ["size"]:
                 new_spec[key] = value
             else:
                 new_spec["subplots"][0][key] = value
         return new_spec
 
+
 def apply_search_dirs(figure_spec, data_search_dirs):
-    """ look for files in figure_spec, and if those files do not exist, search data_search_dirs for them"""
+    """
+    look for files in figure_spec, and if those files do not exist,
+    search data_search_dirs for them
+    """
 
     new_spec = dict(figure_spec)
 
@@ -115,7 +127,8 @@ def apply_search_dirs(figure_spec, data_search_dirs):
 
 
 def get_deps(figure_spec):
-    """Look in figure_spec for needed files, and find files in data_search_dirs if they exist
+    """Look in figure_spec for needed files, and find files
+    in data_search_dirs if they exist
     otherwise, just use the raw files needed in figure_spec
     """
     deps = []

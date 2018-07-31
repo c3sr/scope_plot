@@ -12,14 +12,14 @@ from scope_plot import figure
 from scope_plot.benchmark import GoogleBenchmark
 from scope_plot import utils
 from scope_plot.__init__ import __version__
-
 """ If the module has a command line interface then this
 file should be the entry point for that interface. """
 
 
 @click.command()
 @click.argument('output', type=click.Path(dir_okay=False, resolve_path=True))
-@click.argument('spec', type=click.Path(exists=True, dir_okay=False, resolve_path=True))
+@click.argument(
+    'spec', type=click.Path(exists=True, dir_okay=False, resolve_path=True))
 @click.argument('target')
 @click.pass_context
 def deps(ctx, output, spec, target):
@@ -27,14 +27,17 @@ def deps(ctx, output, spec, target):
 
     utils.debug("Loading {}".format(spec))
     figure_spec = specification.load_yaml(spec)
-    figure_spec = specification.apply_search_dirs(figure_spec, ctx.obj.get("INCLUDE", []))
+    figure_spec = specification.apply_search_dirs(figure_spec,
+                                                  ctx.obj.get("INCLUDE", []))
     figure_deps = specification.get_deps(figure_spec)
     utils.debug("Saving to {}".format(output))
     specification.save_makefile_deps(output, target, figure_deps)
 
 
 @click.command()
-@click.argument('benchmark', type=click.Path(exists=True, dir_okay=False, resolve_path=True))
+@click.argument(
+    'benchmark',
+    type=click.Path(exists=True, dir_okay=False, resolve_path=True))
 @click.argument('output', type=click.Path(dir_okay=False, resolve_path=True))
 @click.option('--name-regex', help="a YAML spec for a figure")
 @click.option('--x-field', help="field for X axis")
@@ -44,11 +47,9 @@ def bar(ctx, benchmark, name_regex, output, x_field, y_field):
     """Create a bar graph."""
     default_spec = {
         "generator": "bar",
-        "series": [
-            {
-                "input_file": benchmark,
-            }
-        ],
+        "series": [{
+            "input_file": benchmark,
+        }],
     }
 
     if x_field:
@@ -66,8 +67,13 @@ def bar(ctx, benchmark, name_regex, output, x_field, y_field):
 
 
 @click.command()
-@click.option('-o', '--output', help="Output path.", type=click.Path(dir_okay=False, resolve_path=True))
-@click.argument('spec', type=click.Path(exists=True, dir_okay=False, resolve_path=True))
+@click.option(
+    '-o',
+    '--output',
+    help="Output path.",
+    type=click.Path(dir_okay=False, resolve_path=True))
+@click.argument(
+    'spec', type=click.Path(exists=True, dir_okay=False, resolve_path=True))
 @click.pass_context
 def spec(ctx, output, spec):
     """Create a figure from a spec file."""
@@ -92,7 +98,8 @@ def spec(ctx, output, spec):
     if output is None and figure_spec.get("output_file", None) is not None:
         script_dir = os.path.dirname(os.path.realpath(__file__))
         output_path = os.path.join(script_dir, figure_spec.get("output_file"))
-        if not output_path.endswith(".pdf") and not output_path.endswith(".png"):
+        if not output_path.endswith(".pdf") and not output_path.endswith(
+                ".png"):
             base_output_path = output_path
             output_path = []
             for ext in figure_spec.get("output_format", ["pdf"]):
@@ -105,9 +112,16 @@ def spec(ctx, output, spec):
 
 
 @click.group()
-@click.option('--debug/--no-debug', help="print debug messages to stderr.", default=False)
-@click.option('--include', help="Search location for input_file in spec.",
-              multiple=True, type=click.Path(exists=True, file_okay=False, readable=True, resolve_path=True))
+@click.option(
+    '--debug/--no-debug',
+    help="print debug messages to stderr.",
+    default=False)
+@click.option(
+    '--include',
+    help="Search location for input_file in spec.",
+    multiple=True,
+    type=click.Path(
+        exists=True, file_okay=False, readable=True, resolve_path=True))
 @click.option('--quiet/--no-quiet', help="don't print messages", default=False)
 @click.pass_context
 def main(ctx, debug, include, quiet):
@@ -134,15 +148,27 @@ def help(ctx):
     with click.Context(main) as ctx:
         click.echo(main.get_help(ctx))
 
+
 @click.command()
 @click.pass_context
 @click.argument("regex")
-@click.option('-i', '--input', help="Input file (- for stdin)", type=click.File(mode='rb'), default="-")
-@click.option('-o', '--output', help="Output path (- for stdout)", type=click.File(mode='wb'), default="-")
+@click.option(
+    '-i',
+    '--input',
+    help="Input file (- for stdin)",
+    type=click.File(mode='rb'),
+    default="-")
+@click.option(
+    '-o',
+    '--output',
+    help="Output path (- for stdout)",
+    type=click.File(mode='wb'),
+    default="-")
 def filter_name(ctx, regex, input, output):
     """Filter google benchmark results by name"""
     with GoogleBenchmark(stream=input) as b:
         output.write(b.filter_name(regex).json())
+
 
 @click.command()
 @click.pass_context
@@ -154,6 +180,7 @@ def cat(ctx, files):
     for file in files:
         gb += GoogleBenchmark(stream=file)
     click.echo(gb.json())
+
 
 main.add_command(bar)
 main.add_command(deps)

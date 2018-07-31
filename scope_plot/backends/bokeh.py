@@ -1,7 +1,6 @@
 #  This causes bokeh.plotting to not refer to this file, bokeh.py
 from __future__ import absolute_import
 
-
 from scope_plot import utils
 from scope_plot import schema
 from scope_plot.benchmark import GoogleBenchmark
@@ -16,19 +15,20 @@ import pandas as pd
 import math
 
 try:
-   unicode = unicode
+    unicode = unicode
 except NameError:
-   # 'unicode' is undefined, must be Python 3
-   str = str
-   unicode = str
-   bytes = bytes
-   basestring = str
+    # 'unicode' is undefined, must be Python 3
+    str = str
+    unicode = str
+    bytes = bytes
+    basestring = str
 else:
-   # 'unicode' exists, must be Python 2
-   str = str
-   unicode = unicode
-   bytes = str
-   basestring = basestring
+    # 'unicode' exists, must be Python 2
+    str = str
+    unicode = unicode
+    bytes = str
+    basestring = basestring
+
 
 def configure_xaxis(fig, axis_spec):
     if "lim" in axis_spec:
@@ -37,12 +37,14 @@ def configure_xaxis(fig, axis_spec):
     if "label" in axis_spec:
         fig.xaxis.axis_label = axis_spec["label"]
 
+
 def configure_yaxis(fig, axis_spec):
     if "lim" in axis_spec:
         lim = axis_spec["lim"]
         fig.y_range = Range1d(lim[0], lim[1])
     if "label" in axis_spec:
         fig.yaxis.axis_label = axis_spec["label"]
+
 
 def generate_errorbar(errorbar_spec):
     x_type = errorbar_spec.get("xaxis", {}).get("type", "auto")
@@ -52,19 +54,19 @@ def generate_errorbar(errorbar_spec):
     default_y_scale = errorbar_spec.get("yscale", 1.0)
 
     # Create the figure
-    fig = figure(title=errorbar_spec["title"],
-                 x_axis_type=x_type,
-                 y_axis_type=y_type,
-                 plot_width=808,
-                 plot_height=int(500/2.0),
-                 toolbar_location='above',
-                 sizing_mode='scale_width'
-    )
+    fig = figure(
+        title=errorbar_spec["title"],
+        x_axis_type=x_type,
+        y_axis_type=y_type,
+        plot_width=808,
+        plot_height=int(500 / 2.0),
+        toolbar_location='above',
+        sizing_mode='scale_width')
 
     if "xaxis" in errorbar_spec:
         configure_xaxis(fig, errorbar_spec["xaxis"])
     if "yaxis" in errorbar_spec:
-        configure_yaxis(fig, errorbar_spec["yaxis"])        
+        configure_yaxis(fig, errorbar_spec["yaxis"])
 
     # Read all the series data
     df = pd.DataFrame()
@@ -72,7 +74,8 @@ def generate_errorbar(errorbar_spec):
 
         color = series_spec.get("color", styles.colors[i % len(styles.colors)])
 
-        input_path = series_spec.get("input_file", errorbar_spec.get("input_file", None))
+        input_path = series_spec.get("input_file",
+                                     errorbar_spec.get("input_file", None))
         regex = series_spec.get("regex", ".*")
         x_field = series_spec.get("xfield", errorbar_spec["xfield"])
         y_field = series_spec.get("yfield", errorbar_spec["yfield"])
@@ -101,13 +104,17 @@ def generate_errorbar(errorbar_spec):
             df.loc[:, "upper"] = df.loc[:, 'y_mean'] + df.loc[:, 'y_stddev']
             error_source = ColumnDataSource(df)
 
-            whisker = Whisker(source=error_source, base='x_mean', upper="upper", lower="lower", line_color=color)
+            whisker = Whisker(
+                source=error_source,
+                base='x_mean',
+                upper="upper",
+                lower="lower",
+                line_color=color)
             whisker.upper_head.line_color = color
             whisker.lower_head.line_color = color
             fig.add_layout(whisker)
 
     return fig
-
 
 
 def generate_bar(bar_spec):
@@ -118,7 +125,7 @@ def generate_bar(bar_spec):
     y_axis_label = bar_spec.get("yaxis", {}).get("label", "")
     x_axis_tick_rotation = bar_spec.get("xaxis", {}).get("tick_rotation", 90)
 
-    #convert x axis tick rotation to radians
+    # convert x axis tick rotation to radians
     x_axis_tick_rotation = x_axis_tick_rotation / 360 * 2 * math.pi
 
     x_type = bar_spec.get("xaxis", {}).get("type", "auto")
@@ -128,7 +135,8 @@ def generate_bar(bar_spec):
     df = pd.DataFrame()
     for i, series_spec in enumerate(bar_spec["series"]):
 
-        input_path = series_spec.get("input_file", bar_spec.get("input_file", None))
+        input_path = series_spec.get("input_file",
+                                     bar_spec.get("input_file", None))
         regex = series_spec.get("regex", ".*")
         utils.debug("Using regex {}".format(regex))
         x_field = series_spec.get("xfield", bar_spec["xfield"])
@@ -141,7 +149,6 @@ def generate_bar(bar_spec):
             new_df = new_df.rename(columns={y_field: label})
             df = pd.concat([df, new_df], axis=1, sort=True)
 
-
     # convert index to a string
     df.index = df.index.map(str)
     source = ColumnDataSource(data=df)
@@ -151,33 +158,41 @@ def generate_bar(bar_spec):
     utils.debug("x_range contains {} unique values".format(len(x_range)))
 
     # Create the figure
-    fig = figure(title=bar_spec["title"],
-                 x_axis_label=x_axis_label,
-                 y_axis_label=y_axis_label,
-                 x_axis_type=x_type,
-                 y_axis_type=y_type,
-                 x_range=x_range,
-                 plot_width=800,
-                 plot_height=int(300),
-                 toolbar_location='above',
+    fig = figure(
+        title=bar_spec["title"],
+        x_axis_label=x_axis_label,
+        y_axis_label=y_axis_label,
+        x_axis_type=x_type,
+        y_axis_type=y_type,
+        x_range=x_range,
+        plot_width=800,
+        plot_height=int(300),
+        toolbar_location='above',
     )
- 
 
     fig.xaxis.major_label_orientation = x_axis_tick_rotation
 
     # offset each series
-    group_width = 1 / (len(bar_spec["series"]) + 1) # each group of bars is 1 wide, leave 1 bar-width between groups
-    bar_width = group_width * 0.95 # small gap between bars
+    group_width = 1 / (
+        len(bar_spec["series"]) + 1
+    )  # each group of bars is 1 wide, leave 1 bar-width between groups
+    bar_width = group_width * 0.95  # small gap between bars
 
     # plot the bars
     for i, series_spec in enumerate(bar_spec["series"]):
 
         color = series_spec.get("color", styles.colors[i % len(styles.colors)])
 
-        dodge_amount = -0.5 + (i+1) * group_width
-        fig.vbar(x=dodge('num_segments', dodge_amount, range=fig.x_range), top=series_spec["label"], width=bar_width, source=source, color=color)
+        dodge_amount = -0.5 + (i + 1) * group_width
+        fig.vbar(
+            x=dodge('num_segments', dodge_amount, range=fig.x_range),
+            top=series_spec["label"],
+            width=bar_width,
+            source=source,
+            color=color)
 
     return fig
+
 
 def generate_plot(plot_spec):
 
@@ -198,7 +213,6 @@ def generate_plot(plot_spec):
         utils.halt("Unrecognized type: {}".format(type_str))
 
     return fig
-
 
 
 def generate(figure_spec):
@@ -223,8 +237,8 @@ def generate(figure_spec):
         pos = plot_spec["pos"]
 
         fig = generate_plot(plot_spec)
-        grid[pos[1]-1][pos[0]-1] = fig
+        grid[pos[1] - 1][pos[0] - 1] = fig
 
-    merge_tools = False # don't merge child plot tools
+    merge_tools = False  # don't merge child plot tools
     grid = gridplot(grid, merge_tools=merge_tools)
     show(grid)

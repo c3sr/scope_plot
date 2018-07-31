@@ -20,6 +20,9 @@ class ModList(object):
     def __getitem__(self, key):
         return self.list[key % len(self.list)]
 
+    def __len__(self):
+        return len(self.list)
+
 
 colors = ModList([
     '#E24A33', '#348ABD', '#988ED5', '#777777', '#FBC15E', '#8EBA42',

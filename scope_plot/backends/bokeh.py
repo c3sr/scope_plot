@@ -72,7 +72,7 @@ def generate_errorbar(errorbar_spec):
     df = pd.DataFrame()
     for i, series_spec in enumerate(errorbar_spec["series"]):
 
-        color = series_spec.get("color", styles.colors[i % len(styles.colors)])
+        color = series_spec.get("color", styles.colors[i])
 
         input_path = series_spec.get("input_file",
                                      errorbar_spec.get("input_file", None))
@@ -181,7 +181,7 @@ def generate_bar(bar_spec):
     # plot the bars
     for i, series_spec in enumerate(bar_spec["series"]):
 
-        color = series_spec.get("color", styles.colors[i % len(styles.colors)])
+        color = series_spec.get("color", styles.colors[i])
 
         dodge_amount = -0.5 + (i + 1) * group_width
         fig.vbar(

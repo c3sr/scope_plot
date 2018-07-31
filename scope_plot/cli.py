@@ -46,7 +46,8 @@ def deps(ctx, output, spec, target):
 def bar(ctx, benchmark, name_regex, output, x_field, y_field):
     """Create a bar graph."""
     default_spec = {
-        "generator": "bar",
+        "backend": "matplotlib",
+        "type": "bar",
         "series": [{
             "input_file": benchmark,
         }],
@@ -167,7 +168,7 @@ def help(ctx):
 def filter_name(ctx, regex, input, output):
     """Filter google benchmark results by name"""
     with GoogleBenchmark(stream=input) as b:
-        output.write(b.filter_name(regex).json())
+        output.write(b.keep_name_regex(regex).json())
 
 
 @click.command()

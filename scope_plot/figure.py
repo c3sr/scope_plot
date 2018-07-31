@@ -20,16 +20,12 @@ from scope_plot.specification import canonicalize_to_subplot
 
 def generate(figure_spec):
 
-    # verify that info for backend configuration is present
-
     backend_str = figure_spec["backend"]
-    del figure_spec["backend"]
 
     if "bokeh" == backend_str:
         figure_spec = canonicalize_to_subplot(figure_spec)
-        bokeh_backend.generate(figure_spec)
-        return
+        return bokeh_backend.generate(figure_spec)
     elif "matplotlib" == backend_str:
-        matplotlib_backend.generate(figure_spec)
+        return matplotlib_backend.generate(figure_spec)
     else:
-        utils.halt("Unexpected backend: {}", backend_str)
+        utils.halt("Unexpected backend: {}".format(backend_str))

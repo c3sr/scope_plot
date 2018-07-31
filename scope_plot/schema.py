@@ -42,14 +42,17 @@ SERIES_SCHEMA = Schema({
 POS = list
 SIZE = list
 
-EVAL = Schema(Any(basestring, float, int))
+EVAL = Any(basestring, float, int)
 
 BACKEND = Any("bokeh", "matplotlib")
 TYPE = Any("errorbar", "bar", "regplot")
 
+SPEC_FIELDS = Schema({
+    Required("backend"): BACKEND,
+})
+
 PLOT_DICT = Schema({
     Required("type"): TYPE,
-    Required("backend"): BACKEND,
     Optional("title"): basestring,
     Optional("input_file"): basestring,
     Optional("yfield"): basestring,
@@ -70,6 +73,18 @@ BAR_EXTENSIONS = {Optional("bar_width"): Any(int, float)}
 
 BAR_DICT = PLOT_DICT.extend(BAR_EXTENSIONS)
 
+ERRORBAR_EXTENSIONS = {
+    Required("backend"): BACKEND,
+}
+
+ERRORBAR_DICT = PLOT_DICT.extend(ERRORBAR_EXTENSIONS)
+
+REG_EXTENSIONS = {
+    Required("backend"): BACKEND,
+}
+
+REG_DICT = PLOT_DICT.extend(REG_EXTENSIONS)
+
 
 def require_series_field(plot_spec, field):
     """ require field to be present in plot_spec or plot_spec["series"] """
@@ -88,31 +103,31 @@ BAR = All(
 )
 
 ERRORBAR = All(
-    PLOT_DICT,
+    ERRORBAR_DICT,
     lambda spec: require_series_field(spec, "xfield"),
     lambda spec: require_series_field(spec, "yfield"),
     lambda spec: require_series_field(spec, "input_file"),
 )
 
-REGPLOT = All(
-    PLOT_DICT,
+REG = All(
+    REG_DICT,
     lambda spec: require_series_field(spec, "xfield"),
     lambda spec: require_series_field(spec, "yfield"),
     lambda spec: require_series_field(spec, "input_file"),
-)
-
-PLOT = Any(
-    ERRORBAR,
-    BAR,
 )
 
 # subplot additional field requirements
 SUBPLOT_EXTENSIONS = {
     Required("pos"): POS,
 }
+# all figures require these fields
+FIGURE_EXTENSIONS = {Required("backend"): BACKEND}
+
+BAR_FIGURE_FIELDS = BAR_DICT.extend(FIGURE_EXTENSIONS)
+ERRORBAR_FIGURE_FIELDS = ERRORBAR_DICT.extend(FIGURE_EXTENSIONS)
+REG_FIGURE_FIELDS = REG_DICT.extend(FIGURE_EXTENSIONS)
 
 SUBPLOT_DICT = PLOT_DICT.extend(SUBPLOT_EXTENSIONS)
-
 BAR_SUBPLOT_DICT = SUBPLOT_DICT.extend(BAR_EXTENSIONS)
 
 # an errorbar plot in a subplot
@@ -136,12 +151,14 @@ SUBPLOT = Any(
     BAR_SUBPLOT,
 )
 
-SUBPLOTS = Schema({
+SUBPLOT_FIGURE = Schema({
     Required("subplots"): [SUBPLOT],
     Optional("size"): SIZE,
     Required("backend"): BACKEND,
     Optional("xaxis"): AXIS,
     Optional("yaxis"): AXIS,
+    Optional("yscale"): SCALE,
+    Optional("xscale"): SCALE,
 })
 
 
@@ -151,14 +168,14 @@ def validate(orig_spec):
 
     backend = orig_spec["backend"]
     if "subplots" in orig_spec:
-        return SUBPLOTS(orig_spec)
+        return SUBPLOT_FIGURE(orig_spec)
     else:
         if "type" not in orig_spec:
             utils.halt("spec without subplots should define type")
         ty = orig_spec["type"]
         if ty == "errorbar":
-            return ERRORBAR(orig_spec)
+            return ERRORBAR_FIGURE(orig_spec)
         elif ty == "bar":
-            return BAR(orig_spec)
+            return BAR_FIGURE(orig_spec)
         elif ty == "regplot":
-            return REGPLOT(orig_spec)
+            return REG_FIGURE(orig_spec)

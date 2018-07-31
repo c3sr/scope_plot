@@ -284,7 +284,4 @@ def generate(figure_spec):
         utils.debug("Using figsize {}".format(fig_size))
         fig.set_size_inches(fig_size)
 
-    fig.show()
-    plt.show()
-
     return fig

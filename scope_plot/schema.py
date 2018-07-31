@@ -3,10 +3,6 @@ from voluptuous import All, Any, Schema, Optional, Required, ALLOW_EXTRA, REMOVE
 
 from scope_plot import utils
 
-import pprint
-pp = pprint.PrettyPrinter(indent=4)
-
-
 try:
     unicode = unicode
 except NameError:
@@ -153,5 +149,4 @@ SPEC = Any(
 
 def validate(orig_spec):
     validated_spec = SPEC(orig_spec)
-    pp.pprint(SPEC)
     return validated_spec

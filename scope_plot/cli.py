@@ -100,7 +100,6 @@ def spec(ctx, output, spec):
                 output_path.append(base_output_path + "." + ext)
 
     if fig is not None:
-        # fig.show()
         utils.debug("writing to {}".format(output))
         fig.savefig(output, clip_on=False, transparent=False)
 

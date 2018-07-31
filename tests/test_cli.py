@@ -33,3 +33,11 @@ def test_scope_plot_bar(tmpdir, run):
 def test_spec_missing(tmpdir, run):
     result = run("--include", FIXTURES_DIR, "spec", "--output", "test.pdf", os.path.join(FIXTURES_DIR, "bar_missing.yml"))
     assert result.ret == 0
+
+def test_bokeh_bar(tmpdir, run):
+    result = run("--include", FIXTURES_DIR, "spec", "--output", "test.pdf", os.path.join(FIXTURES_DIR, "bokeh_bar.yml"))
+    assert result.ret == 0
+
+def test_bokeh_errorbar(tmpdir, run):
+    result = run("--include", FIXTURES_DIR, "spec", "--output", "test.pdf", os.path.join(FIXTURES_DIR, "bokeh_errorbar.yml"))
+    assert result.ret == 0

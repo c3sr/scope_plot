@@ -45,7 +45,7 @@ def configure_yaxis(fig, axis_spec):
     if "label" in axis_spec:
         fig.yaxis.axis_label = axis_spec["label"]
 
-def generate_errorbar(errorbar_spec, strict):
+def generate_errorbar(errorbar_spec):
 
 
     x_type = errorbar_spec.get("xaxis", {}).get("type", "auto")
@@ -113,7 +113,7 @@ def generate_errorbar(errorbar_spec, strict):
 
 
 
-def generate_bar(bar_spec, strict):
+def generate_bar(bar_spec):
 
     bar_width = 0.2
 
@@ -182,7 +182,7 @@ def generate_bar(bar_spec, strict):
 
     return fig
 
-def generate_plot(plot_spec, strict):
+def generate_plot(plot_spec):
 
     # validate plot_spec
     if "type" not in plot_spec:
@@ -193,10 +193,10 @@ def generate_plot(plot_spec, strict):
 
     if "bar" == type_str:
         utils.debug("Generating bar plot")
-        fig = generate_bar(plot_spec, strict)
+        fig = generate_bar(plot_spec)
     elif "errorbar" == type_str:
         utils.debug("Generating errorbar plot")
-        fig = generate_errorbar(plot_spec, strict)
+        fig = generate_errorbar(plot_spec)
     else:
         utils.halt("Unrecognized type: {}".format(type_str))
 
@@ -204,7 +204,7 @@ def generate_plot(plot_spec, strict):
 
 
 
-def generate(figure_spec, strict):
+def generate(figure_spec):
 
     if "subplots" not in figure_spec:
         utils.halt("expected key subplots in spec")
@@ -227,7 +227,7 @@ def generate(figure_spec, strict):
 
         pos = plot_spec["pos"]
 
-        fig = generate_plot(plot_spec, strict)
+        fig = generate_plot(plot_spec)
         grid[pos[1]-1][pos[0]-1] = fig
 
     merge_tools = False # don't merge child plot tools

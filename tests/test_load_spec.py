@@ -5,8 +5,9 @@ FIXTURES_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "
 
 
 def test_errorbar_spec():
-    figure_spec = specification.load(os.path.join(FIXTURES_DIR, "errorbar.yml"))
-    assert figure_spec["generator"] == "errorbar"
+    figure_spec = specification.load(os.path.join(FIXTURES_DIR, "bokeh_errorbar.yml"))
+    assert figure_spec["backend"] == "bokeh"
+    assert figure_spec["type"] == "errorbar"
 
 
 def test_errorbar_spec():
@@ -15,5 +16,6 @@ def test_errorbar_spec():
 
 
 def test_errorbar_spec():
-    figure_spec = specification.load(os.path.join(FIXTURES_DIR, "bar.yml"))
-    assert figure_spec["generator"] == "bar"
+    figure_spec = specification.load(os.path.join(FIXTURES_DIR, "bokeh_bar.yml"))
+    assert figure_spec["backend"] == "bokeh"
+    assert figure_spec["type"] == "bar"

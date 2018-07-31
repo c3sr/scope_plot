@@ -60,7 +60,7 @@ def bar(ctx, benchmark, name_regex, output, x_field, y_field):
         default_spec["series"][0]["regex"] = name_regex
         default_spec["title"] = name_regex
 
-    fig = figure.generate(default_spec, ctx.obj["STRICT"])
+    fig = figure.generate(default_spec)
     fig.savefig(output, clip_on=False, transparent=False)
 
 
@@ -71,7 +71,6 @@ def bar(ctx, benchmark, name_regex, output, x_field, y_field):
 def spec(ctx, output, spec):
     """Create a figure from a spec file."""
     include = ctx.obj["INCLUDE"]
-    strict = ctx.obj["STRICT"]
 
     figure_spec = specification.load(spec)
 
@@ -80,7 +79,7 @@ def spec(ctx, output, spec):
             utils.debug("searching dir {}".format(d))
         figure_spec = specification.apply_search_dirs(figure_spec, include)
 
-    fig = figure.generate(figure_spec, strict=ctx.obj["STRICT"])
+    fig = figure.generate(figure_spec)
 
     # Decide output path
     if output is None and figure_spec.get("output_file", None) is not None:
@@ -104,9 +103,8 @@ def spec(ctx, output, spec):
 @click.option('--include', help="Search location for input_file in spec.",
               multiple=True, type=click.Path(exists=True, file_okay=False, readable=True, resolve_path=True))
 @click.option('--quiet/--no-quiet', help="don't print messages", default=False)
-@click.option('--strict/--no-strict', help="require recognized spec contents", default=True)
 @click.pass_context
-def main(ctx, debug, include, quiet, strict):
+def main(ctx, debug, include, quiet):
     # This is needed if main is called via setuptools entrypoint
     if ctx.obj is None:
         ctx.obj = {}
@@ -114,7 +112,6 @@ def main(ctx, debug, include, quiet, strict):
     utils.DEBUG = debug
     utils.QUIET = quiet
     ctx.obj["INCLUDE"] = include
-    ctx.obj["STRICT"] = strict
 
 
 @click.command()

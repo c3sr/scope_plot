@@ -1,4 +1,5 @@
-generator: regplot
+backend: matplotlib
+type: regplot
 series:
   - label: CPU0 to GPU0
     input_file: hal000.ncsa.illinois.edu-UM_Latency_GPUToGPU-0-1.json
@@ -15,3 +16,5 @@ yaxis:
 xaxis:
   label: "# of Strides"
 title: AC922 Unified Memory Latency
+xfield: strides
+yfield: real_time

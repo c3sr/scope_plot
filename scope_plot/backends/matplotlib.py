@@ -27,7 +27,7 @@ def configure_yaxis(ax, axis_spec):
         ax.set_ylabel(axis_spec["label"])
     if "type" in axis_spec:
         value = axis_spec["type"]
-        utils.debug("seting y axis scale: {}".format(value))
+        utils.debug("seting y axis type: {}".format(value))
         ax.set_yscale(value, basey=10)
 
 
@@ -38,7 +38,7 @@ def configure_xaxis(ax, axis_spec):
         ax.set_xlabel(axis_spec["label"])
     if "type" in axis_spec:
         value = axis_spec["type"]
-        utils.debug("seting x axis scale: {}".format(value))
+        utils.debug("seting x axis type: {}".format(value))
         ax.set_xscale(value, basex=2)
 
 
@@ -51,7 +51,6 @@ def generator_bar(ax, ax_cfg):
     default_x_field = ax_cfg.get("xfield", None)
     default_y_field = ax_cfg.get("yfield", None)
     series_specs = ax_cfg["series"]
-
 
     utils.debug("Number of series: {}".format(len(series_specs)))
 
@@ -81,13 +80,6 @@ def generator_bar(ax, ax_cfg):
             series_df = series_df.rename(columns={y_field: label})
 
             df = pd.concat([df, series_df], axis=1, sort=True)
-
-    print(df)
-    # convert index to a string
-    df.index = df.index.map(str)
-
-    # Figure out the unique x values that we'll need to plot
-    x_range = list(df.index)
 
     ax = df.plot(kind='bar')
 
@@ -125,11 +117,10 @@ def generator_errorbar(ax, ax_cfg):
             stats = g.keep_name_regex(regex).keep_stats()
             df = stats.stats_dataframe(x_field, y_field)
             df = df.sort_values(by=["x_mean"])
-            x = df.loc[:, "x_mean"]
-            y = df.loc[:, "y_mean"]
-            e = df.loc[:, "y_stddev"]
+        x = df.loc[:, "x_mean"]
+        y = df.loc[:, "y_mean"]
+        e = df.loc[:, "y_stddev"]
 
-        # Rescale
         x *= xscale
         y *= yscale
         e *= yscale
@@ -151,79 +142,53 @@ def generator_errorbar(ax, ax_cfg):
 
 
 def generator_regplot(ax, ax_spec):
+    default_input_file = ax_spec.get("input_file", None)
+    default_x_field = ax_spec.get("xfield", None)
+    default_y_field = ax_spec.get("yfield", None)
+    series_specs = ax_spec["series"]
 
-    # defaults
-    series_specs = None
-    title = ""
-    xaxis_spec = {}
-    yaxis_spec = {}
-
-    # parse config
-    consume_keys = []
-    for key, value in iteritems(ax_spec):
-        if key == "series":
-            series_specs = value
-        elif key == "title":
-            title = value
-        elif key == "xaxis":
-            xaxis_spec = value
-        elif key == "yaxis":
-            yaxis_spec = value
-        else:
-            utils.debug("unrecognized key {} in regplot ax_spec".format(key))
-        consume_keys += [key]
-    for key in consume_keys:
-        del ax_spec[key]
-
-    for series_spec in series_specs:
-        file_path = series_spec["input_file"]
+    for i, series_spec in enumerate(series_specs):
+        file_path = series_spec.get("input_file", default_input_file)
         label = series_spec["label"]
         regex = series_spec.get("regex", ".*")
-        with open(file_path, "rb") as f:
-            j = json.loads(f.read().decode('utf-8'))
+        yscale = eval(str(series_spec.get("yscale", 1.0)))
+        xscale = eval(str(series_spec.get("xscale", 1.0)))
+        x_field = series_spec.get("xfield", default_x_field)
+        y_field = series_spec.get("yfield", default_y_field)
+        utils.debug("series {}: opening {}".format(i, file_path))
 
-        pattern = re.compile(regex)
-        matches = [b for b in j["benchmarks"] if pattern is None or pattern.search(b["name"])]
-        means = [b for b in matches if b["name"].endswith("_mean")]
-        stddevs = [b for b in matches if b["name"].endswith("_stddev")]
+        with GoogleBenchmark(file_path) as g:
+            stats = g.keep_name_regex(regex).keep_stats()
+            df = stats.stats_dataframe(x_field, y_field)
+            df = df.sort_values(by=["x_mean"])
+        x = df.loc[:, "x_mean"]
+        y = df.loc[:, "y_mean"]
+        e = df.loc[:, "y_stddev"]
 
-        def show_func(b):
-            if "strides" in b and "real_time" in b and "error_message" not in b:
-                return True
-            return False
-        x = np.array(list(map(lambda b: float(b["strides"]), filter(show_func, means))))
-        y = np.array(list(map(lambda b: float(b["real_time"]), filter(show_func, means))))
-        e = np.array(list(map(lambda b: float(b["real_time"]), filter(show_func, stddevs))))
+        x *= xscale
+        y *= yscale
+        e *= yscale
 
-        # Rescale
-        x *= float(series_spec.get("xscale", 1.0))
-        y *= float(series_spec.get("yscale", 1.0))
-        e *= float(series_spec.get("yscale", 1.0))
-
-        # sort by x
-        x, y, e = zip(*sorted(zip(x.tolist(), y.tolist(), e.tolist())))
-        x = np.array(x)
-        y = np.array(y)
-        e = np.array(e)
-
-        color = series_spec.get("color", "black")
+        color = series_spec.get("color", styles.colors[i])
 
         # Draw scatter plot of values
-        ax.errorbar(x, y, e, capsize=3, ecolor=color, linestyle='None')
+        ax.errorbar(x, y, e, capsize=3, ecolor=color, linestyle='None', label=None)
 
-        # compute a fit line
+        # compute a fit line and show
         z, _ = np.polyfit(x, y, 1, w=1./e, cov=True)
         slope, intercept = z[0], z[1]
         ax.plot(x, x * slope + intercept, color=color,
                 label=label + ": {:.2f}".format(slope) + " us/fault")
 
-    configure_yaxis(ax, yaxis_spec)
-    configure_xaxis(ax, xaxis_spec)
+    if "title" in ax_spec:
+        ax.set_title(ax_spec["title"])
+    if "yaxis" in ax_spec:
+        configure_yaxis(ax, ax_spec["yaxis"])
+    if "xaxis" in ax_spec:
+        configure_xaxis(ax, ax_spec["xaxis"])
 
-    utils.debug("set title to {}".format(title))
-    ax.set_title(title)
-
-    ax.legend()
+    ax.legend(loc="best")
+    ax.grid(True)
 
     return ax
 
@@ -317,70 +282,3 @@ def generate(figure_spec):
     plt.show()
 
     return fig
-
-
-"""
-# Make some style choices for plotting
-color_wheel = [
-    "#e9d043",
-    "#83c995",
-    "#859795",
-    "#d7369e",
-    "#c4c9d8",
-    "#f37738",
-    "#7b85d4",
-    "#ad5b50",
-    "#329932",
-    "#ff6961",
-    "b",
-    "#6a3d9a",
-    "#fb9a99",
-    "#e31a1c",
-    "#fdbf6f",
-    "#ff7f00",
-    "#cab2d6",
-    "#6a3d9a",
-    "#ffff99",
-    "#b15928",
-    "#67001f",
-    "#b2182b",
-    "#d6604d",
-    "#f4a582",
-    "#fddbc7",
-    "#f7f7f7",
-    "#d1e5f0",
-    "#92c5de",
-    "#4393c3",
-    "#2166ac",
-    "#053061",
-]
-dashes_styles = [[3, 1], [1000, 1], [2, 1, 10, 1], [4, 1, 1, 1, 1, 1]]
-
-color_wheel2 = [
-    "#000000",
-    "#009E73",
-    "#e79f00",
-    "#9ad0f3",
-    "#0072B2",
-    "#D55E00",
-    "#CC79A7",
-    "#F0E442",
-]
-
-plt.style.use(
-    {
-        # "xtick.labelsize": 16,
-        # "ytick.labelsize": 16,
-        # "font.size": 15,
-        "figure.autolayout": True,
-        # "figure.figsize": (7.2, 4.45),
-        # "axes.titlesize": 16,
-        # "axes.labelsize": 17,
-        "lines.linewidth": 2,
-        # "lines.markersize": 6,
-        # "legend.fontsize": 13,
-        "mathtext.fontset": "stix",
-        "font.family": "STIXGeneral",
-    }
-)
-"""

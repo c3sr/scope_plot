@@ -25,7 +25,8 @@ AXIS = Schema({
     Optional('type'): basestring,
 })
 
-SCALE = Schema(Any(float, int, basestring))
+SCALE = Any(float, int, basestring)
+COLOR = Any(basestring, float, int)
 
 SERIES_SCHEMA = Schema({
     Optional("label"): basestring,
@@ -34,7 +35,8 @@ SERIES_SCHEMA = Schema({
     Optional("xfield"): basestring,
     Optional("yfield"): basestring,
     Optional("xscale"): SCALE,
-    Optional("yscale"): SCALE,    
+    Optional("yscale"): SCALE,
+    Optional("color"): COLOR, 
 })
 
 POS = list
@@ -95,6 +97,12 @@ ERRORBAR = All(
     lambda spec: require_series_field(spec, "input_file"),        
 )
 
+REGPLOT = All(
+    PLOT_DICT,
+    lambda spec: require_series_field(spec, "xfield"),
+    lambda spec: require_series_field(spec, "yfield"),
+    lambda spec: require_series_field(spec, "input_file"),        
+)
 
 PLOT = Any(
     ERRORBAR,
@@ -159,4 +167,4 @@ def validate(orig_spec):
         elif ty == "bar":
             return BAR(orig_spec)
         elif ty == "regplot":
-            utils.halt("no schema for regplot yet")
+            return REGPLOT(orig_spec)

@@ -68,7 +68,7 @@ class GoogleBenchmark(object):
         filtered = copy.deepcopy(self)
         filtered.benchmark = []
         for b in self.benchmarks:
-            if any(b["name"].endswith(suffix) for suffix in ("_mean", "_median", "_err")):
+            if any(b["name"].endswith(suffix) for suffix in ("_mean", "_median", "_stddev")):
                 filtered.benchmarks += [b]
         return filtered
 

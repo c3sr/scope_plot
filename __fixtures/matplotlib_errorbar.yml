@@ -1,4 +1,5 @@
-generator: errorbar
+backend: matplotlib
+type: errorbar
 series:
   - label: GPU0 to GPU1 (local)
     input_file: hal000.ncsa.illinois.edu-UM_Coherence_GPUToGPU-0-1.json
@@ -13,8 +14,10 @@ yaxis:
   #   - 80
 xaxis:
   label: Transfer Size (B)
-  scale: log
+  type: log
 title: AC922 GPU/GPU Coherence Bandwidth
+xfield: bytes
+yfield: bytes_per_second
 size:
   - 6
   - 5

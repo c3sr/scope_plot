@@ -16,8 +16,9 @@ from scope_plot.error import UnknownGenerator
 from scope_plot.schema import validate
 from scope_plot import schema
 from scope_plot.benchmark import GoogleBenchmark
+from scope_plot import styles
 
-plt.switch_backend('agg')
+# plt.switch_backend('agg')
 
 def configure_yaxis(ax, axis_spec):
     if "lim" in axis_spec:
@@ -90,47 +91,6 @@ def generator_bar(ax, ax_cfg):
 
     ax = df.plot(kind='bar')
 
-        # pattern = re.compile(regex)
-        # matches = [
-        #     b for b in j["benchmarks"] if pattern is None or pattern.search(b["name"])
-        # ]
-        # utils.debug("{} datapoints matched {}".format(len(matches), regex))
-
-        # if len(matches) == 0:
-        #     utils.warn("no matches for pattern {} in {}".format(regex, file_path))
-        #     continue
-
-
-        # # extract data
-        # def show_func(b):
-        #     if xfield in b and yfield in b and "error_message" not in b:
-        #         return True
-        #     else:
-        #         return False
-        # x = np.array(list(map(lambda b: float(b[xfield]), filter(show_func, matches))))
-        # y = np.array(list(map(lambda b: float(b[yfield]), filter(show_func, matches))))
-
-        # # Rescale
-        # utils.debug("series {}: x scale={} yscale={}".format(c, xscale, yscale))
-        # x *= xscale
-        # y *= yscale
-
-        # # sort by x
-        # x, y = zip(*sorted(zip(x.tolist(), y.tolist())))
-        # x = np.array(x)
-        # y = np.array(y)
-
-        # ind = np.arange(len(x))
-        # utils.debug("ind: {}".format(ind))
-        # utils.debug("x: {}".format(x))
-        # utils.debug("y: {}".format(y))
-
-        # ax.bar(ind + bar_width * c, y, width=bar_width, label=label, align="center")
-
-    # ax.set_xticks(ind + bar_width * (len(series_specs) - 1) / 2)
-    # ax.set_xticklabels(x.round(2))
-
-
     if "xaxis" in ax_cfg:
         configure_yaxis(ax, ax_cfg["yaxis"])
     if "yaxis" in ax_cfg:
@@ -146,90 +106,46 @@ def generator_bar(ax, ax_cfg):
 
 
 def generator_errorbar(ax, ax_cfg):
+    default_input_file = ax_cfg.get("input_file", None)
+    default_x_field = ax_cfg.get("xfield", None)
+    default_y_field = ax_cfg.get("yfield", None)
+    series_specs = ax_cfg["series"]
 
-    ax.grid(True)
-
-    # defaults
-    default_x_field = "bytes"
-    default_y_field = "bytes_per_second"
-    xaxis_spec = {}
-    yaxis_spec = {}
-    series = None
-    title = None
-
-    # parse config
-    consume_keys = []
-    for key, value in iteritems(ax_cfg):
-        if key == "series":
-            series_specs = value
-        elif key == "title":
-            title = value
-        elif key == "xaxis":
-            xaxis_spec = value
-        elif key == "yaxis":
-            yaxis_spec = value
-        elif key == "xfield":
-            default_x_field = value
-        elif key == "yfield":
-            default_y_field = value
-        elif key == "title":
-            title = value
-        else:
-            utils.debug("unrecognized key {} in errorbar ax_cfg".format(key))
-        consume_keys += [key]
-    for key in consume_keys:
-        del ax_cfg[key]
-
-    for i, s in enumerate(series_specs):
-        file_path = s["input_file"]
-        label = s["label"]
-        regex = s.get("regex", ".*")
-        yscale = float(s.get("yscale", 1.0))
-        xscale = float(s.get("xscale", 1.0))
+    for i, series_spec in enumerate(series_specs):
+        file_path = series_spec.get("input_file", default_input_file)
+        label = series_spec["label"]
+        regex = series_spec.get("regex", ".*")
+        yscale = eval(str(series_spec.get("yscale", 1.0)))
+        xscale = eval(str(series_spec.get("xscale", 1.0)))
+        x_field = series_spec.get("xfield", default_x_field)
+        y_field = series_spec.get("yfield", default_y_field)
         utils.debug("series {}: opening {}".format(i, file_path))
-        with open(file_path, "rb") as f:
-            j = json.loads(f.read().decode('utf-8'))
 
-        pattern = re.compile(regex)
-        matches = [b for b in j["benchmarks"] if pattern is None or pattern.search(b["name"])]
-        means = [b for b in matches if b["name"].endswith("_mean")]
-        stddevs = [b for b in matches if b["name"].endswith("_stddev")]
-
-        # extract data
-        def show_func(b):
-            if default_x_field in b and default_y_field in b and "error_message" not in b:
-                return True
-            else:
-                return False
-        x = np.array(list(map(lambda b: float(b[default_x_field]), filter(show_func, means))))
-        y = np.array(list(map(lambda b: float(b[default_y_field]), filter(show_func, means))))
-        e = np.array(list(map(lambda b: float(b[default_y_field]), filter(show_func, stddevs))))
+        with GoogleBenchmark(file_path) as g:
+            stats = g.keep_name_regex(regex).keep_stats()
+            df = stats.stats_dataframe(x_field, y_field)
+            df = df.sort_values(by=["x_mean"])
+            x = df.loc[:, "x_mean"]
+            y = df.loc[:, "y_mean"]
+            e = df.loc[:, "y_stddev"]
 
         # Rescale
         x *= xscale
         y *= yscale
         e *= yscale
 
-        # sort by x
-        x, y, e = zip(*sorted(zip(x.tolist(), y.tolist(), e.tolist())))
-        x = np.array(x)
-        y = np.array(y)
-        e = np.array(e)
-
-        # pp.pprint(means)
-        if "color" in s:
-            color = s["color"]
-        else:
-            color = color_wheel[i]
+        color = series_spec.get("color", styles.colors[i])
         ax.errorbar(x, y, e, capsize=3, label=label, color=color)
 
-    if title:
-        ax.set_title(title)
-
-    configure_yaxis(ax, yaxis_spec)
-    configure_xaxis(ax, xaxis_spec)
+    if "title" in ax_cfg:
+        ax.set_title(ax_cfg["title"])
+    if "yaxis" in ax_cfg:
+        configure_yaxis(ax, ax_cfg["yaxis"])
+    if "xaxis" in ax_cfg:
+        configure_xaxis(ax, ax_cfg["xaxis"])
 
     ax.legend(loc="best")
+    ax.grid(True)
 
     return ax
 
@@ -396,6 +312,9 @@ def generate(figure_spec):
     if fig_size:
         utils.debug("Using figsize {}".format(fig_size))
         fig.set_size_inches(fig_size)
+
+    fig.show()
+    plt.show()
 
     return fig
 

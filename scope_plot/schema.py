@@ -43,9 +43,12 @@ SIZE = list
 EVAL = Schema(Any(basestring, float, int))
 
 BACKEND = Any("bokeh", "matplotlib")
+TYPE = Any("errorbar", "bar", "regplot")
 
 PLOT_DICT = Schema(
     {
+        Required("type"): TYPE,
+        Required("backend"): BACKEND,
         Optional("title"): basestring,
         Optional("input_file"): basestring,
         Optional("yfield"): basestring,
@@ -57,11 +60,8 @@ PLOT_DICT = Schema(
         Optional("xscale"): SCALE,
         Optional("xtype"): basestring,
         Optional("ytype"): basestring,
-        Required("type"): basestring,
         Optional("yscale"): EVAL,
         Optional("xscale"): EVAL,
-        Optional("bar_width"): Any(int, float),
-        Required("backend"): BACKEND,
         Optional("size"): SIZE
     }
 )
@@ -88,14 +88,13 @@ BAR = All(
 )
 
 
-ERRORBAR = Schema(
-    All(
-        PLOT_DICT,
-        lambda spec: require_series_field(spec, "xfield"),
-        lambda spec: require_series_field(spec, "yfield"),
-        lambda spec: require_series_field(spec, "input_file"),        
-    )
+ERRORBAR = All(
+    PLOT_DICT,
+    lambda spec: require_series_field(spec, "xfield"),
+    lambda spec: require_series_field(spec, "yfield"),
+    lambda spec: require_series_field(spec, "input_file"),        
 )
+
 
 PLOT = Any(
     ERRORBAR,
@@ -134,19 +133,30 @@ SUBPLOT = Any(
     BAR_SUBPLOT,
 )
 
-SUBPLOTS = {
+SUBPLOTS = Schema({
     Required("subplots"): [SUBPLOT],
     Optional("size"): SIZE,
     Required("backend"): BACKEND,
     Optional("xaxis"): AXIS,
     Optional("yaxis"): AXIS,
-}
+})
 
-SPEC = Any(
-    PLOT,
-    SUBPLOT,
-)
+
 
 def validate(orig_spec):
-    validated_spec = SPEC(orig_spec)
-    return validated_spec
+    if "backend" not in orig_spec:
+        utils.halt("spec should define backend")
+    
+    backend = orig_spec["backend"]
+    if "subplots" in orig_spec:
+        return SUBPLOTS(orig_spec)
+    else:
+        if "type" not in orig_spec:
+            utils.halt("spec without subplots should define type")
+        ty = orig_spec["type"]
+        if ty == "errorbar":
+            return ERRORBAR(orig_spec)
+        elif ty == "bar":
+            return BAR(orig_spec)
+        elif ty == "regplot":
+            utils.halt("no schema for regplot yet")

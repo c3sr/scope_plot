@@ -38,10 +38,10 @@ def deps(ctx, output, spec, target):
 @click.argument(
     'benchmark',
     type=click.Path(exists=True, dir_okay=False, resolve_path=True))
+@click.argument('x-field')
+@click.argument('y-field')
 @click.argument('output', type=click.Path(dir_okay=False, resolve_path=True))
 @click.option('--name-regex', help="a YAML spec for a figure")
-@click.option('--x-field', help="field for X axis")
-@click.option('--y-field', help="field for Y axis")
 @click.pass_context
 def bar(ctx, benchmark, name_regex, output, x_field, y_field):
     """Create a bar graph."""
@@ -63,6 +63,7 @@ def bar(ctx, benchmark, name_regex, output, x_field, y_field):
         default_spec["series"][0]["regex"] = name_regex
         default_spec["title"] = name_regex
 
+    default_spec = schema.validate(default_spec)
     fig = figure.generate(default_spec)
     fig.savefig(output, clip_on=False, transparent=False)
 

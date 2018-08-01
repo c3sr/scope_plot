@@ -69,6 +69,8 @@ def bar(ctx, benchmark, name_regex, output, x_field, y_field):
     utils.debug("saving figure to {}".format(output))
     fig.savefig(output, clip_on=False, transparent=False)
 
+    figure.save(fig)
+
 
 @click.command()
 @click.option(
@@ -110,9 +112,13 @@ def spec(ctx, output, spec):
                 ext = ext.lstrip(".")
                 output_path.append(base_output_path + "." + ext)
 
-    if fig is not None:
-        utils.debug("writing to {}".format(output))
-        fig.savefig(output, clip_on=False, transparent=False)
+    if fig is None:
+        utils.halt("failed to generate figure")
+
+    if output is None:
+        utils.warn("no output path specified")
+    else:
+        figure.save(fig, [output])
 
 
 @click.group()

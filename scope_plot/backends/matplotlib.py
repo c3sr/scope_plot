@@ -285,9 +285,6 @@ def generate_subplots(figure_spec):
 
 def generate(figure_spec):
 
-    if "size" in figure_spec:
-        fig_size = figure_spec["size"]
-
     if "subplots" in figure_spec:
         fig = generate_subplots(figure_spec)
     else:
@@ -304,3 +301,9 @@ def generate(figure_spec):
     fig.set_tight_layout(True)
 
     return fig
+
+
+def save(fig, paths):
+    for path in paths:
+        utils.debug("saving matplotlib figure: {}".format(path))
+        fig.savefig(path)

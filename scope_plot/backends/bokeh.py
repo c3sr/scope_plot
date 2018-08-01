@@ -119,14 +119,14 @@ def generate_errorbar(errorbar_spec):
 
 def generate_bar(bar_spec):
 
-    bar_width = 0.2
-
     x_axis_label = bar_spec.get("xaxis", {}).get("label", "")
     y_axis_label = bar_spec.get("yaxis", {}).get("label", "")
+    default_x_scale = eval(str(bar_spec.get("xscale", 1.0)))
+    default_y_scale = eval(str(bar_spec.get("yscale", 1.0)))
     x_axis_tick_rotation = bar_spec.get("xaxis", {}).get("tick_rotation", 90)
 
     # convert x axis tick rotation to radians
-    x_axis_tick_rotation = x_axis_tick_rotation / 360 * 2 * math.pi
+    x_axis_tick_rotation = x_axis_tick_rotation / 360.0 * 2 * math.pi
 
     x_type = bar_spec.get("xaxis", {}).get("type", "auto")
     y_type = bar_spec.get("yaxis", {}).get("type", "auto")
@@ -137,6 +137,8 @@ def generate_bar(bar_spec):
 
         input_path = series_spec.get("input_file",
                                      bar_spec.get("input_file", None))
+        y_scale = eval(str(series_spec.get("yscale", default_y_scale)))
+        x_scale = eval(str(series_spec.get("xscale", default_x_scale)))
         regex = series_spec.get("regex", ".*")
         utils.debug("Using regex {}".format(regex))
         x_field = series_spec.get("xfield", bar_spec["xfield"])
@@ -146,13 +148,20 @@ def generate_bar(bar_spec):
         utils.debug("Opening {}".format(input_path))
         with GoogleBenchmark(input_path) as b:
             new_df = b.keep_name_regex(regex).xy_dataframe(x_field, y_field)
+            new_df.loc[:, x_field] *= x_scale
+            new_df.loc[:, y_field] *= y_scale
             new_df = new_df.rename(columns={y_field: label})
-            df = pd.concat([df, new_df], axis=1, sort=True)
 
+            new_df = new_df.set_index(x_field)
+            df = pd.concat([df, new_df], axis=1, sort=False)
+
+    print(df)
     # convert index to a string
     df.index = df.index.map(str)
     source = ColumnDataSource(data=df)
 
+    print(source.data[x_field])
+    source.data[x_field] = map(str, source.data[x_field])
     # Figure out the unique x values that we'll need to plot
     x_range = list(df.index)
     utils.debug("x_range contains {} unique values".format(len(x_range)))
@@ -170,10 +179,8 @@ def generate_bar(bar_spec):
         toolbar_location='above',
     )
 
-    fig.xaxis.major_label_orientation = x_axis_tick_rotation
-
     # offset each series
-    group_width = 1 / (
+    group_width = 1.0 / (
         len(bar_spec["series"]) + 1
     )  # each group of bars is 1 wide, leave 1 bar-width between groups
     bar_width = group_width * 0.95  # small gap between bars
@@ -184,12 +191,16 @@ def generate_bar(bar_spec):
         color = series_spec.get("color", styles.colors[i])
 
         dodge_amount = -0.5 + (i + 1) * group_width
+        utils.debug("{}".format(dodge_amount))
         fig.vbar(
-            x=dodge('num_segments', dodge_amount, range=fig.x_range),
+            x=dodge(x_field, dodge_amount, range=fig.x_range),
+            # x=x_field,
             top=series_spec["label"],
             width=bar_width,
             source=source,
             color=color)
+
+    fig.xaxis.major_label_orientation = x_axis_tick_rotation
 
     return fig
 
@@ -205,14 +216,12 @@ def generate_plot(plot_spec):
 
     if "bar" == type_str:
         utils.debug("Generating bar plot")
-        fig = generate_bar(plot_spec)
+        return generate_bar(plot_spec)
     elif "errorbar" == type_str:
         utils.debug("Generating errorbar plot")
-        fig = generate_errorbar(plot_spec)
+        return generate_errorbar(plot_spec)
     else:
         utils.halt("Unrecognized type: {}".format(type_str))
-
-    return fig
 
 
 def generate(figure_spec):
@@ -242,3 +251,5 @@ def generate(figure_spec):
     merge_tools = False  # don't merge child plot tools
     grid = gridplot(grid, merge_tools=merge_tools)
     show(grid)
+
+    return grid

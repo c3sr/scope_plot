@@ -45,7 +45,7 @@ def deps(ctx, output, spec, target):
 @click.pass_context
 def bar(ctx, benchmark, name_regex, output, x_field, y_field):
     """Create a bar graph."""
-    default_spec = {
+    bar_spec = {
         "backend": "matplotlib",
         "type": "bar",
         "series": [{
@@ -54,17 +54,17 @@ def bar(ctx, benchmark, name_regex, output, x_field, y_field):
     }
 
     if x_field:
-        default_spec["series"][0]["xfield"] = x_field
-        default_spec["xaxis"] = {"label": x_field}
+        bar_spec["series"][0]["xfield"] = x_field
+        bar_spec["xaxis"] = {"label": x_field}
     if y_field:
-        default_spec["series"][0]["yfield"] = y_field
-        default_spec["yaxis"] = {"label": y_field, "scale": "log"}
+        bar_spec["series"][0]["yfield"] = y_field
+        bar_spec["yaxis"] = {"label": y_field, "type": "log"}
     if name_regex:
-        default_spec["series"][0]["regex"] = name_regex
-        default_spec["title"] = name_regex
+        bar_spec["series"][0]["regex"] = name_regex
+        bar_spec["title"] = name_regex
 
-    default_spec = schema.validate(default_spec)
-    fig = figure.generate(default_spec)
+    bar_spec = schema.validate(bar_spec)
+    fig = figure.generate(bar_spec)
     fig.savefig(output, clip_on=False, transparent=False)
 
 

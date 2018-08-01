@@ -53,34 +53,47 @@ def generator_bar(ax, ax_cfg):
     default_y_field = ax_cfg.get("yfield", None)
     series_specs = ax_cfg["series"]
 
+    if default_x_field:
+        utils.debug("using xfield {} if not defined in series".format(default_x_field))
+    if default_y_field:
+        utils.debug("using yfield {} if not defined in series".format(default_y_field))
     utils.debug("Number of series: {}".format(len(series_specs)))
 
     df = pd.DataFrame()
     for i, series_spec in enumerate(series_specs):
-        # defaults
         input_path = default_file
         label = series_spec.get("label", str(i))
         regex = series_spec.get("regex", ".*")
         y_field = series_spec.get("yfield", default_y_field)
-        x_field = series_spec.get("yfield", default_x_field)
+        x_field = series_spec.get("xfield", default_x_field)
         y_scale = eval(str(series_spec.get("yscale", default_y_scale)))
         x_scale = eval(str(series_spec.get("xscale", default_x_scale)))
         input_path = series_spec.get("input_file", default_file)
         utils.require(input_path, "input_file should have been defined")
+        utils.require(y_field, "yfield should have been defined")
+        utils.require(x_field, "xfield should have been defined")
 
         utils.debug("series {}: Opening {}".format(i, input_path))
-
         utils.debug("series {}: filter regex is {}".format(i, regex))
         utils.debug("series {}: x field: {}".format(i, x_field))
         utils.debug("series {}: y field: {}".format(i, y_field))
+        if x_scale != 1:
+            utils.debug("series {}: xscale: {}".format(i, x_scale))
+        if y_scale != 1:
+            utils.debug("series {}: yscale: {}".format(i, y_scale))
 
+
+        print(df)
         with GoogleBenchmark(input_path) as b:
             series_df = b.keep_name_regex(regex).xy_dataframe(x_field, y_field)
-            series_df.index *= x_scale
-            series_df.loc[:, y_field] *= y_scale
-            series_df = series_df.rename(columns={y_field: label})
+        
+        series_df.index *= x_scale
+        series_df.loc[:, y_field] *= y_scale
+        print(series_df)
+        series_df = series_df.rename(columns={y_field: label})
+        df = pd.concat([df, series_df], axis=1, sort=True)
+        print(df)
 
-            df = pd.concat([df, series_df], axis=1, sort=True)
 
     ax = df.plot(kind='bar')
 

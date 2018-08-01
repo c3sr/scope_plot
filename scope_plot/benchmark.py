@@ -118,30 +118,30 @@ class GoogleBenchmark(object):
             ]
         return tuple(data)
 
-    def xy_dataframe(self, x_field, y_field):
-        """return a pandas dataframe indexed by x_field with a column for y_field"""
+    def custom_dataframe(*column_fields):
+        """return a pandas dataframe with a column for each field in column_fields"""
 
-        # both x_field and y_field should be present
-        def valid_func(b):
-            if "error_message" in b or x_field not in b or y_field not in b:
+        # all fields should be present
+        def field_present(b):
+            if "error_message" in b:
                 return False
+            for field in column_fields:
+                if field not in b:
+                    return False
             return True
 
         data = {}
-        data[x_field] = list(
-            map(lambda b: float(b[x_field]), filter(valid_func,
-                                                    self.benchmarks)))
-        data[y_field] = list(
-            map(lambda b: float(b[y_field]), filter(valid_func,
+        for field in column_fields:
+            data[field] = list(
+            map(lambda b: float(b[field]), filter(valid_func,
                                                     self.benchmarks)))
 
         df = pd.DataFrame.from_dict(data)
-        df = df.set_index(x_field)
         return df
 
-    def custom_dataframe(self, index, *columns):
-        """return a pandas dataframe indexed by field 'index' with a column each for fields 'columns'"""
-        raise NotImplementedError
+    def xy_dataframe(self, x_field, y_field):
+        """return a pandas dataframe with a column for x_field and y_field"""
+        return self.custom_dataframe(*[x_field, y_field])
 
     def dataframe(self):
         """return a pandas dataframe containing a row for each benchmark object"""

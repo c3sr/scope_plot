@@ -130,6 +130,30 @@ REG_FIGURE_FIELDS = REG_DICT.extend(FIGURE_EXTENSIONS)
 SUBPLOT_DICT = PLOT_DICT.extend(SUBPLOT_EXTENSIONS)
 BAR_SUBPLOT_DICT = SUBPLOT_DICT.extend(BAR_EXTENSIONS)
 
+# a bar plot that is a full figure
+BAR_FIGURE = All(
+    BAR_FIGURE_FIELDS,
+    lambda spec: require_series_field(spec, "xfield"),
+    lambda spec: require_series_field(spec, "yfield"),
+    lambda spec: require_series_field(spec, "input_file"),   
+)
+
+# an errorbar plot that is a full figure
+ERRORBAR_FIGURE = All(
+    ERRORBAR_FIGURE_FIELDS,
+    lambda spec: require_series_field(spec, "xfield"),
+    lambda spec: require_series_field(spec, "yfield"),
+    lambda spec: require_series_field(spec, "input_file"),   
+)
+
+# a reg plot that is a full figure
+REG_FIGURE = All(
+    REG_FIGURE_FIELDS,
+    lambda spec: require_series_field(spec, "xfield"),
+    lambda spec: require_series_field(spec, "yfield"),
+    lambda spec: require_series_field(spec, "input_file"),   
+)
+
 # an errorbar plot in a subplot
 ERRORBAR_SUBPLOT = All(
     SUBPLOT_DICT,

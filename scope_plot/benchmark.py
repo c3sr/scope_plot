@@ -118,7 +118,7 @@ class GoogleBenchmark(object):
             ]
         return tuple(data)
 
-    def custom_dataframe(*column_fields):
+    def custom_dataframe(self, *column_fields):
         """return a pandas dataframe with a column for each field in column_fields"""
 
         # all fields should be present
@@ -133,8 +133,8 @@ class GoogleBenchmark(object):
         data = {}
         for field in column_fields:
             data[field] = list(
-            map(lambda b: float(b[field]), filter(valid_func,
-                                                    self.benchmarks)))
+                map(lambda b: float(b[field]),
+                    filter(field_present, self.benchmarks)))
 
         df = pd.DataFrame.from_dict(data)
         return df

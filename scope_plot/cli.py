@@ -53,6 +53,7 @@ def bar(ctx, benchmark, name_regex, output, x_field, y_field):
         }],
     }
 
+    bar_spec["series"][0]["label"] = ""
     if x_field:
         bar_spec["series"][0]["xfield"] = x_field
         bar_spec["xaxis"] = {"label": x_field}

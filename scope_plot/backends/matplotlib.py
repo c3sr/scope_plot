@@ -18,7 +18,7 @@ from scope_plot import schema
 from scope_plot.benchmark import GoogleBenchmark
 from scope_plot import styles
 
-# plt.switch_backend('agg')
+plt.switch_backend('agg')
 
 
 def configure_yaxis(ax, axis_spec):
@@ -54,9 +54,11 @@ def generator_bar(ax, ax_cfg):
     series_specs = ax_cfg["series"]
 
     if default_x_field:
-        utils.debug("using xfield {} if not defined in series".format(default_x_field))
+        utils.debug(
+            "using xfield {} if not defined in series".format(default_x_field))
     if default_y_field:
-        utils.debug("using yfield {} if not defined in series".format(default_y_field))
+        utils.debug(
+            "using yfield {} if not defined in series".format(default_y_field))
     utils.debug("Number of series: {}".format(len(series_specs)))
 
     df = pd.DataFrame()
@@ -82,20 +84,24 @@ def generator_bar(ax, ax_cfg):
         if y_scale != 1:
             utils.debug("series {}: yscale: {}".format(i, y_scale))
 
-
-        print(df)
         with GoogleBenchmark(input_path) as b:
             series_df = b.keep_name_regex(regex).xy_dataframe(x_field, y_field)
-        
-        series_df.index *= x_scale
+
+        series_df.loc[:, x_field] *= x_scale
         series_df.loc[:, y_field] *= y_scale
-        print(series_df)
         series_df = series_df.rename(columns={y_field: label})
-        df = pd.concat([df, series_df], axis=1, sort=True)
-        print(df)
+        series_df = series_df.set_index(x_field)
 
+        # FIXME: this could be resolved with join?
+        # https://stackoverflow.com/questions/27719407/pandas-concat-valueerror-shape-of-passed-values-is-blah-indices-imply-blah2
+        if not series_df.index.is_unique:
+            utils.error(
+                "index is not unique (duplicate x_field ({}) values)".format(
+                    x_field))
+        df = pd.concat([df, series_df], axis=1, sort=False)
+    df = df.sort_index()
 
-    ax = df.plot(kind='bar')
+    ax = df.plot.bar()
 
     if "xaxis" in ax_cfg:
         configure_yaxis(ax, ax_cfg["yaxis"])
@@ -105,7 +111,6 @@ def generator_bar(ax, ax_cfg):
     if "title" in ax_cfg:
         ax.set_title(ax_cfg["title"])
 
-    # ax.legend(loc='upper left')
     ax.legend(loc="best")
 
     return ax
@@ -291,10 +296,13 @@ def generate(figure_spec):
         generate_axes(axs[0, 0], figure_spec)
 
     # Set the figure size
-    fig.set_tight_layout(True)
+
     fig.autofmt_xdate()
     if fig_size:
         utils.debug("Using figsize {}".format(fig_size))
         fig.set_size_inches(fig_size)
+    fig.set_tight_layout(True)
+
+    # plt.show()
 
     return fig

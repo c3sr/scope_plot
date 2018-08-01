@@ -48,8 +48,8 @@ def test_scope_plot_cat(tmpdir, run):
 
 
 def test_scope_plot_bar(tmpdir, run):
-    result = run("bar", os.path.join(FIXTURES_DIR, "unsorted.json"), "bytes", "real_time"
-                 os.path.join(FIXTURES_DIR, "temp.pdf"))
+    result = run("bar", os.path.join(FIXTURES_DIR, "unsorted.json"), "bytes",
+                 "real_time", os.path.join(FIXTURES_DIR, "temp.pdf"))
     assert result.ret == 0
 
 

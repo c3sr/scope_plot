@@ -135,7 +135,7 @@ BAR_FIGURE = All(
     BAR_FIGURE_FIELDS,
     lambda spec: require_series_field(spec, "xfield"),
     lambda spec: require_series_field(spec, "yfield"),
-    lambda spec: require_series_field(spec, "input_file"),   
+    lambda spec: require_series_field(spec, "input_file"),
 )
 
 # an errorbar plot that is a full figure
@@ -143,7 +143,7 @@ ERRORBAR_FIGURE = All(
     ERRORBAR_FIGURE_FIELDS,
     lambda spec: require_series_field(spec, "xfield"),
     lambda spec: require_series_field(spec, "yfield"),
-    lambda spec: require_series_field(spec, "input_file"),   
+    lambda spec: require_series_field(spec, "input_file"),
 )
 
 # a reg plot that is a full figure
@@ -151,7 +151,7 @@ REG_FIGURE = All(
     REG_FIGURE_FIELDS,
     lambda spec: require_series_field(spec, "xfield"),
     lambda spec: require_series_field(spec, "yfield"),
-    lambda spec: require_series_field(spec, "input_file"),   
+    lambda spec: require_series_field(spec, "input_file"),
 )
 
 # an errorbar plot in a subplot

@@ -7,7 +7,8 @@ from scope_plot.benchmark import GoogleBenchmark
 from scope_plot import styles
 from voluptuous import Any, Schema, Optional, MultipleInvalid
 from bokeh.plotting import figure
-from bokeh.io import show
+from bokeh.io import show, export_png, export_svgs
+import bokeh.io
 from bokeh.layouts import gridplot
 from bokeh.transform import dodge
 from bokeh.models import ColumnDataSource, Whisker, Range1d, LinearAxis
@@ -155,12 +156,10 @@ def generate_bar(bar_spec):
             new_df = new_df.set_index(x_field)
             df = pd.concat([df, new_df], axis=1, sort=False)
 
-    print(df)
     # convert index to a string
     df.index = df.index.map(str)
     source = ColumnDataSource(data=df)
 
-    print(source.data[x_field])
     source.data[x_field] = map(str, source.data[x_field])
     # Figure out the unique x values that we'll need to plot
     x_range = list(df.index)
@@ -194,7 +193,6 @@ def generate_bar(bar_spec):
         utils.debug("{}".format(dodge_amount))
         fig.vbar(
             x=dodge(x_field, dodge_amount, range=fig.x_range),
-            # x=x_field,
             top=series_spec["label"],
             width=bar_width,
             source=source,
@@ -250,6 +248,19 @@ def generate(figure_spec):
 
     merge_tools = False  # don't merge child plot tools
     grid = gridplot(grid, merge_tools=merge_tools)
-    show(grid)
 
     return grid
+
+
+def save(fig, paths):
+    for path in paths:
+        utils.debug("saving matplotlib figure: {}".format(path))
+        if path.endswith(".png"):
+            export_png(fig, filename=path)
+        elif path.endswith(".svg"):
+            export_svgs(fig, filename=path)
+        elif path.endswith(".html"):
+            bokeh.io.output_file(path)
+            bokeh.io.save(fig)
+        else:
+            utils.error("unsupported bokeh output type {}".format(path))

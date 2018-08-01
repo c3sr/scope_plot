@@ -306,4 +306,4 @@ def generate(figure_spec):
 def save(fig, paths):
     for path in paths:
         utils.debug("saving matplotlib figure: {}".format(path))
-        fig.savefig(path)
+        fig.savefig(path, clip_on=False, transparent=False)

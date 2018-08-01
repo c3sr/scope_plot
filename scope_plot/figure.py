@@ -6,6 +6,7 @@ import re
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.figure
+import bokeh.plotting
 import yaml
 from future.utils import iteritems
 from voluptuous import Required, Schema
@@ -33,7 +34,7 @@ def generate(figure_spec):
 def save(fig, paths):
     if isinstance(fig, matplotlib.figure.Figure):
         matplotlib_backend.save(fig, paths)
-    elif isinstance(fig, bokeh.Figure):
+    elif isinstance(fig, bokeh.layouts.Column):
         bokeh_backend.save(fig, paths)
     else:
         utils.halt("Unhandled figure type {}".format(fig))

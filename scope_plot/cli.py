@@ -67,9 +67,8 @@ def bar(ctx, benchmark, name_regex, output, x_field, y_field):
     bar_spec = schema.validate(bar_spec)
     fig = figure.generate(bar_spec)
     utils.debug("saving figure to {}".format(output))
-    fig.savefig(output, clip_on=False, transparent=False)
 
-    figure.save(fig)
+    figure.save(fig, [output])
 
 
 @click.command()
@@ -99,18 +98,6 @@ def spec(ctx, output, spec):
 
     # generate figures
     fig = figure.generate(figure_spec)
-
-    # Decide output path
-    if output is None and figure_spec.get("output_file", None) is not None:
-        script_dir = os.path.dirname(os.path.realpath(__file__))
-        output_path = os.path.join(script_dir, figure_spec.get("output_file"))
-        if not output_path.endswith(".pdf") and not output_path.endswith(
-                ".png"):
-            base_output_path = output_path
-            output_path = []
-            for ext in figure_spec.get("output_format", ["pdf"]):
-                ext = ext.lstrip(".")
-                output_path.append(base_output_path + "." + ext)
 
     if fig is None:
         utils.halt("failed to generate figure")

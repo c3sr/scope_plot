@@ -18,7 +18,7 @@ from scope_plot import schema
 from scope_plot.benchmark import GoogleBenchmark
 from scope_plot import styles
 
-plt.switch_backend('agg')
+# plt.switch_backend('agg')
 
 
 def configure_yaxis(ax, axis_spec):
@@ -101,7 +101,7 @@ def generator_bar(ax, ax_cfg):
         df = pd.concat([df, series_df], axis=1, sort=False)
     df = df.sort_index()
 
-    ax = df.plot.bar()
+    df.plot.bar(ax=ax)
 
     if "xaxis" in ax_cfg:
         configure_yaxis(ax, ax_cfg["yaxis"])
@@ -285,7 +285,6 @@ def generate_subplots(figure_spec):
 
 def generate(figure_spec):
 
-    fig_size = None
     if "size" in figure_spec:
         fig_size = figure_spec["size"]
 
@@ -297,12 +296,11 @@ def generate(figure_spec):
 
     # Set the figure size
 
-    fig.autofmt_xdate()
-    if fig_size:
-        utils.debug("Using figsize {}".format(fig_size))
-        fig.set_size_inches(fig_size)
+    # fig.autofmt_xdate()
+    if "size" in figure_spec:
+        size = figure_spec["size"]
+        utils.debug("Using figsize {}".format(size))
+        fig.set_size_inches(size)
     fig.set_tight_layout(True)
-
-    # plt.show()
 
     return fig

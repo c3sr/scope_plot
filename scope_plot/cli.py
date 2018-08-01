@@ -66,6 +66,7 @@ def bar(ctx, benchmark, name_regex, output, x_field, y_field):
 
     bar_spec = schema.validate(bar_spec)
     fig = figure.generate(bar_spec)
+    utils.debug("saving figure to {}".format(output))
     fig.savefig(output, clip_on=False, transparent=False)
 
 

@@ -1,6 +1,5 @@
 import os
 from scope_plot import specification
-from scope_plot import figure
 
 FIXTURES_DIR = os.path.join(
     os.path.dirname(os.path.realpath(__file__)), "..", "__fixtures")

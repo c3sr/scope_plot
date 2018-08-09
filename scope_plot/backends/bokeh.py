@@ -5,6 +5,7 @@ from scope_plot import utils
 from scope_plot import schema
 from scope_plot.benchmark import GoogleBenchmark
 from scope_plot import styles
+from scope_plot import specification
 from voluptuous import Any, Schema, Optional, MultipleInvalid
 from bokeh.plotting import figure
 from bokeh.io import show, export_png, export_svgs
@@ -72,8 +73,9 @@ def generate_errorbar(errorbar_spec):
     # Read all the series data
     df = pd.DataFrame()
     for i, series_spec in enumerate(errorbar_spec["series"]):
-
+        label = series_spec.get("label", str(i))
         color = series_spec.get("color", styles.colors[i])
+        utils.debug("series \"{}\": color {}".format(label, color))
 
         input_path = series_spec.get("input_file",
                                      errorbar_spec.get("input_file", None))
@@ -82,13 +84,15 @@ def generate_errorbar(errorbar_spec):
         y_field = series_spec.get("yfield", errorbar_spec["yfield"])
         x_scale = series_spec.get("xscale", default_x_scale)
         y_scale = series_spec.get("yscale", default_y_scale)
-        label = series_spec.get("label", str(i))
-
+        
         utils.debug("Opening {}".format(input_path))
         with GoogleBenchmark(input_path) as b:
             df = b.keep_name_regex(regex) \
                   .keep_stats() \
                   .stats_dataframe(x_field, y_field)
+
+            if not df.size:
+                utils.warn("Empty stats dataframe for path={} and x_field={} and y_field={}".format(input_path, x_field, y_field))
 
             df.loc[:, 'x_mean'] *= eval(str(x_scale))
             df.loc[:, 'x_median'] *= eval(str(x_scale))
@@ -99,7 +103,7 @@ def generate_errorbar(errorbar_spec):
 
             df = df.sort_values(by=['x_mean'])
 
-            fig.line(x=df.loc[:, "x_mean"], y=df.loc[:, "y_mean"], color=color)
+            fig.line(x=df.loc[:, "x_mean"], y=df.loc[:, "y_mean"], color=color, legend=label)
 
             df.loc[:, "lower"] = df.loc[:, 'y_mean'] - df.loc[:, 'y_stddev']
             df.loc[:, "upper"] = df.loc[:, 'y_mean'] + df.loc[:, 'y_stddev']
@@ -114,6 +118,9 @@ def generate_errorbar(errorbar_spec):
             whisker.upper_head.line_color = color
             whisker.lower_head.line_color = color
             fig.add_layout(whisker)
+
+    fig.legend.location = "top_left"
+    fig.legend.click_policy = "hide"
 
     return fig
 
@@ -224,6 +231,8 @@ def generate_plot(plot_spec):
 
 def generate(figure_spec):
 
+    figure_spec = specification.canonicalize_to_subplot(figure_spec)
+
     if "subplots" not in figure_spec:
         utils.halt("expected key subplots in spec")
 
@@ -252,15 +261,23 @@ def generate(figure_spec):
     return grid
 
 
-def save(fig, paths):
-    for path in paths:
-        utils.debug("saving matplotlib figure: {}".format(path))
-        if path.endswith(".png"):
-            export_png(fig, filename=path)
-        elif path.endswith(".svg"):
-            export_svgs(fig, filename=path)
-        elif path.endswith(".html"):
-            bokeh.io.output_file(path)
-            bokeh.io.save(fig)
-        else:
-            utils.error("unsupported bokeh output type {}".format(path))
+def run(job):
+    figure_spec = job.figure_spec
+    fig = generate(figure_spec)
+
+    if not fig:
+        utils.halt("Unable to generate figure")
+
+    save(fig, job.path)
+
+def save(fig, path):
+    utils.debug("saving bokeh figure: {}".format(path))
+    if path.endswith(".png"):
+        export_png(fig, filename=path)
+    elif path.endswith(".svg"):
+        export_svgs(fig, filename=path)
+    elif path.endswith(".html"):
+        bokeh.io.output_file(path)
+        bokeh.io.save(fig)
+    else:
+        utils.error("unsupported bokeh output type {}".format(path))

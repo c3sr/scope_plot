@@ -4,25 +4,19 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-click = "*"
-matplotlib = "*"
-seaborn = "*"
-bokeh = "*"
-pandas = "*"
-mypy = "*"
-schema = "*"
-jsonschema = "*"
-networkx = "*"
-prettyprinter = "*"
-scipy = "*"
+bokeh = "<0.14,>=0.13"
+click = "<6.8,>=6.7"
+future = ">=0.16.0,<0.17"
+matplotlib = "<2.3,>=2.2"
+numpy = "<1.15,>=1.14"
+pandas = ">=0.23,<0.24"
+selenium = ">=3.13,<3.14"
+voluptuous = ">=0.11,<0.12"
+PyYAML = ">=3.13,<3.14"
+"e1839a8" = {editable = true, path = "."}
 
 [dev-packages]
-black = "*"
-yapf = "*"
-"pep8" = "*"
-"flake8-mypy" = "*"
-"flake8" = "*"
-itermplot = "*"
+pycodestyle = "*"
 
 [requires]
 python_version = "3.6"

@@ -48,8 +48,14 @@ EVAL = Any(basestring, float, int)
 BACKEND = Any("bokeh", "matplotlib")
 TYPE = Any("errorbar", "bar", "regplot")
 
-SPEC_FIELDS = Schema({
+FILES_SCHEMA = Schema({
     Required("backend"): BACKEND,
+    Required("extension"): basestring,
+})
+
+OUTPUT = Schema({
+    Optional("name"): basestring,
+    Required("files"): [FILES_SCHEMA],
 })
 
 PLOT_DICT = Schema({
@@ -75,13 +81,12 @@ BAR_EXTENSIONS = {Optional("bar_width"): Any(int, float)}
 BAR_DICT = PLOT_DICT.extend(BAR_EXTENSIONS)
 
 ERRORBAR_EXTENSIONS = {
-    Required("backend"): BACKEND,
 }
 
-ERRORBAR_DICT = PLOT_DICT.extend(ERRORBAR_EXTENSIONS)
+ERRORBAR_FIELDS = PLOT_DICT.extend(ERRORBAR_EXTENSIONS)
 
 REG_EXTENSIONS = {
-    Required("backend"): BACKEND,
+    Optional("output"): OUTPUT,
 }
 
 REG_DICT = PLOT_DICT.extend(REG_EXTENSIONS)
@@ -104,7 +109,7 @@ BAR = All(
 )
 
 ERRORBAR = All(
-    ERRORBAR_DICT,
+    ERRORBAR_FIELDS,
     lambda spec: require_series_field(spec, "xfield"),
     lambda spec: require_series_field(spec, "yfield"),
     lambda spec: require_series_field(spec, "input_file"),
@@ -122,10 +127,12 @@ SUBPLOT_EXTENSIONS = {
     Required("pos"): POS,
 }
 # all figures require these fields
-FIGURE_EXTENSIONS = {Required("backend"): BACKEND}
+FIGURE_EXTENSIONS = {
+    Optional("output"): OUTPUT,
+}
 
 BAR_FIGURE_FIELDS = BAR_DICT.extend(FIGURE_EXTENSIONS)
-ERRORBAR_FIGURE_FIELDS = ERRORBAR_DICT.extend(FIGURE_EXTENSIONS)
+ERRORBAR_FIGURE_FIELDS = ERRORBAR_FIELDS.extend(FIGURE_EXTENSIONS)
 REG_FIGURE_FIELDS = REG_DICT.extend(FIGURE_EXTENSIONS)
 
 SUBPLOT_DICT = PLOT_DICT.extend(SUBPLOT_EXTENSIONS)
@@ -179,7 +186,7 @@ SUBPLOT = Any(
 SUBPLOT_FIGURE = Schema({
     Required("subplots"): [SUBPLOT],
     Optional("size"): SIZE,
-    Required("backend"): BACKEND,
+    Optional("output"): OUTPUT,
     Optional("xaxis"): AXIS,
     Optional("yaxis"): AXIS,
     Optional("yscale"): SCALE,
@@ -188,10 +195,6 @@ SUBPLOT_FIGURE = Schema({
 
 
 def validate(orig_spec):
-    if "backend" not in orig_spec:
-        raise NoBackendError
-
-    backend = orig_spec["backend"]
     if "subplots" in orig_spec:
         return SUBPLOT_FIGURE(orig_spec)
     else:

@@ -7,9 +7,8 @@ class NoInputFilesError(Exception):
 
 class NoBackendError(Exception):
     """raise when a spec file does not define 'backend'"""
-
     def __str__(self):
-        return "repr"
+        return "spec did not define 'backend'"
 
 class UnknownGenerator(Exception):
     def __init__(self, generator):

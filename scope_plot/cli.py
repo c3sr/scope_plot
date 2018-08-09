@@ -8,10 +8,10 @@ import glob
 from scope_plot import specification
 from scope_plot.specification import Specification
 from scope_plot import schema
-from scope_plot import figure
 from scope_plot.benchmark import GoogleBenchmark
 from scope_plot import utils
 from scope_plot.error import NoBackendError
+from scope_plot import backend
 from scope_plot.__init__ import __version__
 """ If the module has a command line interface then this
 file should be the entry point for that interface. """
@@ -77,12 +77,13 @@ def bar(ctx, benchmark, name_regex, output, x_field, y_field):
 @click.option(
     '-o',
     '--output',
-    help="Output path.",
+    help="override spec output paths",
     type=click.Path(dir_okay=False, resolve_path=True))
+@click.option('--output-prefix', help="prepend to all output paths")
 @click.argument(
     'spec', type=click.Path(exists=True, dir_okay=False, resolve_path=True))
 @click.pass_context
-def spec(ctx, output, spec):
+def spec(ctx, output, output_prefix, spec):
     """Create a figure from a spec file."""
     include = ctx.obj["INCLUDE"]
 
@@ -95,23 +96,20 @@ def spec(ctx, output, spec):
     except NoBackendError as e:
         utils.halt("in {}: {}".format(spec, e))
 
-
     # apply include directories
     if include:
         for d in include:
             utils.debug("searching dir {}".format(d))
         figure_spec = specification.apply_search_dirs(figure_spec, include)
 
-    # generate figures
-    fig = figure.generate(figure_spec)
+    # determine the figures that need to be constructed
+    jobs = specification.construct_jobs(figure_spec, output, output_prefix)
 
-    if fig is None:
-        utils.halt("failed to generate figure")
+    utils.debug("{} generation jobs".format(len(jobs)))
 
-    if output is None:
-        utils.warn("no output path specified")
-    else:
-        figure.save(fig, [output])
+    for job in jobs:
+        backend.run(job)
+        
 
 
 @click.group()

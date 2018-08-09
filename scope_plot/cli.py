@@ -11,6 +11,7 @@ from scope_plot import schema
 from scope_plot import figure
 from scope_plot.benchmark import GoogleBenchmark
 from scope_plot import utils
+from scope_plot.error import NoBackendError
 from scope_plot.__init__ import __version__
 """ If the module has a command line interface then this
 file should be the entry point for that interface. """
@@ -20,17 +21,18 @@ file should be the entry point for that interface. """
 @click.argument('output', type=click.Path(dir_okay=False, resolve_path=True))
 @click.argument(
     'spec', type=click.Path(exists=True, dir_okay=False, resolve_path=True))
-@click.argument('target')
+@click.argument('target', type=click.Path(dir_okay=False, resolve_path=True))
 @click.pass_context
 def deps(ctx, output, spec, target):
     """Create a Makefile dependence"""
 
     utils.debug("Loading {}".format(spec))
-    figure_spec = specification.load_yaml(spec)
-    figure_spec = specification.apply_search_dirs(figure_spec,
-                                                  ctx.obj.get("INCLUDE", []))
+    figure_spec = specification.load(spec)
+    include_dirs = ctx.obj["INCLUDE"]
+    utils.debug("Searching for input_file values in: {}".format(include_dirs))
+    figure_spec = specification.apply_search_dirs(figure_spec, include_dirs)
     figure_deps = specification.get_deps(figure_spec)
-    utils.debug("Saving to {}".format(output))
+    utils.debug("Saving deps to {}".format(output))
     specification.save_makefile_deps(output, target, figure_deps)
 
 
@@ -88,7 +90,11 @@ def spec(ctx, output, spec):
     figure_spec = specification.load(spec)
 
     # validate specification
-    figure_spec = schema.validate(figure_spec)
+    try:
+        figure_spec = schema.validate(figure_spec)
+    except NoBackendError as e:
+        utils.halt("in {}: {}".format(spec, e))
+
 
     # apply include directories
     if include:
@@ -114,7 +120,7 @@ def spec(ctx, output, spec):
     help="print debug messages to stderr.",
     default=False)
 @click.option(
-    '--include',
+    "-I", '--include',
     help="Search location for input_file in spec.",
     multiple=True,
     type=click.Path(
@@ -129,6 +135,8 @@ def main(ctx, debug, include, quiet):
     utils.DEBUG = debug
     utils.QUIET = quiet
     ctx.obj["INCLUDE"] = include
+
+    utils.debug("Running: {}".format(" ".join(sys.argv)))
 
 
 @click.command()

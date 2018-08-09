@@ -141,7 +141,10 @@ def get_deps(figure_spec):
 
 
 def save_makefile_deps(path, target, dependencies):
-    with open(path, 'wb') as f:
+
+    print(path, target, dependencies)
+
+    with open(path, 'w') as f:
         f.write(target)
         f.write(": ")
         for d in dependencies:

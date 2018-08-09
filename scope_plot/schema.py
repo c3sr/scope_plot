@@ -1,6 +1,7 @@
 from future.utils import iteritems
 from voluptuous import All, Any, Schema, Optional, Required, ALLOW_EXTRA, REMOVE_EXTRA, PREVENT_EXTRA, Invalid
 
+from scope_plot.error import NoBackendError
 from scope_plot import utils
 
 try:
@@ -188,7 +189,7 @@ SUBPLOT_FIGURE = Schema({
 
 def validate(orig_spec):
     if "backend" not in orig_spec:
-        utils.halt("spec should define backend")
+        raise NoBackendError
 
     backend = orig_spec["backend"]
     if "subplots" in orig_spec:

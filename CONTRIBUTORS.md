@@ -57,3 +57,8 @@ Install pipenv
 Add PIPENV_VENV_IN_PROJECT to the environment. This puts the .venv directory in the directory you run pipenv from, not in .local/share/virtualenvs.
 
     echo 'export PIPENV_VENV_IN_PROJECT=1' >> ~/.zshrc
+
+Install multiple pythons and make them local in the `scope_plot` directory so tox can find them.
+
+    pyenv install 3.5.5
+    pyenv local 3.5.5

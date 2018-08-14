@@ -16,3 +16,44 @@ In chronological order:
 ## Generating a Release
 
 See [RELEASE.md](RELEASE.md) for instructions on how to create a new release.
+
+## Development Environment
+
+Install pyenv, possibly with the [pyenv-installer](https://github.com/pyenv/pyenv-installer):
+
+```bash
+curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
+echo 'export PATH="$HOME/.pyenv/bin:$PATH"' >> ~/.zshrc
+echo 'eval "$(pyenv init -)"' >> ~/.zshrc
+echo 'eval "$(pyenv virtualenv-init -)"' ~/.zshrc
+```
+
+You may need to fix [common build problems](https://github.com/pyenv/pyenv/wiki/common-build-problems) for pyenv:
+
+    sudo apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev Libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev xz-utils tk-dev libffi-dev liblzma-dev
+
+
+Install pip
+
+Don't install the system pip. Instead, use `get-pip.py`.
+This is because using pip to upgrade the system pip can cause problems.
+Install for both python2 and python3, if desired.
+
+    wget https://bootstrap.pypa.io/get-pip.py
+    python get-pip.py --user
+    python3 get-pip.py --user
+
+Probably add $HOME/.local/bin to the PATH.
+
+    echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.zshrc
+
+
+Don't install the system pip. Instead, use get-pip.py. This is because using pip to upgrade the system pip can cause problems. Install for both python2 and python3, if desired.
+
+Install pipenv
+
+    pip install --user pipenv
+
+Add PIPENV_VENV_IN_PROJECT to the environment. This puts the .venv directory in the directory you run pipenv from, not in .local/share/virtualenvs.
+
+    echo 'export PIPENV_VENV_IN_PROJECT=1' >> ~/.zshrc

@@ -32,28 +32,6 @@ def run_spec(testdir):
     return do_run
 
 
-def test_scope_plot_help(tmpdir, run):
-    result = run("--help")
-    assert result.ret == 0
-
-
-def test_scope_plot_version(tmpdir, run):
-    result = run("version")
-    assert result.ret == 0
-
-
-def test_scope_plot_cat(tmpdir, run):
-    result = run("cat", os.path.join(FIXTURES_DIR, "unsorted.json"),
-                 os.path.join(FIXTURES_DIR, "unsorted.json"))
-    assert result.ret == 0
-
-
-def test_scope_plot_bar(tmpdir, run):
-    result = run("bar", os.path.join(FIXTURES_DIR, "unsorted.json"), "bytes",
-                 "real_time", os.path.join(FIXTURES_DIR, "temp.pdf"))
-    assert result.ret == 0
-
-
 def test_spec_missing(tmpdir, run_spec):
     result = run_spec("matplotlib_bar_missing.yml")
     assert result.ret == 0

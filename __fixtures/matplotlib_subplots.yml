@@ -1,4 +1,3 @@
-backend: matplotlib
 subplots:
   - type: errorbar
     pos:

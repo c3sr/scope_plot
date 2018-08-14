@@ -22,9 +22,10 @@ def run(testdir):
 def run_spec(testdir):
     def do_run(spec_file):
         spec_path = os.path.join(FIXTURES_DIR, spec_file)
+        output_path = os.path.join(FIXTURES_DIR, "test.pdf")
         args = [
             "scope_plot", "--debug", "--include", FIXTURES_DIR, "spec",
-            "--output", "test.pdf", spec_path
+            "--output", output_path, spec_path
         ]
         return testdir._run(*args)
 

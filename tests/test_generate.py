@@ -1,5 +1,7 @@
 import os
 from scope_plot import specification
+from scope_plot import backend
+from scope_plot import schema
 
 FIXTURES_DIR = os.path.join(
     os.path.dirname(os.path.realpath(__file__)), "..", "__fixtures")
@@ -7,8 +9,11 @@ FIXTURES_DIR = os.path.join(
 
 def generate_fixture(name):
     figure_spec = specification.load(os.path.join(FIXTURES_DIR, name))
+    figure_spec = schema.validate(figure_spec)
     figure_spec = specification.apply_search_dirs(figure_spec, [FIXTURES_DIR])
-    fig = figure.generate(figure_spec)
+    jobs = specification.construct_jobs(figure_spec, "test.pdf", None)
+    for job in jobs:
+        backend.run(job)
 
 
 def test_generate_errorbar():

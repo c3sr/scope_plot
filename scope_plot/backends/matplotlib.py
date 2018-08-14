@@ -292,7 +292,6 @@ def generate(figure_spec):
         generate_axes(axs[0, 0], figure_spec)
 
     # Set the figure size
-
     # fig.autofmt_xdate()
     if "size" in figure_spec:
         size = figure_spec["size"]
@@ -303,7 +302,14 @@ def generate(figure_spec):
     return fig
 
 
-def save(fig, paths):
-    for path in paths:
-        utils.debug("saving matplotlib figure: {}".format(path))
-        fig.savefig(path, clip_on=False, transparent=False)
+def run(job):
+    figure_spec = job.figure_spec
+    fig = generate(figure_spec)
+    if not fig:
+        utils.halt("Unable to generate figure")
+    save(fig, job.path)
+
+
+def save(fig, path):
+    utils.debug("saving matplotlib figure: {}".format(path))
+    fig.savefig(path, clip_on=False, transparent=False)

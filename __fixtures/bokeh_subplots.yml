@@ -1,4 +1,3 @@
-backend: bokeh
 subplots:
   - type: errorbar
     pos:

@@ -1,4 +1,3 @@
-backend: bokeh
 type: bar
 title: Reduction 256
 input_file: ex1.json

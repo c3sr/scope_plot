@@ -77,6 +77,7 @@ def load(yaml_path):
         cfg = yaml.load(f)
     return cfg
 
+
 def canonicalize_to_subplot(orig_spec):
     if 'subplots' in orig_spec:
         return orig_spec
@@ -94,6 +95,7 @@ def canonicalize_to_subplot(orig_spec):
             else:
                 new_spec["subplots"][0][key] = value
         return new_spec
+
 
 def apply_search_dirs(figure_spec, data_search_dirs):
     """
@@ -146,6 +148,7 @@ def save_makefile_deps(path, target, dependencies):
             f.write(" \\\n\t")
             f.write(d)
 
+
 class Job(object):
     """Job holds specification for generating a figure, as well as a specification for saving the figure"""
 
@@ -153,6 +156,7 @@ class Job(object):
         self.figure_spec = figure_spec
         self.backend = backend
         self.path = path
+
 
 def get_output_specs(figure_spec):
     if "output" not in figure_spec:
@@ -163,10 +167,13 @@ def get_output_specs(figure_spec):
     for spec in figure_spec.get("output", []):
         backend = spec['backend']
         ext = spec['extension']
-        specs += [(name+"."+ext, backend)]
+        specs += [(name + "." + ext, backend)]
     return specs
 
+
 def construct_jobs(figure_spec, output_path, prefix):
+    """ return the figure generation jobs from the figure_spec. Optionally override the figure_spec output with output_path, or append prefix to all outputs"""
+
     if output_path:
         if prefix:
             utils.debug("appending {} to output paths".format(prefix))
@@ -174,16 +181,19 @@ def construct_jobs(figure_spec, output_path, prefix):
         utils.debug("Using {} instead of spec output name".format(output_path))
         _, file_extension = os.path.splitext(output_path)
         if file_extension == ".pdf" or file_extension == ".png":
-            utils.debug("inferring matplotlib backend from output path {}".format(output_path))
+            utils.debug(
+                "inferring matplotlib backend from output path {}".format(
+                    output_path))
             backend = 'matplotlib'
         elif file_extension == ".svg" or file_extension == ".html":
-            utils.debug("inferring bokeh backend from output path {}".format(output_path))
+            utils.debug("inferring bokeh backend from output path {}".format(
+                output_path))
             backend = 'bokeh'
         else:
             assert False
         return [Job(figure_spec, output_path, backend)]
 
-    else: # read outputs from figure_spec
+    else:  # read outputs from figure_spec
         output_specs = get_output_specs(figure_spec)
         jobs = []
         for spec in output_specs:
@@ -193,6 +203,3 @@ def construct_jobs(figure_spec, output_path, prefix):
                 path = os.path.join(prefix, path)
             jobs += [Job(figure_spec, path, backend)]
         return jobs
-
-    
-

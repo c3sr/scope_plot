@@ -47,9 +47,18 @@ def deps(ctx, output, spec, target):
 @click.pass_context
 def bar(ctx, benchmark, name_regex, output, x_field, y_field):
     """Create a bar graph."""
+
+    root, ext = os.path.splitext(output)
+
     bar_spec = {
-        "backend": "matplotlib",
         "type": "bar",
+        # "output": {
+        #     "name": root,
+        #     "files": [{
+        #         "backend": "matplotlib",
+        #         "extension": ext,
+        #     }]
+        # },
         "series": [{
             "input_file": benchmark,
         }],
@@ -67,10 +76,9 @@ def bar(ctx, benchmark, name_regex, output, x_field, y_field):
         bar_spec["title"] = name_regex
 
     bar_spec = schema.validate(bar_spec)
-    fig = figure.generate(bar_spec)
-    utils.debug("saving figure to {}".format(output))
-
-    figure.save(fig, [output])
+    jobs = specification.construct_jobs(bar_spec, output, None)
+    for job in jobs:
+        backend.run(job)
 
 
 @click.command()
@@ -104,12 +112,11 @@ def spec(ctx, output, output_prefix, spec):
 
     # determine the figures that need to be constructed
     jobs = specification.construct_jobs(figure_spec, output, output_prefix)
+    utils.debug("{} jobs to run".format(len(jobs)))
 
-    utils.debug("{} generation jobs".format(len(jobs)))
-
+    # run the jobs
     for job in jobs:
         backend.run(job)
-        
 
 
 @click.group()
@@ -118,7 +125,8 @@ def spec(ctx, output, output_prefix, spec):
     help="print debug messages to stderr.",
     default=False)
 @click.option(
-    "-I", '--include',
+    "-I",
+    '--include',
     help="Search location for input_file in spec.",
     multiple=True,
     type=click.Path(

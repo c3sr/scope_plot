@@ -1,4 +1,3 @@
-backend: matplotlib
 type: regplot
 series:
   - label: CPU0 to GPU0

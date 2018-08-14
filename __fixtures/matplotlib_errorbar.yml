@@ -1,4 +1,3 @@
-backend: matplotlib
 type: errorbar
 series:
   - label: GPU0 to GPU1 (local)

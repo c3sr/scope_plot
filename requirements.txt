@@ -1,9 +1,0 @@
-bokeh>=0.13,<0.14
-click>=6.7,<6.8
-future>=0.16.0,<0.17
-matplotlib>=2.2,<2.3
-numpy>=1.14,<1.15
-pandas>=0.23,<0.24
-pyyaml>=3.13,<3.14
-selenium>=3.13,<3.14
-voluptuous>=0.11,<0.12

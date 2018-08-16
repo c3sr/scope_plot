@@ -19,8 +19,17 @@ with open('README.md') as f:
 with open('CHANGELOG.md') as f:
     changes = f.read()
 
-with open('requirements.txt') as f:
-    requirements = [line for line in f.read().split('\n') if len(line.strip())]
+requirements = [
+    "bokeh>=0.13,<0.14",
+    "click>=6.7,<6.8",
+    "future>=0.16.0,<0.17",
+    "matplotlib>=2.2,<2.3",
+    "numpy>=1.14,<1.15",
+    "pandas>=0.23,<0.24",
+    "pyyaml>=3.13,<3.14",
+    "selenium>=3.13,<3.14",
+    "voluptuous>=0.11,<0.12",
+]
 
 packages = [
     base_package + '.' + x
@@ -39,8 +48,8 @@ if __name__ == '__main__':
         version=VERSION,
         author='Abdul Dakkak',
         author_email='dakkak@illinois.edu',
-        maintainer='Abdul Dakkak',
-        maintainer_email='dakkak@illinois.edu',
+        maintainer='Carl Pearson',
+        maintainer_email='pearson@illinois.edu',
         entry_points={'console_scripts': ['scope_plot=scope_plot.cli:main']},
         install_requires=requirements,
         keywords=['scope_plot'],

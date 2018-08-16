@@ -84,7 +84,7 @@ def generate_errorbar(errorbar_spec):
         y_field = series_spec.get("yfield", errorbar_spec["yfield"])
         x_scale = series_spec.get("xscale", default_x_scale)
         y_scale = series_spec.get("yscale", default_y_scale)
-        
+
         utils.debug("Opening {}".format(input_path))
         with GoogleBenchmark(input_path) as b:
             df = b.keep_name_regex(regex) \
@@ -269,6 +269,7 @@ def run(job):
         utils.halt("Unable to generate figure")
 
     save(fig, job.path)
+
 
 def save(fig, path):
     utils.debug("saving bokeh figure: {}".format(path))

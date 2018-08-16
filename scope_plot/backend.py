@@ -2,6 +2,7 @@ from scope_plot import utils
 import scope_plot.backends.bokeh as bokeh_backend
 import scope_plot.backends.matplotlib as matplotlib_backend
 
+
 def run(job):
     backend_str = job.backend
     if "bokeh" == backend_str:

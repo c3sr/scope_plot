@@ -19,6 +19,12 @@ See [RELEASE.md](RELEASE.md) for instructions on how to create a new release.
 
 ## Development Environment
 
+Install the system python and python3
+
+```
+sudo apt install -y python python-dev python3 python3-dev python3-distutils
+```
+
 Install pyenv, possibly with the [pyenv-installer](https://github.com/pyenv/pyenv-installer):
 
 ```bash
@@ -41,14 +47,10 @@ Install for both python2 and python3, if desired.
 
     wget https://bootstrap.pypa.io/get-pip.py
     python get-pip.py --user
-    python3 get-pip.py --user
 
 Probably add $HOME/.local/bin to the PATH.
 
     echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.zshrc
-
-
-Don't install the system pip. Instead, use get-pip.py. This is because using pip to upgrade the system pip can cause problems. Install for both python2 and python3, if desired.
 
 Install pipenv
 
@@ -58,7 +60,17 @@ Add PIPENV_VENV_IN_PROJECT to the environment. This puts the .venv directory in 
 
     echo 'export PIPENV_VENV_IN_PROJECT=1' >> ~/.zshrc
 
+Install tox
+
+    pip install --user tox
+
 Install multiple pythons and make them local in the `scope_plot` directory so tox can find them.
 
     pyenv install 3.5.5
-    pyenv local 3.5.5
+    pyenv install 3.7.0
+    pyenv local 3.5.5 3.7.0
+
+Run tox.
+It should pick up the different python versions installed with pyenv.
+
+    tox

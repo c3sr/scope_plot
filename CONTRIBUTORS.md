@@ -48,7 +48,7 @@ Install for both python2 and python3, if desired.
     wget https://bootstrap.pypa.io/get-pip.py
     python get-pip.py --user
 
-Probably add $HOME/.local/bin to the PATH.
+Probably add `$HOME/.local/bin` to the PATH so you can run `pip`.
 
     echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.zshrc
 

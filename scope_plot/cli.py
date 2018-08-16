@@ -75,8 +75,8 @@ def bar(ctx, benchmark, name_regex, output, x_field, y_field):
         bar_spec["series"][0]["regex"] = name_regex
         bar_spec["title"] = name_regex
 
-    bar_spec = schema.validate(bar_spec)
-    jobs = specification.construct_jobs(bar_spec, output, None)
+    bar_spec = Specification.load_dict(bar_spec)
+    jobs = backend.construct_jobs(bar_spec, output)
     for job in jobs:
         backend.run(job)
 
@@ -96,22 +96,28 @@ def spec(ctx, output, output_prefix, spec):
     include = ctx.obj["INCLUDE"]
 
     # load YAML spec file
-    figure_spec = specification.load(spec)
-
-    # validate specification
-    try:
-        figure_spec = schema.validate(figure_spec)
-    except NoBackendError as e:
-        utils.halt("in {}: {}".format(spec, e))
+    figure_spec = Specification.load_yaml(spec)
 
     # apply include directories
     if include:
         for d in include:
             utils.debug("searching dir {}".format(d))
-        figure_spec = specification.apply_search_dirs(figure_spec, include)
+        figure_spec.apply_search_dirs(include)
+
+    # output path from command line or spec
+    if output:
+        output_paths = [output]
+    else:
+        output_paths = figure_spec.output_paths()
+
+    # prepend prefix to output_path
+    if output_prefix:
+        for output_path in output_paths:
+            output_path = os.path.join(output_prefix, output_path)
 
     # determine the figures that need to be constructed
-    jobs = specification.construct_jobs(figure_spec, output, output_prefix)
+    jobs = backend.construct_jobs(figure_spec, output_paths)
+
     utils.debug("{} jobs to run".format(len(jobs)))
 
     # run the jobs

@@ -1,5 +1,5 @@
 import os
-from scope_plot import specification
+from scope_plot.specification import Specification
 from scope_plot import backend
 from scope_plot import schema
 
@@ -8,10 +8,9 @@ FIXTURES_DIR = os.path.join(
 
 
 def generate_fixture(name):
-    figure_spec = specification.load(os.path.join(FIXTURES_DIR, name))
-    figure_spec = schema.validate(figure_spec)
-    figure_spec = specification.apply_search_dirs(figure_spec, [FIXTURES_DIR])
-    jobs = specification.construct_jobs(figure_spec, "test.pdf", None)
+    figure_spec = Specification.load_yaml(os.path.join(FIXTURES_DIR, name))
+    figure_spec.apply_search_dirs([FIXTURES_DIR])
+    jobs = backend.construct_jobs(figure_spec, ["test.pdf"])
     for job in jobs:
         backend.run(job)
 

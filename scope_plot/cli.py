@@ -37,15 +37,18 @@ def deps(ctx, output, spec, target):
 
 @click.command()
 @click.argument(
-    'benchmark',
-    type=click.Path(exists=True, dir_okay=False, resolve_path=True))
+    'benchmark', type=click.Path(dir_okay=False, exists=True, resolve_path=True))
 @click.argument('x-field')
 @click.argument('y-field')
 @click.argument('output', type=click.Path(dir_okay=False, resolve_path=True))
-@click.option('--name-regex', help="a YAML spec for a figure")
+
+@click.option('--filter-name', help="only keep benchmarks with this name")
 @click.pass_context
-def bar(ctx, benchmark, name_regex, output, x_field, y_field):
-    """Create a bar graph."""
+def bar(ctx, benchmark, filter_name, output, x_field, y_field):
+    """
+    Create a bar graph from BENCHMARK data (default stdin) using X_FIELD and Y_FIELD
+    as the fields for the x- and y-data respectively, rendering to OUTPUT.
+    """
 
     root, ext = os.path.splitext(output)
 
@@ -70,9 +73,9 @@ def bar(ctx, benchmark, name_regex, output, x_field, y_field):
     if y_field:
         bar_spec["series"][0]["yfield"] = y_field
         bar_spec["yaxis"] = {"label": y_field, "type": "log"}
-    if name_regex:
-        bar_spec["series"][0]["regex"] = name_regex
-        bar_spec["title"] = name_regex
+    if filter_name:
+        bar_spec["series"][0]["regex"] = filter_name
+        bar_spec["title"] = filter_name
 
     bar_spec = Specification.load_dict(bar_spec)
     jobs = backend.construct_jobs(bar_spec, [output])

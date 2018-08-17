@@ -166,21 +166,15 @@ def help(ctx):
 
 @click.command()
 @click.pass_context
+@click.argument("input", type=click.File(mode='rb'), default="-")
 @click.argument("regex")
-@click.option(
-    '-i',
-    '--input',
-    help="Input file (- for stdin)",
-    type=click.File(mode='rb'),
-    default="-")
-@click.option(
-    '-o',
-    '--output',
-    help="Output path (- for stdout)",
-    type=click.File(mode='wb'),
-    default="-")
+@click.argument("output", type=click.File(mode='wb'), default="-")
 def filter_name(ctx, regex, input, output):
-    """Filter google benchmark results by name"""
+    """
+    Filter Google Benchmark JSON files by benchmark name.
+    INPUT and OUTPUT are optional files, otherwise stdin/stdout are used.
+    REGEX is a regular expression for names to keep.
+    """
     with GoogleBenchmark(stream=input) as b:
         output.write(b.keep_name_regex(regex).json())
 

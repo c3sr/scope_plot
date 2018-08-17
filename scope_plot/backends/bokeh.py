@@ -72,13 +72,12 @@ def generate_errorbar(errorbar_spec):
 
     # Read all the series data
     df = pd.DataFrame()
-    for i, series_spec in enumerate(errorbar_spec["series"]):
+    for i, series_spec in enumerate(errorbar_spec.series):
         label = series_spec.get("label", str(i))
         color = series_spec.get("color", styles.colors[i])
         utils.debug("series \"{}\": color {}".format(label, color))
 
-        input_path = series_spec.get("input_file",
-                                     errorbar_spec.get("input_file", None))
+        input_path = series_spec.input_file()
         regex = series_spec.get("regex", ".*")
         x_field = series_spec.get("xfield", errorbar_spec["xfield"])
         y_field = series_spec.get("yfield", errorbar_spec["yfield"])
@@ -141,10 +140,9 @@ def generate_bar(bar_spec):
 
     # Read all the series data
     df = pd.DataFrame()
-    for i, series_spec in enumerate(bar_spec["series"]):
+    for i, series_spec in enumerate(bar_spec.series):
 
-        input_path = series_spec.get("input_file",
-                                     bar_spec.get("input_file", None))
+        input_path = series_spec.input_file()
         y_scale = eval(str(series_spec.get("yscale", default_y_scale)))
         x_scale = eval(str(series_spec.get("xscale", default_x_scale)))
         regex = series_spec.get("regex", ".*")
@@ -187,12 +185,12 @@ def generate_bar(bar_spec):
 
     # offset each series
     group_width = 1.0 / (
-        len(bar_spec["series"]) + 1
+        len(bar_spec.series) + 1
     )  # each group of bars is 1 wide, leave 1 bar-width between groups
     bar_width = group_width * 0.95  # small gap between bars
 
     # plot the bars
-    for i, series_spec in enumerate(bar_spec["series"]):
+    for i, series_spec in enumerate(bar_spec.series):
 
         color = series_spec.get("color", styles.colors[i])
 
@@ -212,21 +210,14 @@ def generate_bar(bar_spec):
 
 def generate_plot(plot_spec):
 
-    # validate plot_spec
-    if "type" not in plot_spec:
-        utils.halt("Expected type key in plot_spec")
-
-    type_str = plot_spec['type']
-    del plot_spec['type']
-
-    if "bar" == type_str:
+    if "bar" == plot_spec.ty():
         utils.debug("Generating bar plot")
         return generate_bar(plot_spec)
-    elif "errorbar" == type_str:
+    elif "errorbar" == plot_spec.ty():
         utils.debug("Generating errorbar plot")
         return generate_errorbar(plot_spec)
     else:
-        utils.halt("Unrecognized type: {}".format(type_str))
+        utils.halt("Unrecognized plot type: {}".format(plot_spec.ty()))
 
 
 def generate(figure_spec):

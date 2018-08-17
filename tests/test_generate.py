@@ -9,7 +9,7 @@ FIXTURES_DIR = os.path.join(
 
 def generate_fixture(name):
     figure_spec = Specification.load_yaml(os.path.join(FIXTURES_DIR, name))
-    figure_spec.apply_search_dirs([FIXTURES_DIR])
+    figure_spec.find_input_files([FIXTURES_DIR])
     jobs = backend.construct_jobs(figure_spec, ["test.pdf"])
     for job in jobs:
         backend.run(job)

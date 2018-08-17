@@ -27,13 +27,12 @@ def deps(ctx, output, spec, target):
     """Create a Makefile dependence"""
 
     utils.debug("Loading {}".format(spec))
-    figure_spec = specification.load(spec)
+    figure_spec = Specification.load_yaml(spec)
     include_dirs = ctx.obj["INCLUDE"]
     utils.debug("Searching for input_file values in: {}".format(include_dirs))
-    figure_spec = specification.apply_search_dirs(figure_spec, include_dirs)
-    figure_deps = specification.get_deps(figure_spec)
+    figure_spec.find_input_files(include_dirs)
     utils.debug("Saving deps to {}".format(output))
-    specification.save_makefile_deps(output, target, figure_deps)
+    figure_spec.save_makefile_deps(output, target)
 
 
 @click.command()
@@ -76,7 +75,7 @@ def bar(ctx, benchmark, name_regex, output, x_field, y_field):
         bar_spec["title"] = name_regex
 
     bar_spec = Specification.load_dict(bar_spec)
-    jobs = backend.construct_jobs(bar_spec, output)
+    jobs = backend.construct_jobs(bar_spec, [output])
     for job in jobs:
         backend.run(job)
 
@@ -100,9 +99,8 @@ def spec(ctx, output, output_prefix, spec):
 
     # apply include directories
     if include:
-        for d in include:
-            utils.debug("searching dir {}".format(d))
-        figure_spec.apply_search_dirs(include)
+        utils.debug("searching dirs {}".format(include))
+        figure_spec.find_input_files(include)
 
     # output path from command line or spec
     if output:

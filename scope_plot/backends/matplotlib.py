@@ -46,12 +46,11 @@ def configure_xaxis(ax, axis_spec):
 def generator_bar(ax, ax_cfg):
 
     bar_width = ax_cfg.get("bar_width", 0.8)
-    default_file = ax_cfg.get("input_file", None)
     default_x_scale = eval(str(ax_cfg.get("xscale", 1.0)))
     default_y_scale = eval(str(ax_cfg.get("yscale", 1.0)))
     default_x_field = ax_cfg.get("xfield", None)
     default_y_field = ax_cfg.get("yfield", None)
-    series_specs = ax_cfg["series"]
+    series_specs = ax_cfg.series
 
     if default_x_field:
         utils.debug(
@@ -63,14 +62,14 @@ def generator_bar(ax, ax_cfg):
 
     df = pd.DataFrame()
     for i, series_spec in enumerate(series_specs):
-        input_path = default_file
+        input_path = series_spec.input_file()
         label = series_spec.get("label", str(i))
         regex = series_spec.get("regex", ".*")
         y_field = series_spec.get("yfield", default_y_field)
         x_field = series_spec.get("xfield", default_x_field)
         y_scale = eval(str(series_spec.get("yscale", default_y_scale)))
         x_scale = eval(str(series_spec.get("xscale", default_x_scale)))
-        input_path = series_spec.get("input_file", default_file)
+        input_path = series_spec.input_file()
         utils.require(input_path, "input_file should have been defined")
         utils.require(y_field, "yfield should have been defined")
         utils.require(x_field, "xfield should have been defined")
@@ -96,7 +95,7 @@ def generator_bar(ax, ax_cfg):
         # https://stackoverflow.com/questions/27719407/pandas-concat-valueerror-shape-of-passed-values-is-blah-indices-imply-blah2
         if not series_df.index.is_unique:
             utils.error(
-                "index is not unique (duplicate x_field ({}) values)".format(
+                "multiple benchmark results with equal x_field={} values. The plot might be weird.".format(
                     x_field))
         df = pd.concat([df, series_df], axis=1, sort=False)
     df = df.sort_index()
@@ -117,13 +116,12 @@ def generator_bar(ax, ax_cfg):
 
 
 def generator_errorbar(ax, ax_cfg):
-    default_input_file = ax_cfg.get("input_file", None)
     default_x_field = ax_cfg.get("xfield", None)
     default_y_field = ax_cfg.get("yfield", None)
-    series_specs = ax_cfg["series"]
+    series_specs = ax_cfg.series
 
     for i, series_spec in enumerate(series_specs):
-        file_path = series_spec.get("input_file", default_input_file)
+        file_path = series_spec.input_file()
         label = series_spec["label"]
         regex = series_spec.get("regex", ".*")
         yscale = eval(str(series_spec.get("yscale", 1.0)))
@@ -161,13 +159,12 @@ def generator_errorbar(ax, ax_cfg):
 
 
 def generator_regplot(ax, ax_spec):
-    default_input_file = ax_spec.get("input_file", None)
     default_x_field = ax_spec.get("xfield", None)
     default_y_field = ax_spec.get("yfield", None)
-    series_specs = ax_spec["series"]
+    series_specs = ax_spec.series
 
     for i, series_spec in enumerate(series_specs):
-        file_path = series_spec.get("input_file", default_input_file)
+        file_path = series_spec.input_file()
         label = series_spec["label"]
         regex = series_spec.get("regex", ".*")
         yscale = eval(str(series_spec.get("yscale", 1.0)))
@@ -217,7 +214,7 @@ def generator_regplot(ax, ax_spec):
 
 
 def generate_axes(ax, ax_spec):
-    ty = ax_spec["type"]
+    ty = ax_spec.ty()
     if ty == "bar":
         ax = generator_bar(ax, ax_spec)
     elif ty == "errorbar":
@@ -230,31 +227,10 @@ def generate_axes(ax, ax_spec):
 
 
 def generate_subplots(figure_spec):
-    # defaults
-    default_x_axis_spec = {}
-    default_y_axis_spec = {}
-    subplots = None
+    default_x_axis_spec = figure_spec.get("xaxis", {})
+    default_y_axis_spec = figure_spec.get("yaxis", {})
 
-    # parse figure_spec
-    consume_keys = []
-    for key, value in iteritems(figure_spec):
-        if key == "xaxis":
-            default_x_axis_spec = value
-        elif key == "yaxis":
-            default_y_axis_spec = value
-        elif key == "size":
-            fig_size = value
-        elif key == "subplots":
-            subplots = value
-        else:
-            utils.debug("unrecognized key {} in figure_spec".format(key))
-        consume_keys += [key]
-
-    # delete consumed specs
-    for key in consume_keys:
-        del figure_spec[key]
-
-    ax_specs = subplots
+    ax_specs = figure_spec.subplots
 
     for spec in ax_specs:
         assert "pos" in spec
@@ -285,11 +261,7 @@ def generate_subplots(figure_spec):
 
 def generate(figure_spec):
 
-    if "subplots" in figure_spec:
-        fig = generate_subplots(figure_spec)
-    else:
-        fig, axs = plt.subplots(1, 1, squeeze=False)
-        generate_axes(axs[0, 0], figure_spec)
+    fig = generate_subplots(figure_spec)
 
     # Set the figure size
     # fig.autofmt_xdate()

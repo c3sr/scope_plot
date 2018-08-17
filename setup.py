@@ -20,15 +20,15 @@ with open('CHANGELOG.md') as f:
     changes = f.read()
 
 requirements = [
-    "bokeh>=0.13,<0.14",
-    "click>=6.7,<6.8",
-    "future>=0.16.0,<0.17",
-    "matplotlib>=2.2,<2.3",
-    "numpy>=1.14,<1.15",
+    "bokeh>=0.13",
+    "click>=6.7",
+    "future>=0.16",
+    "matplotlib>=2.2",
+    "numpy>=1.14",
     "pandas>=0.20",
-    "pyyaml>=3.13,<3.14",
-    "selenium>=3.13,<3.14",
-    "voluptuous>=0.11,<0.12",
+    "pyyaml>=3.13",
+    "selenium>=3.13",
+    "voluptuous>=0.11",
 ]
 
 packages = [

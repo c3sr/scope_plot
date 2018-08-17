@@ -63,7 +63,7 @@ jobs:
   allow_failures:
     - python: nightly
       env: TOXENV=py37
-    - python: 3.5
+    - python: 3.6
       env: TOXENV=pycodestyle
 
 

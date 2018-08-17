@@ -10,4 +10,4 @@ if [[ "$(uname -s)" == "Darwin" ]]; then
     eval "$(pyenv init -)"
 fi
 
-tox
+python -m tox

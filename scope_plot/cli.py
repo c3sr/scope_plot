@@ -41,7 +41,6 @@ def deps(ctx, output, spec, target):
 @click.argument('x-field')
 @click.argument('y-field')
 @click.argument('output', type=click.Path(dir_okay=False, resolve_path=True))
-
 @click.option('--filter-name', help="only keep benchmarks with this name")
 @click.pass_context
 def bar(ctx, benchmark, filter_name, output, x_field, y_field):
@@ -54,13 +53,6 @@ def bar(ctx, benchmark, filter_name, output, x_field, y_field):
 
     bar_spec = {
         "type": "bar",
-        # "output": {
-        #     "name": root,
-        #     "files": [{
-        #         "backend": "matplotlib",
-        #         "extension": ext,
-        #     }]
-        # },
         "series": [{
             "input_file": benchmark,
         }],

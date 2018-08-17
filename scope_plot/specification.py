@@ -6,13 +6,16 @@ from scope_plot import utils
 from scope_plot.error import NoInputFilesError
 from scope_plot import schema
 
+
 class InputFileNotFoundError(Exception):
     """raise when a spec file does not define 'backend'"""
     def __init__(self, name, search_dirs):
         self.name = name
         self.search_dirs = search_dirs
+
     def __str__(self):
         return "input_file {} not found in any of {}".format(self.name, self.search_dirs)
+
 
 def find(name, search_dirs):
     if not os.path.isfile(name):
@@ -25,6 +28,7 @@ def find(name, search_dirs):
                 return check_path
         if not found:
             return None
+
 
 class SpecificationBase(object):
     """ emulate a dictionary to provide compatibility with most of old implementation"""
@@ -53,14 +57,12 @@ class SeriesSpecification(SpecificationBase):
         super(SeriesSpecification, self).__init__(parent, spec)
         self._input_file = spec.get("input_file", None)
 
-
     def label_seperator(self):
         """the seperator that should be used to build the label, or None if the label a string"""
         label_spec = self.spec["label"]
         if isinstance(label_spec, dict):
             return label_spec.get("seperator", "x")
         return None
-
 
     def label_fields(self):
         """the fields that should be used to build the label, or None if the label a string"""
@@ -69,14 +71,12 @@ class SeriesSpecification(SpecificationBase):
             return label_spec["fields"]
         return None
 
-
     def label(self):
         """return the label, if it is a string, or None"""
         label_spec = self.spec["label"]
         if isinstance(label_spec, str):
             return label_spec
         return None
-
 
     def find_input_file(self, search_dirs):
         if self._input_file:
@@ -97,13 +97,12 @@ class SeriesSpecification(SpecificationBase):
 class PlotSpecification(SpecificationBase):
     def __init__(self, parent, spec):
         super(PlotSpecification, self).__init__(parent, spec)
-        self.series =  [ 
+        self.series = [
             SeriesSpecification(self, s) for s in spec["series"]
         ]
         self._input_file = spec.get("input_file", None)
         self.type_str = spec.get("type", None)
         self.spec = spec
-
 
     def find_input_files(self, search_dirs):
         if self._input_file:
@@ -140,11 +139,10 @@ class Specification(SpecificationBase):
         else:
             utils.debug("subplot not in spec")
             self.subplots = [PlotSpecification(self, spec)]
-            self.subplots[0]["pos"] = (1,1)
+            self.subplots[0]["pos"] = (1, 1)
         self._input_file = spec.get("input_file", None)
         self.size = spec.get("size", None)
         self.type_str = spec.get("type", None)
-
 
     def input_files(self):
         """ return all input_files entries in the specification"""
@@ -154,7 +152,6 @@ class Specification(SpecificationBase):
 
     def input_file(self):
         return self._input_file
-
 
     def find_input_files(self, search_dirs):
         if self._input_file:
@@ -199,13 +196,14 @@ class Specification(SpecificationBase):
 
         deps = sorted(list(set(self.input_files())))
         if len(deps) == 0:
-            raise NoInputFilesError(self) 
+            raise NoInputFilesError(self)
         with open(path, 'w') as f:
             f.write(target)
             f.write(": ")
             for d in deps:
                 f.write(" \\\n\t")
                 f.write(d)
+
 
 def canonicalize_to_subplot(orig_spec):
     if 'subplots' in orig_spec:
@@ -224,4 +222,3 @@ def canonicalize_to_subplot(orig_spec):
             else:
                 new_spec["subplots"][0][key] = value
         return new_spec
-

@@ -3,6 +3,7 @@ import scope_plot.backends.bokeh as bokeh_backend
 import scope_plot.backends.matplotlib as matplotlib_backend
 import os
 
+
 class Job(object):
     """Job holds specification for generating a figure, as well as a specification for saving the figure"""
 
@@ -10,6 +11,7 @@ class Job(object):
         self.figure_spec = figure_spec
         self.backend = backend
         self.path = path
+
 
 def run(job):
     backend_str = job.backend
@@ -19,6 +21,7 @@ def run(job):
         return matplotlib_backend.run(job)
     else:
         utils.halt("Unexpected backend str: {}".format(backend_str))
+
 
 def construct_jobs(spec, output_paths):
     """ construct jobs from spec, ignoring output field in spec and using output_paths"""
@@ -39,6 +42,3 @@ def construct_jobs(spec, output_paths):
 
         jobs += [Job(spec, output_path, backend)]
     return jobs
-
-
-

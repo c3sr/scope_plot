@@ -25,14 +25,14 @@ jobs:
     # Linux Builds
     - python: 2.7
       env: TOXENV=py27
-    - python: 3.4
-      env: TOXENV=py34
     - python: 3.5
       env: TOXENV=py35
-    - python: 3.6-dev
+    - python: 3.6
       env: TOXENV=py36
-    - python: nightly
+    - python: 3.7
       env: TOXENV=py37
+    - python: nightly
+      env: TOXENV=py38
 
     # OSX Builds
     - language: generic
@@ -40,13 +40,13 @@ jobs:
       env: TOXENV=py27
     - language: generic
       os: osx
-      env: TOXENV=py34
-    - language: generic
-      os: osx
       env: TOXENV=py35
     - language: generic
       os: osx
       env: TOXENV=py36
+    - language: generic
+      os: osx
+      env: TOXENV=py37
     - stage: deploy
       python: 3.6
       install: true
@@ -62,10 +62,7 @@ jobs:
           tags: true
   allow_failures:
     - python: nightly
-      env: TOXENV=py37
-    - python: 3.6
-      env: TOXENV=pycodestyle
-
+      env: TOXENV=py38
 
 notifications:
   email: false

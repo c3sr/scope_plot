@@ -43,8 +43,9 @@ if __name__ == '__main__':
         name='scope_plot',
         description='Plot Google Benchmark results',
         long_description='\n\n'.join([readme, changes]),
+        long_description_content_type='text/markdown', # This is important!
         license=LICENSE,
-        url='http://scope_plot.readthedocs.io',
+        url='https://github.com/rai-project/scope_plot',
         version=VERSION,
         author='Abdul Dakkak',
         author_email='dakkak@illinois.edu',
@@ -63,8 +64,7 @@ if __name__ == '__main__':
             'Programming Language :: Python :: 2',
             'Programming Language :: Python :: 2.7',
             'Programming Language :: Python :: 3',
-            'Programming Language :: Python :: 3.3',
-            'Programming Language :: Python :: 3.4',
             'Programming Language :: Python :: 3.5',
-            'Programming Language :: Python :: 3.6'
+            'Programming Language :: Python :: 3.6',
+            'Programming Language :: Python :: 3.7',
         ])

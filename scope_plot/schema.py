@@ -26,8 +26,8 @@ AXIS = Schema({
     Optional('type'): basestring,
 })
 
-SCALE = Any(float, int, basestring)
 COLOR = Any(basestring, float, int)
+EVAL = Any(basestring, float, int)
 
 SERIES_SCHEMA = Schema({
     Optional("label"): basestring,
@@ -35,15 +35,13 @@ SERIES_SCHEMA = Schema({
     Optional("regex"): basestring,
     Optional("xfield"): basestring,
     Optional("yfield"): basestring,
-    Optional("xscale"): SCALE,
-    Optional("yscale"): SCALE,
+    Optional("xscale"): EVAL,
+    Optional("yscale"): EVAL,
     Optional("color"): COLOR,
 })
 
 POS = list
 SIZE = list
-
-EVAL = Any(basestring, float, int)
 
 BACKEND = Any("bokeh", "matplotlib")
 TYPE = Any("errorbar", "bar", "regplot")
@@ -58,7 +56,7 @@ OUTPUT = Schema({
     Required("files"): [FILES_SCHEMA],
 })
 
-PLOT_DICT = Schema({
+PLOT_FIELDS = Schema({
     Required("type"): TYPE,
     Optional("title"): basestring,
     Optional("input_file"): basestring,
@@ -67,8 +65,6 @@ PLOT_DICT = Schema({
     Optional("yaxis"): AXIS,
     Optional("xaxis"): AXIS,
     Optional("series"): [SERIES_SCHEMA],
-    Optional("yscale"): SCALE,
-    Optional("xscale"): SCALE,
     Optional("xtype"): basestring,
     Optional("ytype"): basestring,
     Optional("yscale"): EVAL,
@@ -76,20 +72,18 @@ PLOT_DICT = Schema({
     Optional("size"): SIZE
 })
 
-BAR_EXTENSIONS = {Optional("bar_width"): Any(int, float)}
-
-BAR_DICT = PLOT_DICT.extend(BAR_EXTENSIONS)
-
-ERRORBAR_EXTENSIONS = {
+BAR_EXTENSIONS = {
+    Optional("bar_width"): Any(int, float)
 }
+BAR_FIELDS = PLOT_FIELDS.extend(BAR_EXTENSIONS)
 
-ERRORBAR_FIELDS = PLOT_DICT.extend(ERRORBAR_EXTENSIONS)
+ERRORBAR_EXTENSIONS = {}
+ERRORBAR_FIELDS = PLOT_FIELDS.extend(ERRORBAR_EXTENSIONS)
 
 REG_EXTENSIONS = {
     Optional("output"): OUTPUT,
 }
-
-REG_DICT = PLOT_DICT.extend(REG_EXTENSIONS)
+REG_FIELDS = PLOT_FIELDS.extend(REG_EXTENSIONS)
 
 
 def require_series_field(plot_spec, field):
@@ -101,102 +95,58 @@ def require_series_field(plot_spec, field):
     return plot_spec
 
 
-BAR = All(
-    BAR_DICT,
-    lambda spec: require_series_field(spec, "xfield"),
-    lambda spec: require_series_field(spec, "yfield"),
-    lambda spec: require_series_field(spec, "input_file"),
-)
-
-ERRORBAR = All(
-    ERRORBAR_FIELDS,
-    lambda spec: require_series_field(spec, "xfield"),
-    lambda spec: require_series_field(spec, "yfield"),
-    lambda spec: require_series_field(spec, "input_file"),
-)
-
-REG = All(
-    REG_DICT,
-    lambda spec: require_series_field(spec, "xfield"),
-    lambda spec: require_series_field(spec, "yfield"),
-    lambda spec: require_series_field(spec, "input_file"),
-)
-
-# subplot additional field requirements
-SUBPLOT_EXTENSIONS = {
+# Schema for an entry in a subplot list
+SUBPLOT_FIELDS = {
     Required("pos"): POS,
 }
-# all figures require these fields
-FIGURE_EXTENSIONS = {
+SUBPLOT_FIELDS = PLOT_FIELDS.extend(SUBPLOT_FIELDS)
+
+
+# Schema for top-level figure spec
+FIGURE_FIELDS = {
     Optional("output"): OUTPUT,
+    Optional("xfield"): basestring,
+    Optional("yfield"): basestring,
+    Optional("size"): SIZE,
+    Optional("output"): OUTPUT,
+    Optional("xaxis"): AXIS,
+    Optional("yaxis"): AXIS,
+    Optional("yscale"): EVAL,
+    Optional("xscale"): EVAL,
 }
 
-BAR_FIGURE_FIELDS = BAR_DICT.extend(FIGURE_EXTENSIONS)
-ERRORBAR_FIGURE_FIELDS = ERRORBAR_FIELDS.extend(FIGURE_EXTENSIONS)
-REG_FIGURE_FIELDS = REG_DICT.extend(FIGURE_EXTENSIONS)
+# bar figure is a bar plot which is also a figure
+BAR_FIGURE_FIELDS = BAR_FIELDS.extend(FIGURE_FIELDS)
+ERRORBAR_FIGURE_FIELDS = ERRORBAR_FIELDS.extend(FIGURE_FIELDS)
+REG_FIGURE_FIELDS = REG_FIELDS.extend(FIGURE_FIELDS)
 
-SUBPLOT_DICT = PLOT_DICT.extend(SUBPLOT_EXTENSIONS)
-BAR_SUBPLOT_DICT = SUBPLOT_DICT.extend(BAR_EXTENSIONS)
+BAR_SUBPLOT_FIELDS = SUBPLOT_FIELDS.extend(BAR_EXTENSIONS)
 
-# a bar plot that is a full figure
-BAR_FIGURE = All(
-    BAR_FIGURE_FIELDS,
-    lambda spec: require_series_field(spec, "xfield"),
-    lambda spec: require_series_field(spec, "yfield"),
-    lambda spec: require_series_field(spec, "input_file"),
-)
-
-# an errorbar plot that is a full figure
-ERRORBAR_FIGURE = All(
-    ERRORBAR_FIGURE_FIELDS,
-    lambda spec: require_series_field(spec, "xfield"),
-    lambda spec: require_series_field(spec, "yfield"),
-    lambda spec: require_series_field(spec, "input_file"),
-)
-
-# a reg plot that is a full figure
-REG_FIGURE = All(
-    REG_FIGURE_FIELDS,
-    lambda spec: require_series_field(spec, "xfield"),
-    lambda spec: require_series_field(spec, "yfield"),
-    lambda spec: require_series_field(spec, "input_file"),
-)
+# figures that are bar, errorbar, or reg at the figure level
+BAR_FIGURE = BAR_FIGURE_FIELDS
+ERRORBAR_FIGURE = ERRORBAR_FIGURE_FIELDS
+REG_FIGURE = REG_FIGURE_FIELDS
 
 # an errorbar plot in a subplot
-ERRORBAR_SUBPLOT = All(
-    SUBPLOT_DICT,
-    lambda spec: require_series_field(spec, "xfield"),
-    lambda spec: require_series_field(spec, "yfield"),
-    lambda spec: require_series_field(spec, "input_file"),
-)
+ERRORBAR_SUBPLOT = SUBPLOT_FIELDS
+BAR_SUBPLOT = BAR_SUBPLOT_FIELDS
 
-# a bar plot in a subplot
-BAR_SUBPLOT = All(
-    BAR_SUBPLOT_DICT,
-    lambda spec: require_series_field(spec, "xfield"),
-    lambda spec: require_series_field(spec, "yfield"),
-    lambda spec: require_series_field(spec, "input_file"),
-)
-
+# anythink that can be a subplot
 SUBPLOT = Any(
     ERRORBAR_SUBPLOT,
     BAR_SUBPLOT,
 )
 
-SUBPLOT_FIGURE = Schema({
+# a figure that defines the subplots
+SUBPLOTS_EXTENSIONS = {
     Required("subplots"): [SUBPLOT],
-    Optional("size"): SIZE,
-    Optional("output"): OUTPUT,
-    Optional("xaxis"): AXIS,
-    Optional("yaxis"): AXIS,
-    Optional("yscale"): SCALE,
-    Optional("xscale"): SCALE,
-})
+}
 
+SUBPLOTS_FIGURE = Schema(FIGURE_FIELDS).extend(SUBPLOTS_EXTENSIONS)
 
 def validate(orig_spec):
     if "subplots" in orig_spec:
-        return SUBPLOT_FIGURE(orig_spec)
+        return SUBPLOTS_FIGURE(orig_spec)
     else:
         if "type" not in orig_spec:
             utils.halt("spec without subplots should define type")

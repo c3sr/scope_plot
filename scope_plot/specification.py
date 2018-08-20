@@ -6,7 +6,6 @@ from scope_plot import utils
 from scope_plot.error import NoInputFilesError
 from scope_plot import schema
 
-
 class InputFileNotFoundError(Exception):
     """raise when a spec file does not define 'backend'"""
     def __init__(self, name, search_dirs):
@@ -16,6 +15,11 @@ class InputFileNotFoundError(Exception):
     def __str__(self):
         return "input_file {} not found in any of {}".format(self.name, self.search_dirs)
 
+class XfieldNotFoundError(Exception):
+    """raise when xfield is not defined"""
+
+class YfieldNotFoundError(Exception):
+    """raise when yfield is not defined"""
 
 def find(name, search_dirs):
     if not os.path.isfile(name):
@@ -29,6 +33,64 @@ def find(name, search_dirs):
         if not found:
             return None
 
+
+class xfield_mixin(object):
+    def __init__(self, parent, spec):
+        self.parent = parent
+        self._xfield = spec.get("xfield", None)
+
+    def xfield(self):
+        if self._xfield:
+            return self._xfield
+        elif isinstance(self.parent, xfield_mixin):
+            f = self.parent.xfield()
+            if not f:
+                raise XfieldNotFoundError
+            return f
+        return None
+
+class yfield_mixin(object):
+    def __init__(self, parent, spec):
+        self.parent = parent
+        self._yfield = spec.get("yfield", None)
+
+    def yfield(self):
+        if self._yfield:
+            return self._yfield
+        elif isinstance(self.parent, yfield_mixin):
+            f = self.parent.yfield()
+            if not f:
+                raise YfieldNotFoundError
+            return f
+        return None
+
+class xscale_mixin(object):
+    def __init__(self, parent, spec):
+        self.parent = parent
+        self._xscale = spec.get("xscale", None)
+
+    def xscale(self):
+        if self._xscale:
+            return eval(str(self._xscale))
+        elif isinstance(self.parent, xscale_mixin):
+            f = self.parent.xscale()
+            if f:
+                return f
+        return 1.0
+
+class yscale_mixin(object):
+    def __init__(self, parent, spec):
+        self.parent = parent
+        self._yscale = spec.get("yscale", None)
+
+    def yscale(self):
+        if self._yscale:
+            return eval(str(self._yscale))
+        elif isinstance(self.parent, yscale_mixin):
+            f = self.parent.yscale()
+            if f:
+                return f
+        return 1.0
 
 class SpecificationBase(object):
     """ emulate a dictionary to provide compatibility with most of old implementation"""
@@ -52,9 +114,19 @@ class SpecificationBase(object):
         return self.spec.get(key, default)
 
 
-class SeriesSpecification(SpecificationBase):
+class SeriesSpecification(
+    SpecificationBase, 
+    xfield_mixin, 
+    yfield_mixin,
+    xscale_mixin,
+    yscale_mixin,
+):
     def __init__(self, parent, spec):
-        super(SeriesSpecification, self).__init__(parent, spec)
+        SpecificationBase.__init__(self, parent, spec)
+        xfield_mixin.__init__(self, parent, spec)
+        yfield_mixin.__init__(self, parent, spec)
+        xscale_mixin.__init__(self, parent, spec)
+        yscale_mixin.__init__(self, parent, spec)
         self._input_file = spec.get("input_file", None)
 
     def label_seperator(self):
@@ -94,13 +166,24 @@ class SeriesSpecification(SpecificationBase):
         return f
 
 
-class PlotSpecification(SpecificationBase):
+class PlotSpecification(SpecificationBase,
+    xfield_mixin,
+    yfield_mixin,
+    xscale_mixin,
+    yscale_mixin,    
+):
     def __init__(self, parent, spec):
-        super(PlotSpecification, self).__init__(parent, spec)
+        SpecificationBase.__init__(self, parent, spec)
+        xfield_mixin.__init__(self, parent, spec)
+        yfield_mixin.__init__(self, parent, spec)
+        xscale_mixin.__init__(self, parent, spec)
+        yscale_mixin.__init__(self, parent, spec)
         self.series = [
             SeriesSpecification(self, s) for s in spec["series"]
         ]
         self._input_file = spec.get("input_file", None)
+        self._xfield = spec.get("xfield", None)
+        self._yfield = spec.get("yfield", None)
         self.type_str = spec.get("type", None)
         self.spec = spec
 
@@ -129,9 +212,13 @@ class PlotSpecification(SpecificationBase):
         return type_str
 
 
-class Specification(SpecificationBase):
+class Specification(SpecificationBase, xfield_mixin, yfield_mixin):
     def __init__(self, spec):
-        super(Specification, self).__init__(parent=None, spec=spec)
+        SpecificationBase.__init__(self, parent=None, spec=spec)
+        xfield_mixin.__init__(self, None, spec)
+        yfield_mixin.__init__(self, None, spec)
+        xscale_mixin.__init__(self, None, spec)
+        yscale_mixin.__init__(self, None, spec)
         if "subplots" in spec:
             self.subplots = [
                 PlotSpecification(self, s) for s in spec["subplots"]

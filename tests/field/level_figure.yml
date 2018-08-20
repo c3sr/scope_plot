@@ -1,0 +1,46 @@
+subplots:
+  - type: errorbar
+    pos: [1,1]
+    series:
+      - label: CPU0 to GPU0 (Local)
+        input_file: hal000.ncsa.illinois.edu-NUMA_Memcpy_HostToGPU-0-0.json
+        yscale: 1e-9
+      - label: CPU0 to GPU2 (Remote)
+        input_file: hal000.ncsa.illinois.edu-NUMA_Memcpy_HostToGPU-0-2.json
+        yscale: 1e-9
+      - label: GPU0 to CPU0 (Local)
+        input_file: hal000.ncsa.illinois.edu-NUMA_Memcpy_GPUToHost-0-0.json
+        yscale: 1e-9
+      - label: GPU2 to CPU0 (Remote)
+        input_file: hal000.ncsa.illinois.edu-NUMA_Memcpy_GPUToHost-0-2.json
+        yscale: 1e-9
+    title: (b) AC922 Pageable CPU/GPU Transfers
+  - type: errorbar
+    pos: [1,2]
+    series:
+      - label: CPU0 to GPU0 (Local)
+        input_file: hal000.ncsa.illinois.edu-NUMA_Memcpy_PinnedToGPU-0-0.json
+        yscale: 1e-9
+      - label: CPU0 to GPU2 (Remote)
+        input_file: hal000.ncsa.illinois.edu-NUMA_Memcpy_PinnedToGPU-0-2.json
+        yscale: 1e-9
+      - label: GPU0 to CPU0 (Local)
+        input_file: hal000.ncsa.illinois.edu-NUMA_Memcpy_GPUToPinned-0-0.json
+        yscale: 1e-9
+      - label: GPU2 to CPU0 (Remote)
+        input_file: hal000.ncsa.illinois.edu-NUMA_Memcpy_GPUToPinned-0-2.json
+        yscale: 1e-9
+    title: (d) AC922 Pinned CPU/GPU Transfers
+yaxis:
+  label: Transfer Bandwidth (GB/s)
+  lim:
+    - 0
+    - 80
+xaxis:
+  label: Transfer Size (B)
+  type: log
+size:
+  - 9
+  - 15
+xfield: bytes
+yfield: bytes_per_second

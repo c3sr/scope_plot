@@ -52,9 +52,6 @@ def generate_errorbar(errorbar_spec):
     x_type = errorbar_spec.get("xaxis", {}).get("type", "auto")
     y_type = errorbar_spec.get("yaxis", {}).get("type", "auto")
 
-    default_x_scale = errorbar_spec.get("xscale", 1.0)
-    default_y_scale = errorbar_spec.get("yscale", 1.0)
-
     # Create the figure
     fig = figure(
         title=errorbar_spec["title"],
@@ -79,10 +76,10 @@ def generate_errorbar(errorbar_spec):
 
         input_path = series_spec.input_file()
         regex = series_spec.get("regex", ".*")
-        x_field = series_spec.get("xfield", errorbar_spec["xfield"])
-        y_field = series_spec.get("yfield", errorbar_spec["yfield"])
-        x_scale = series_spec.get("xscale", default_x_scale)
-        y_scale = series_spec.get("yscale", default_y_scale)
+        x_field = series_spec.xfield()
+        y_field = series_spec.yfield()
+        x_scale = series_spec.xscale()
+        y_scale = series_spec.yscale()
 
         utils.debug("Opening {}".format(input_path))
         with GoogleBenchmark(input_path) as b:
@@ -93,12 +90,12 @@ def generate_errorbar(errorbar_spec):
             if not df.size:
                 utils.warn("Empty stats dataframe for path={} and x_field={} and y_field={}".format(input_path, x_field, y_field))
 
-            df.loc[:, 'x_mean'] *= eval(str(x_scale))
-            df.loc[:, 'x_median'] *= eval(str(x_scale))
-            df.loc[:, 'x_stddev'] *= eval(str(x_scale))
-            df.loc[:, 'y_mean'] *= eval(str(y_scale))
-            df.loc[:, 'y_median'] *= eval(str(y_scale))
-            df.loc[:, 'y_stddev'] *= eval(str(y_scale))
+            df.loc[:, 'x_mean'] *= x_scale
+            df.loc[:, 'x_median'] *= x_scale
+            df.loc[:, 'x_stddev'] *= x_scale
+            df.loc[:, 'y_mean'] *= y_scale
+            df.loc[:, 'y_median'] *= y_scale
+            df.loc[:, 'y_stddev'] *= y_scale
 
             df = df.sort_values(by=['x_mean'])
 
@@ -128,8 +125,6 @@ def generate_bar(bar_spec):
 
     x_axis_label = bar_spec.get("xaxis", {}).get("label", "")
     y_axis_label = bar_spec.get("yaxis", {}).get("label", "")
-    default_x_scale = eval(str(bar_spec.get("xscale", 1.0)))
-    default_y_scale = eval(str(bar_spec.get("yscale", 1.0)))
     x_axis_tick_rotation = bar_spec.get("xaxis", {}).get("tick_rotation", 90)
 
     # convert x axis tick rotation to radians
@@ -143,12 +138,12 @@ def generate_bar(bar_spec):
     for i, series_spec in enumerate(bar_spec.series):
 
         input_path = series_spec.input_file()
-        y_scale = eval(str(series_spec.get("yscale", default_y_scale)))
-        x_scale = eval(str(series_spec.get("xscale", default_x_scale)))
+        y_scale = series_spec.yscale()
+        x_scale = series_spec.xscale()
         regex = series_spec.get("regex", ".*")
         utils.debug("Using regex {}".format(regex))
-        x_field = series_spec.get("xfield", bar_spec["xfield"])
-        y_field = series_spec.get("yfield", bar_spec["yfield"])
+        x_field = series_spec.xfield()
+        y_field = series_spec.yfield()
         label = series_spec.get("label", str(i))
 
         utils.debug("Opening {}".format(input_path))
@@ -224,17 +219,14 @@ def generate(figure_spec):
 
     figure_spec = specification.canonicalize_to_subplot(figure_spec)
 
-    if "subplots" not in figure_spec:
-        utils.halt("expected key subplots in spec")
-
     # figure out the size of the grid
-    num_x = max([int(spec["pos"][0]) for spec in figure_spec["subplots"]])
-    num_y = max([int(spec["pos"][1]) for spec in figure_spec["subplots"]])
+    num_x = max([int(spec["pos"][0]) for spec in figure_spec.subplots])
+    num_y = max([int(spec["pos"][1]) for spec in figure_spec.subplots])
 
     grid = [[None for i in range(num_x)] for j in range(num_y)]
     utils.debug("grid: {}".format(grid))
 
-    for plot_spec in figure_spec["subplots"]:
+    for plot_spec in figure_spec.subplots:
 
         # propagate fields down to children if children don't override
         for k in ["yaxis", "xaxis"]:

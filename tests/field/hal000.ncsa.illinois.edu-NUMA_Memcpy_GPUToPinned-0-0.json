@@ -1,0 +1,1883 @@
+{
+  "context": {
+    "date": "2018-05-23 07:17:42",
+    "num_cpus": 160,
+    "mhz_per_cpu": 3800,
+    "cpu_scaling_enabled": false,
+    "library_build_type": "release"
+  },
+  "benchmarks": [
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/8/0/0/manual_time",
+      "iterations": 45313,
+      "real_time": 1.5499008942554503e+04,
+      "cpu_time": 3.2354346787897506e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 1.6517185127696740e+07,
+      "bytes": 2.5600000000000000e+02
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/8/0/0/manual_time",
+      "iterations": 45313,
+      "real_time": 1.5429410180740289e+04,
+      "cpu_time": 3.2251470306534531e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 1.6591690609116813e+07,
+      "bytes": 2.5600000000000000e+02
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/8/0/0/manual_time",
+      "iterations": 45313,
+      "real_time": 1.5183459404203993e+04,
+      "cpu_time": 3.1934917396773562e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 1.6860452758817188e+07,
+      "bytes": 2.5600000000000000e+02
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/8/0/0/manual_time",
+      "iterations": 45313,
+      "real_time": 1.5257351866419613e+04,
+      "cpu_time": 3.2066928254584778e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 1.6778796362653106e+07,
+      "bytes": 2.5600000000000000e+02
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/8/0/0/manual_time",
+      "iterations": 45313,
+      "real_time": 1.5202601640271705e+04,
+      "cpu_time": 3.2101373513119848e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 1.6839223052576460e+07,
+      "bytes": 2.5600000000000000e+02
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/8/0/0/manual_time_mean",
+      "iterations": 45313,
+      "real_time": 1.5314366406838022e+04,
+      "cpu_time": 3.2141807251782051e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 1.6717469582172060e+07,
+      "bytes": 2.5600000000000000e+02
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/8/0/0/manual_time_median",
+      "iterations": 45313,
+      "real_time": 1.5257351866419613e+04,
+      "cpu_time": 3.2101373513119848e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 1.6778796362653106e+07,
+      "bytes": 2.5600000000000000e+02
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/8/0/0/manual_time_stddev",
+      "iterations": 45313,
+      "real_time": 1.4160384891735370e+02,
+      "cpu_time": 1.6374080396931171e+02,
+      "time_unit": "ns",
+      "bytes_per_second": 1.5408056588243763e+05,
+      "bytes": 2.1324805998800180e-06
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/9/0/0/manual_time",
+      "iterations": 44504,
+      "real_time": 1.5451662048427303e+04,
+      "cpu_time": 3.2158494472406932e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 3.3135593983050659e+07,
+      "bytes": 5.1200000000000000e+02
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/9/0/0/manual_time",
+      "iterations": 44504,
+      "real_time": 1.5485611327127290e+04,
+      "cpu_time": 3.2275489663850472e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 3.3062950450208690e+07,
+      "bytes": 5.1200000000000000e+02
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/9/0/0/manual_time",
+      "iterations": 44504,
+      "real_time": 1.5288649295630388e+04,
+      "cpu_time": 3.2089708700341558e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 3.3488896899893798e+07,
+      "bytes": 5.1200000000000000e+02
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/9/0/0/manual_time",
+      "iterations": 44504,
+      "real_time": 1.5477366168826155e+04,
+      "cpu_time": 3.2258170142009723e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 3.3080563864363976e+07,
+      "bytes": 5.1200000000000000e+02
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/9/0/0/manual_time",
+      "iterations": 44504,
+      "real_time": 1.5483731768797632e+04,
+      "cpu_time": 3.2276996269998199e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 3.3066963936417934e+07,
+      "bytes": 5.1200000000000000e+02
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/9/0/0/manual_time_mean",
+      "iterations": 44504,
+      "real_time": 1.5437404121761752e+04,
+      "cpu_time": 3.2211771849721379e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 3.3166993826787014e+07,
+      "bytes": 5.1200000000000000e+02
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/9/0/0/manual_time_median",
+      "iterations": 44504,
+      "real_time": 1.5477366168826155e+04,
+      "cpu_time": 3.2258170142009723e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 3.3080563864363976e+07,
+      "bytes": 5.1200000000000000e+02
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/9/0/0/manual_time_stddev",
+      "iterations": 44504,
+      "real_time": 8.4259179773962572e+01,
+      "cpu_time": 8.3971539425992262e+01,
+      "time_unit": "ns",
+      "bytes_per_second": 1.8228321387536643e+05,
+      "bytes": 4.2649611997600361e-06
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/10/0/0/manual_time",
+      "iterations": 45179,
+      "real_time": 1.5468667814337416e+04,
+      "cpu_time": 3.2268073839615761e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 6.6198331510544635e+07,
+      "bytes": 1.0240000000000000e+03
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/10/0/0/manual_time",
+      "iterations": 45179,
+      "real_time": 1.5483070233812534e+04,
+      "cpu_time": 3.2281410965271421e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 6.6136753533788718e+07,
+      "bytes": 1.0240000000000000e+03
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/10/0/0/manual_time",
+      "iterations": 45179,
+      "real_time": 1.5477662436494144e+04,
+      "cpu_time": 3.2267844086854464e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 6.6159861296984524e+07,
+      "bytes": 1.0240000000000000e+03
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/10/0/0/manual_time",
+      "iterations": 45179,
+      "real_time": 1.5537062730981705e+04,
+      "cpu_time": 3.2533088204696905e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 6.5906923189419270e+07,
+      "bytes": 1.0240000000000000e+03
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/10/0/0/manual_time",
+      "iterations": 45179,
+      "real_time": 1.8073188323361413e+04,
+      "cpu_time": 3.7007286659731290e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 5.6658514351691730e+07,
+      "bytes": 1.0240000000000000e+03
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/10/0/0/manual_time_mean",
+      "iterations": 45179,
+      "real_time": 1.6007930307797444e+04,
+      "cpu_time": 3.3271540751233973e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 6.4212076776485778e+07,
+      "bytes": 1.0240000000000000e+03
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/10/0/0/manual_time_median",
+      "iterations": 45179,
+      "real_time": 1.5483070233812534e+04,
+      "cpu_time": 3.2281410965271421e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 6.6136753533788718e+07,
+      "bytes": 1.0240000000000000e+03
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/10/0/0/manual_time_stddev",
+      "iterations": 45179,
+      "real_time": 1.1548239146294165e+03,
+      "cpu_time": 2.0914002179275813e+03,
+      "time_unit": "ns",
+      "bytes_per_second": 4.2241053104669740e+06,
+      "bytes": 8.5299223995200722e-06
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/11/0/0/manual_time",
+      "iterations": 44800,
+      "real_time": 1.5545514959691380e+04,
+      "cpu_time": 3.2250405401785651e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 1.3174217806938820e+08,
+      "bytes": 2.0480000000000000e+03
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/11/0/0/manual_time",
+      "iterations": 44800,
+      "real_time": 1.5519632089819879e+04,
+      "cpu_time": 3.2522106205357275e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 1.3196189111618103e+08,
+      "bytes": 2.0480000000000000e+03
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/11/0/0/manual_time",
+      "iterations": 44800,
+      "real_time": 1.5617867798555706e+04,
+      "cpu_time": 3.2405089017857008e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 1.3113185656427397e+08,
+      "bytes": 2.0480000000000000e+03
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/11/0/0/manual_time",
+      "iterations": 44800,
+      "real_time": 1.5581584219168983e+04,
+      "cpu_time": 3.2403952053571429e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 1.3143721275019535e+08,
+      "bytes": 2.0480000000000000e+03
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/11/0/0/manual_time",
+      "iterations": 44800,
+      "real_time": 1.5606218509134349e+04,
+      "cpu_time": 3.2408834419642710e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 1.3122974017064425e+08,
+      "bytes": 2.0480000000000000e+03
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/11/0/0/manual_time_mean",
+      "iterations": 44800,
+      "real_time": 1.5574163515274062e+04,
+      "cpu_time": 3.2398077419642817e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 1.3150057573413657e+08,
+      "bytes": 2.0480000000000000e+03
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/11/0/0/manual_time_median",
+      "iterations": 44800,
+      "real_time": 1.5581584219168983e+04,
+      "cpu_time": 3.2405089017857008e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 1.3143721275019535e+08,
+      "bytes": 2.0480000000000000e+03
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/11/0/0/manual_time_stddev",
+      "iterations": 44800,
+      "real_time": 4.1191837643026304e+01,
+      "cpu_time": 9.6681890012699043e+01,
+      "time_unit": "ns",
+      "bytes_per_second": 3.4803166757164482e+05,
+      "bytes": 1.7059844799040144e-05
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/12/0/0/manual_time",
+      "iterations": 44401,
+      "real_time": 1.6041574532289134e+04,
+      "cpu_time": 3.2871425913830826e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 2.5533653144555137e+08,
+      "bytes": 4.0960000000000000e+03
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/12/0/0/manual_time",
+      "iterations": 44401,
+      "real_time": 1.5900815821876053e+04,
+      "cpu_time": 3.2666653318619072e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 2.5759684571434367e+08,
+      "bytes": 4.0960000000000000e+03
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/12/0/0/manual_time",
+      "iterations": 44401,
+      "real_time": 1.6421724551879226e+04,
+      "cpu_time": 3.3529800590076826e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 2.4942569137973222e+08,
+      "bytes": 4.0960000000000000e+03
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/12/0/0/manual_time",
+      "iterations": 44401,
+      "real_time": 1.5632261196073669e+04,
+      "cpu_time": 3.2456004459359006e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 2.6202223393176070e+08,
+      "bytes": 4.0960000000000000e+03
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/12/0/0/manual_time",
+      "iterations": 44401,
+      "real_time": 1.6182503329313584e+04,
+      "cpu_time": 3.2881790455169961e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 2.5311287856065843e+08,
+      "bytes": 4.0960000000000000e+03
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/12/0/0/manual_time_mean",
+      "iterations": 44401,
+      "real_time": 1.6035775886286334e+04,
+      "cpu_time": 3.2881134947411141e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 2.5549883620640928e+08,
+      "bytes": 4.0960000000000000e+03
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/12/0/0/manual_time_median",
+      "iterations": 44401,
+      "real_time": 1.6041574532289134e+04,
+      "cpu_time": 3.2871425913830826e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 2.5533653144555137e+08,
+      "bytes": 4.0960000000000000e+03
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/12/0/0/manual_time_stddev",
+      "iterations": 44401,
+      "real_time": 2.9646132273390162e+02,
+      "cpu_time": 4.0236802555598990e+02,
+      "time_unit": "ns",
+      "bytes_per_second": 4.7317699274965320e+06,
+      "bytes": 3.4119689598080289e-05
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/13/0/0/manual_time",
+      "iterations": 42898,
+      "real_time": 1.6296860376398681e+04,
+      "cpu_time": 3.3149959671779478e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 5.0267350954689145e+08,
+      "bytes": 8.1920000000000000e+03
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/13/0/0/manual_time",
+      "iterations": 42898,
+      "real_time": 1.6240802579858435e+04,
+      "cpu_time": 3.3100536668376146e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 5.0440856969467610e+08,
+      "bytes": 8.1920000000000000e+03
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/13/0/0/manual_time",
+      "iterations": 42898,
+      "real_time": 1.6274252811629507e+04,
+      "cpu_time": 3.3070212737190413e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 5.0337180421248186e+08,
+      "bytes": 8.1920000000000000e+03
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/13/0/0/manual_time",
+      "iterations": 42898,
+      "real_time": 1.6302290890330412e+04,
+      "cpu_time": 3.3129018322532611e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 5.0250606219148171e+08,
+      "bytes": 8.1920000000000000e+03
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/13/0/0/manual_time",
+      "iterations": 42898,
+      "real_time": 1.6325612453472109e+04,
+      "cpu_time": 3.3091037484264809e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 5.0178821917690051e+08,
+      "bytes": 8.1920000000000000e+03
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/13/0/0/manual_time_mean",
+      "iterations": 42898,
+      "real_time": 1.6287963822337830e+04,
+      "cpu_time": 3.3108152976828693e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 5.0294963296448636e+08,
+      "bytes": 8.1920000000000000e+03
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/13/0/0/manual_time_median",
+      "iterations": 42898,
+      "real_time": 1.6296860376398681e+04,
+      "cpu_time": 3.3100536668376146e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 5.0267350954689145e+08,
+      "bytes": 8.1920000000000000e+03
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/13/0/0/manual_time_stddev",
+      "iterations": 42898,
+      "real_time": 3.2070264982901449e+01,
+      "cpu_time": 3.1518139293217438e+01,
+      "time_unit": "ns",
+      "bytes_per_second": 9.9103558254663716e+05,
+      "bytes": 6.8239379196160578e-05
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/14/0/0/manual_time",
+      "iterations": 43054,
+      "real_time": 1.6229257884149371e+04,
+      "cpu_time": 3.3110675848933679e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 1.0095347622765771e+09,
+      "bytes": 1.6384000000000000e+04
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/14/0/0/manual_time",
+      "iterations": 43054,
+      "real_time": 1.6355840258309800e+04,
+      "cpu_time": 3.3203045291958777e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 1.0017216933673521e+09,
+      "bytes": 1.6384000000000000e+04
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/14/0/0/manual_time",
+      "iterations": 43054,
+      "real_time": 1.5935741230876263e+04,
+      "cpu_time": 3.3031621405676880e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 1.0281291445831972e+09,
+      "bytes": 1.6384000000000000e+04
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/14/0/0/manual_time",
+      "iterations": 43054,
+      "real_time": 1.6294050659403423e+04,
+      "cpu_time": 3.3236916941515243e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 1.0055203793382504e+09,
+      "bytes": 1.6384000000000000e+04
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/14/0/0/manual_time",
+      "iterations": 43054,
+      "real_time": 1.6329658471396508e+04,
+      "cpu_time": 3.3191000464532815e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 1.0033277810860944e+09,
+      "bytes": 1.6384000000000000e+04
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/14/0/0/manual_time_mean",
+      "iterations": 43054,
+      "real_time": 1.6228909700827073e+04,
+      "cpu_time": 3.3154651990523482e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 1.0096467521302944e+09,
+      "bytes": 1.6384000000000000e+04
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/14/0/0/manual_time_median",
+      "iterations": 43054,
+      "real_time": 1.6294050659403423e+04,
+      "cpu_time": 3.3191000464532815e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 1.0055203793382504e+09,
+      "bytes": 1.6384000000000000e+04
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/14/0/0/manual_time_stddev",
+      "iterations": 43054,
+      "real_time": 1.7062597888602906e+02,
+      "cpu_time": 8.2917234614201135e+01,
+      "time_unit": "ns",
+      "bytes_per_second": 1.0739812339849088e+07,
+      "bytes": 1.3647875839232116e-04
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/15/0/0/manual_time",
+      "iterations": 42549,
+      "real_time": 1.8729556581884590e+04,
+      "cpu_time": 3.8203322381254489e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 1.7495342111672590e+09,
+      "bytes": 3.2768000000000000e+04
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/15/0/0/manual_time",
+      "iterations": 42549,
+      "real_time": 1.6964376324897035e+04,
+      "cpu_time": 3.4381787586077065e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 1.9315770513714349e+09,
+      "bytes": 3.2768000000000000e+04
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/15/0/0/manual_time",
+      "iterations": 42549,
+      "real_time": 1.6500581177375036e+04,
+      "cpu_time": 3.3284942959881439e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 1.9858694459156518e+09,
+      "bytes": 3.2768000000000000e+04
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/15/0/0/manual_time",
+      "iterations": 42549,
+      "real_time": 1.6370363382315321e+04,
+      "cpu_time": 3.3125957178782075e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 2.0016660128264973e+09,
+      "bytes": 3.2768000000000000e+04
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/15/0/0/manual_time",
+      "iterations": 42549,
+      "real_time": 1.6516020459858475e+04,
+      "cpu_time": 3.3388194223131009e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 1.9840130423452377e+09,
+      "bytes": 3.2768000000000000e+04
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/15/0/0/manual_time_mean",
+      "iterations": 42549,
+      "real_time": 1.7016179585266091e+04,
+      "cpu_time": 3.4476840865825223e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 1.9305319527252159e+09,
+      "bytes": 3.2768000000000000e+04
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/15/0/0/manual_time_median",
+      "iterations": 42549,
+      "real_time": 1.6516020459858475e+04,
+      "cpu_time": 3.3388194223131009e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 1.9840130423452377e+09,
+      "bytes": 3.2768000000000000e+04
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/15/0/0/manual_time_stddev",
+      "iterations": 42549,
+      "real_time": 9.8379669485976444e+02,
+      "cpu_time": 2.1404648138656803e+03,
+      "time_unit": "ns",
+      "bytes_per_second": 1.0457508580716570e+08,
+      "bytes": 2.7295751678464231e-04
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/16/0/0/manual_time",
+      "iterations": 40491,
+      "real_time": 1.7169572922501426e+04,
+      "cpu_time": 3.4110455162875733e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 3.8169848659492517e+09,
+      "bytes": 6.5536000000000000e+04
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/16/0/0/manual_time",
+      "iterations": 40491,
+      "real_time": 1.7042889579816347e+04,
+      "cpu_time": 3.3856875552591984e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 3.8453573082825909e+09,
+      "bytes": 6.5536000000000000e+04
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/16/0/0/manual_time",
+      "iterations": 40491,
+      "real_time": 1.7190812967339312e+04,
+      "cpu_time": 3.4134980711763121e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 3.8122688045359650e+09,
+      "bytes": 6.5536000000000000e+04
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/16/0/0/manual_time",
+      "iterations": 40491,
+      "real_time": 1.7364157258659772e+04,
+      "cpu_time": 3.4141126521943297e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 3.7742113840460749e+09,
+      "bytes": 6.5536000000000000e+04
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/16/0/0/manual_time",
+      "iterations": 40491,
+      "real_time": 1.7298122951883022e+04,
+      "cpu_time": 3.4194616186313091e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 3.7886191572517381e+09,
+      "bytes": 6.5536000000000000e+04
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/16/0/0/manual_time_mean",
+      "iterations": 40491,
+      "real_time": 1.7213111136039977e+04,
+      "cpu_time": 3.4087610827097444e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 3.8074883040131245e+09,
+      "bytes": 6.5536000000000000e+04
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/16/0/0/manual_time_median",
+      "iterations": 40491,
+      "real_time": 1.7190812967339312e+04,
+      "cpu_time": 3.4134980711763121e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 3.8122688045359650e+09,
+      "bytes": 6.5536000000000000e+04
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/16/0/0/manual_time_stddev",
+      "iterations": 40491,
+      "real_time": 1.2390530916780132e+02,
+      "cpu_time": 1.3258828478310937e+02,
+      "time_unit": "ns",
+      "bytes_per_second": 2.7434000164947692e+07,
+      "bytes": 5.4591503356928462e-04
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/17/0/0/manual_time",
+      "iterations": 36552,
+      "real_time": 1.9002651916333663e+04,
+      "cpu_time": 3.5744373166994934e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 6.8975635914973278e+09,
+      "bytes": 1.3107200000000000e+05
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/17/0/0/manual_time",
+      "iterations": 36552,
+      "real_time": 1.9202639504445789e+04,
+      "cpu_time": 3.6081895217772020e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 6.8257283051975355e+09,
+      "bytes": 1.3107200000000000e+05
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/17/0/0/manual_time",
+      "iterations": 36552,
+      "real_time": 1.9252049872428794e+04,
+      "cpu_time": 3.6197784963887112e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 6.8082100798892355e+09,
+      "bytes": 1.3107200000000000e+05
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/17/0/0/manual_time",
+      "iterations": 36552,
+      "real_time": 1.8265675591278254e+04,
+      "cpu_time": 3.5488011873494950e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 7.1758637858752985e+09,
+      "bytes": 1.3107200000000000e+05
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/17/0/0/manual_time",
+      "iterations": 36552,
+      "real_time": 1.7981797282406984e+04,
+      "cpu_time": 3.4782963668198594e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 7.2891490178369493e+09,
+      "bytes": 1.3107200000000000e+05
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/17/0/0/manual_time_mean",
+      "iterations": 36552,
+      "real_time": 1.8740962833378697e+04,
+      "cpu_time": 3.5659005778069521e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 6.9993029560592699e+09,
+      "bytes": 1.3107200000000000e+05
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/17/0/0/manual_time_median",
+      "iterations": 36552,
+      "real_time": 1.9002651916333663e+04,
+      "cpu_time": 3.5744373166994934e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 6.8975635914973278e+09,
+      "bytes": 1.3107200000000000e+05
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/17/0/0/manual_time_stddev",
+      "iterations": 36552,
+      "real_time": 5.7988507105198596e+02,
+      "cpu_time": 5.6415750771435580e+02,
+      "time_unit": "ns",
+      "bytes_per_second": 2.1919170330985010e+08,
+      "bytes": 1.0918300671385692e-03
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/18/0/0/manual_time",
+      "iterations": 31451,
+      "real_time": 2.2262472573349201e+04,
+      "cpu_time": 3.9156666560681602e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 1.1775152069757841e+10,
+      "bytes": 2.6214400000000000e+05
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/18/0/0/manual_time",
+      "iterations": 31451,
+      "real_time": 2.2201400744305949e+04,
+      "cpu_time": 3.9214739690311719e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 1.1807543272567284e+10,
+      "bytes": 2.6214400000000000e+05
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/18/0/0/manual_time",
+      "iterations": 31451,
+      "real_time": 2.1976594930206145e+04,
+      "cpu_time": 3.8766256398842677e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 1.1928326514299595e+10,
+      "bytes": 2.6214400000000000e+05
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/18/0/0/manual_time",
+      "iterations": 31451,
+      "real_time": 2.2042111978960944e+04,
+      "cpu_time": 3.8946292073383724e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 1.1892871257083477e+10,
+      "bytes": 2.6214400000000000e+05
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/18/0/0/manual_time",
+      "iterations": 31451,
+      "real_time": 2.1885105342035742e+04,
+      "cpu_time": 3.8734563988426489e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 1.1978192286627373e+10,
+      "bytes": 2.6214400000000000e+05
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/18/0/0/manual_time_mean",
+      "iterations": 31451,
+      "real_time": 2.2073537113771599e+04,
+      "cpu_time": 3.8963703742329242e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 1.1876417080067116e+10,
+      "bytes": 2.6214400000000000e+05
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/18/0/0/manual_time_median",
+      "iterations": 31451,
+      "real_time": 2.2042111978960944e+04,
+      "cpu_time": 3.8946292073383724e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 1.1892871257083477e+10,
+      "bytes": 2.6214400000000000e+05
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/18/0/0/manual_time_stddev",
+      "iterations": 31451,
+      "real_time": 1.5647489778767641e+02,
+      "cpu_time": 2.1911603257766777e+02,
+      "time_unit": "ns",
+      "bytes_per_second": 8.4145299402847275e+07,
+      "bytes": 2.1836601342771385e-03
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/19/0/0/manual_time",
+      "iterations": 26488,
+      "real_time": 2.6515695614977165e+04,
+      "cpu_time": 4.3355643008154926e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 1.9772741685262840e+10,
+      "bytes": 5.2428800000000000e+05
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/19/0/0/manual_time",
+      "iterations": 26488,
+      "real_time": 2.8580188463974206e+04,
+      "cpu_time": 4.5295924796133964e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 1.8344455658886703e+10,
+      "bytes": 5.2428800000000000e+05
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/19/0/0/manual_time",
+      "iterations": 26488,
+      "real_time": 2.6124616263784039e+04,
+      "cpu_time": 4.2900177136816492e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 2.0068734970350876e+10,
+      "bytes": 5.2428800000000000e+05
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/19/0/0/manual_time",
+      "iterations": 26488,
+      "real_time": 2.6980762344502251e+04,
+      "cpu_time": 4.3695049758381712e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 1.9431919428578777e+10,
+      "bytes": 5.2428800000000000e+05
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/19/0/0/manual_time",
+      "iterations": 26488,
+      "real_time": 2.7776109957537363e+04,
+      "cpu_time": 4.4585314104500103e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 1.8875501313953018e+10,
+      "bytes": 5.2428800000000000e+05
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/19/0/0/manual_time_mean",
+      "iterations": 26488,
+      "real_time": 2.7195474528955005e+04,
+      "cpu_time": 4.3966421760797450e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 1.9298670611406445e+10,
+      "bytes": 5.2428800000000000e+05
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/19/0/0/manual_time_median",
+      "iterations": 26488,
+      "real_time": 2.6980762344502251e+04,
+      "cpu_time": 4.3695049758381712e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 1.9431919428578777e+10,
+      "bytes": 5.2428800000000000e+05
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/19/0/0/manual_time_stddev",
+      "iterations": 26488,
+      "real_time": 9.8862382897735040e+02,
+      "cpu_time": 9.6620094967406897e+02,
+      "time_unit": "ns",
+      "bytes_per_second": 6.9373917598420441e+08,
+      "bytes": 4.3673202685542770e-03
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/20/0/0/manual_time",
+      "iterations": 17637,
+      "real_time": 3.9276170767587690e+04,
+      "cpu_time": 5.5936836196632918e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 2.6697510971851871e+10,
+      "bytes": 1.0485760000000000e+06
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/20/0/0/manual_time",
+      "iterations": 17637,
+      "real_time": 3.9899584020962830e+04,
+      "cpu_time": 5.6669666496569967e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 2.6280374237713581e+10,
+      "bytes": 1.0485760000000000e+06
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/20/0/0/manual_time",
+      "iterations": 17637,
+      "real_time": 3.9645737516930138e+04,
+      "cpu_time": 5.6356137211543471e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 2.6448644057944962e+10,
+      "bytes": 1.0485760000000000e+06
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/20/0/0/manual_time",
+      "iterations": 17637,
+      "real_time": 3.9807267134654634e+04,
+      "cpu_time": 5.6570425128991294e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 2.6341320956623798e+10,
+      "bytes": 1.0485760000000000e+06
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/20/0/0/manual_time",
+      "iterations": 17637,
+      "real_time": 3.9660785708820680e+04,
+      "cpu_time": 5.6411045982877273e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 2.6438608849012127e+10,
+      "bytes": 1.0485760000000000e+06
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/20/0/0/manual_time_mean",
+      "iterations": 17637,
+      "real_time": 3.9657909029791197e+04,
+      "cpu_time": 5.6388822203322990e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 2.6441291814629269e+10,
+      "bytes": 1.0485760000000000e+06
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/20/0/0/manual_time_median",
+      "iterations": 17637,
+      "real_time": 3.9660785708820680e+04,
+      "cpu_time": 5.6411045982877273e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 2.6438608849012127e+10,
+      "bytes": 1.0485760000000000e+06
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/20/0/0/manual_time_stddev",
+      "iterations": 17637,
+      "real_time": 2.3801006632238793e+02,
+      "cpu_time": 2.8182738288155321e+02,
+      "time_unit": "ns",
+      "bytes_per_second": 1.5937232297692126e+08,
+      "bytes": 8.7346405371085539e-03
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/21/0/0/manual_time",
+      "iterations": 10484,
+      "real_time": 6.5593190154812066e+04,
+      "cpu_time": 8.2374708317438271e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 3.1972099467190620e+10,
+      "bytes": 2.0971520000000000e+06
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/21/0/0/manual_time",
+      "iterations": 10484,
+      "real_time": 6.5778906069887526e+04,
+      "cpu_time": 8.2598135253719811e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 3.1881831506468925e+10,
+      "bytes": 2.0971520000000000e+06
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/21/0/0/manual_time",
+      "iterations": 10484,
+      "real_time": 6.4951643337474437e+04,
+      "cpu_time": 8.1735040442581740e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 3.2287897460941212e+10,
+      "bytes": 2.0971520000000000e+06
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/21/0/0/manual_time",
+      "iterations": 10484,
+      "real_time": 6.5832613613477137e+04,
+      "cpu_time": 8.2644487409386114e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 3.1855821680011116e+10,
+      "bytes": 2.0971520000000000e+06
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/21/0/0/manual_time",
+      "iterations": 10484,
+      "real_time": 6.5281641995193408e+04,
+      "cpu_time": 8.2033549599389284e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 3.2124682160329399e+10,
+      "bytes": 2.0971520000000000e+06
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/21/0/0/manual_time_mean",
+      "iterations": 10484,
+      "real_time": 6.5487599034168918e+04,
+      "cpu_time": 8.2277184204503050e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 3.2024466454988258e+10,
+      "bytes": 2.0971520000000000e+06
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/21/0/0/manual_time_median",
+      "iterations": 10484,
+      "real_time": 6.5593190154812066e+04,
+      "cpu_time": 8.2374708317438271e+04,
+      "time_unit": "ns",
+      "bytes_per_second": 3.1972099467190620e+10,
+      "bytes": 2.0971520000000000e+06
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/21/0/0/manual_time_stddev",
+      "iterations": 10484,
+      "real_time": 3.6902274471764531e+02,
+      "cpu_time": 3.8752737074700781e+02,
+      "time_unit": "ns",
+      "bytes_per_second": 1.8094693460388842e+08,
+      "bytes": 1.7469281074217108e-02
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/22/0/0/manual_time",
+      "iterations": 6686,
+      "real_time": 1.0543687891145718e+05,
+      "cpu_time": 1.2218074902781745e+05,
+      "time_unit": "ns",
+      "bytes_per_second": 3.9780236699933563e+10,
+      "bytes": 4.1943040000000000e+06
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/22/0/0/manual_time",
+      "iterations": 6686,
+      "real_time": 1.0638558932929613e+05,
+      "cpu_time": 1.2314747621896608e+05,
+      "time_unit": "ns",
+      "bytes_per_second": 3.9425490110482338e+10,
+      "bytes": 4.1943040000000000e+06
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/22/0/0/manual_time",
+      "iterations": 6686,
+      "real_time": 1.0643821255235805e+05,
+      "cpu_time": 1.2325535477116580e+05,
+      "time_unit": "ns",
+      "bytes_per_second": 3.9405998084915031e+10,
+      "bytes": 4.1943040000000000e+06
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/22/0/0/manual_time",
+      "iterations": 6686,
+      "real_time": 1.0693887381735475e+05,
+      "cpu_time": 1.2376505713431111e+05,
+      "time_unit": "ns",
+      "bytes_per_second": 3.9221508982445641e+10,
+      "bytes": 4.1943040000000000e+06
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/22/0/0/manual_time",
+      "iterations": 6686,
+      "real_time": 1.0589929987182678e+05,
+      "cpu_time": 1.2278748250074597e+05,
+      "time_unit": "ns",
+      "bytes_per_second": 3.9606531913586746e+10,
+      "bytes": 4.1943040000000000e+06
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/22/0/0/manual_time_mean",
+      "iterations": 6686,
+      "real_time": 1.0621977089645859e+05,
+      "cpu_time": 1.2302722393060128e+05,
+      "time_unit": "ns",
+      "bytes_per_second": 3.9487953158272667e+10,
+      "bytes": 4.1943040000000000e+06
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/22/0/0/manual_time_median",
+      "iterations": 6686,
+      "real_time": 1.0638558932929613e+05,
+      "cpu_time": 1.2314747621896608e+05,
+      "time_unit": "ns",
+      "bytes_per_second": 3.9425490110482338e+10,
+      "bytes": 4.1943040000000000e+06
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/22/0/0/manual_time_stddev",
+      "iterations": 6686,
+      "real_time": 5.7182669103916646e+02,
+      "cpu_time": 5.8840841343282398e+02,
+      "time_unit": "ns",
+      "bytes_per_second": 2.1278002441347301e+08,
+      "bytes": 3.4938562148434216e-02
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/23/0/0/manual_time",
+      "iterations": 4238,
+      "real_time": 1.6578633645169792e+05,
+      "cpu_time": 1.8260056819254355e+05,
+      "time_unit": "ns",
+      "bytes_per_second": 5.0598910498538185e+10,
+      "bytes": 8.3886080000000000e+06
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/23/0/0/manual_time",
+      "iterations": 4238,
+      "real_time": 1.6594458472186065e+05,
+      "cpu_time": 1.8266975082586144e+05,
+      "time_unit": "ns",
+      "bytes_per_second": 5.0550658305964767e+10,
+      "bytes": 8.3886080000000000e+06
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/23/0/0/manual_time",
+      "iterations": 4238,
+      "real_time": 1.6130885153970626e+05,
+      "cpu_time": 1.7804122605002671e+05,
+      "time_unit": "ns",
+      "bytes_per_second": 5.2003395473528236e+10,
+      "bytes": 8.3886080000000000e+06
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/23/0/0/manual_time",
+      "iterations": 4238,
+      "real_time": 1.6616554947699839e+05,
+      "cpu_time": 1.8307215620575720e+05,
+      "time_unit": "ns",
+      "bytes_per_second": 5.0483436707566147e+10,
+      "bytes": 8.3886080000000000e+06
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/23/0/0/manual_time",
+      "iterations": 4238,
+      "real_time": 1.6525094452236177e+05,
+      "cpu_time": 1.8204001274185846e+05,
+      "time_unit": "ns",
+      "bytes_per_second": 5.0762844498385628e+10,
+      "bytes": 8.3886080000000000e+06
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/23/0/0/manual_time_mean",
+      "iterations": 4238,
+      "real_time": 1.6489125334252499e+05,
+      "cpu_time": 1.8168474280320949e+05,
+      "time_unit": "ns",
+      "bytes_per_second": 5.0879849096796600e+10,
+      "bytes": 8.3886080000000000e+06
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/23/0/0/manual_time_median",
+      "iterations": 4238,
+      "real_time": 1.6578633645169792e+05,
+      "cpu_time": 1.8260056819254355e+05,
+      "time_unit": "ns",
+      "bytes_per_second": 5.0598910498538185e+10,
+      "bytes": 8.3886080000000000e+06
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/23/0/0/manual_time_stddev",
+      "iterations": 4238,
+      "real_time": 2.0308552279181247e+03,
+      "cpu_time": 2.0697417687988932e+03,
+      "time_unit": "ns",
+      "bytes_per_second": 6.3649084671477580e+08,
+      "bytes": 6.9877124296868431e-02
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/24/0/0/manual_time",
+      "iterations": 2382,
+      "real_time": 2.8934699592837796e+05,
+      "cpu_time": 3.0606752392947761e+05,
+      "time_unit": "ns",
+      "bytes_per_second": 5.7983031571383118e+10,
+      "bytes": 1.6777216000000000e+07
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/24/0/0/manual_time",
+      "iterations": 2382,
+      "real_time": 2.9725122361210914e+05,
+      "cpu_time": 3.1668484970613063e+05,
+      "time_unit": "ns",
+      "bytes_per_second": 5.6441200800212776e+10,
+      "bytes": 1.6777216000000000e+07
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/24/0/0/manual_time",
+      "iterations": 2382,
+      "real_time": 2.9091413728998369e+05,
+      "cpu_time": 3.0783789084803569e+05,
+      "time_unit": "ns",
+      "bytes_per_second": 5.7670679590509018e+10,
+      "bytes": 1.6777216000000000e+07
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/24/0/0/manual_time",
+      "iterations": 2382,
+      "real_time": 2.9280416382874321e+05,
+      "cpu_time": 3.0956043492862012e+05,
+      "time_unit": "ns",
+      "bytes_per_second": 5.7298420147511101e+10,
+      "bytes": 1.6777216000000000e+07
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/24/0/0/manual_time",
+      "iterations": 2382,
+      "real_time": 2.8987858280434727e+05,
+      "cpu_time": 3.0671211418975831e+05,
+      "time_unit": "ns",
+      "bytes_per_second": 5.7876700781732925e+10,
+      "bytes": 1.6777216000000000e+07
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/24/0/0/manual_time_mean",
+      "iterations": 2382,
+      "real_time": 2.9203902069271222e+05,
+      "cpu_time": 3.0937256272040453e+05,
+      "time_unit": "ns",
+      "bytes_per_second": 5.7454006578269791e+10,
+      "bytes": 1.6777216000000000e+07
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/24/0/0/manual_time_median",
+      "iterations": 2382,
+      "real_time": 2.9091413728998369e+05,
+      "cpu_time": 3.0783789084803569e+05,
+      "time_unit": "ns",
+      "bytes_per_second": 5.7670679590509018e+10,
+      "bytes": 1.6777216000000000e+07
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/24/0/0/manual_time_stddev",
+      "iterations": 2382,
+      "real_time": 3.1989199412701814e+03,
+      "cpu_time": 4.2971305099382334e+03,
+      "time_unit": "ns",
+      "bytes_per_second": 6.2359195567153692e+08,
+      "bytes": 1.3975424859373686e-01
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/25/0/0/manual_time",
+      "iterations": 1285,
+      "real_time": 5.3714283593433839e+05,
+      "cpu_time": 5.5397239688714582e+05,
+      "time_unit": "ns",
+      "bytes_per_second": 6.2468359913305763e+10,
+      "bytes": 3.3554432000000000e+07
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/25/0/0/manual_time",
+      "iterations": 1285,
+      "real_time": 5.3960952453916811e+05,
+      "cpu_time": 5.5645424435796228e+05,
+      "time_unit": "ns",
+      "bytes_per_second": 6.2182801589085770e+10,
+      "bytes": 3.3554432000000000e+07
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/25/0/0/manual_time",
+      "iterations": 1285,
+      "real_time": 5.3801572639748803e+05,
+      "cpu_time": 5.5488211206224549e+05,
+      "time_unit": "ns",
+      "bytes_per_second": 6.2367009649844063e+10,
+      "bytes": 3.3554432000000000e+07
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/25/0/0/manual_time",
+      "iterations": 1285,
+      "real_time": 5.4127101112403523e+05,
+      "cpu_time": 5.5813116108949855e+05,
+      "time_unit": "ns",
+      "bytes_per_second": 6.1991925136206520e+10,
+      "bytes": 3.3554432000000000e+07
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/25/0/0/manual_time",
+      "iterations": 1285,
+      "real_time": 5.3783025047180138e+05,
+      "cpu_time": 5.5467021634241391e+05,
+      "time_unit": "ns",
+      "bytes_per_second": 6.2388517511919441e+10,
+      "bytes": 3.3554432000000000e+07
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/25/0/0/manual_time_mean",
+      "iterations": 1285,
+      "real_time": 5.3877386969336623e+05,
+      "cpu_time": 5.5562202614785312e+05,
+      "time_unit": "ns",
+      "bytes_per_second": 6.2279722760072319e+10,
+      "bytes": 3.3554432000000000e+07
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/25/0/0/manual_time_median",
+      "iterations": 1285,
+      "real_time": 5.3801572639748803e+05,
+      "cpu_time": 5.5488211206224549e+05,
+      "time_unit": "ns",
+      "bytes_per_second": 6.2367009649844063e+10,
+      "bytes": 3.3554432000000000e+07
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/25/0/0/manual_time_stddev",
+      "iterations": 1285,
+      "real_time": 1.6627916256583419e+03,
+      "cpu_time": 1.6705565511264363e+03,
+      "time_unit": "ns",
+      "bytes_per_second": 1.9187265335462567e+08,
+      "bytes": 2.7950849718747373e-01
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/26/0/0/manual_time",
+      "iterations": 686,
+      "real_time": 1.0059229347721807e+06,
+      "cpu_time": 1.0229166093294614e+06,
+      "time_unit": "ns",
+      "bytes_per_second": 6.6713722970436775e+10,
+      "bytes": 6.7108864000000000e+07
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/26/0/0/manual_time",
+      "iterations": 686,
+      "real_time": 1.0159425831158203e+06,
+      "cpu_time": 1.0329812157434404e+06,
+      "time_unit": "ns",
+      "bytes_per_second": 6.6055764484427956e+10,
+      "bytes": 6.7108864000000000e+07
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/26/0/0/manual_time",
+      "iterations": 686,
+      "real_time": 1.0149732526356447e+06,
+      "cpu_time": 1.0343255102041187e+06,
+      "time_unit": "ns",
+      "bytes_per_second": 6.6118849758586449e+10,
+      "bytes": 6.7108864000000000e+07
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/26/0/0/manual_time",
+      "iterations": 686,
+      "real_time": 1.0209490347221906e+06,
+      "cpu_time": 1.0404948717201265e+06,
+      "time_unit": "ns",
+      "bytes_per_second": 6.5731845290652458e+10,
+      "bytes": 6.7108864000000000e+07
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/26/0/0/manual_time",
+      "iterations": 686,
+      "real_time": 1.0077119994984597e+06,
+      "cpu_time": 1.0247467725947447e+06,
+      "time_unit": "ns",
+      "bytes_per_second": 6.6595281224596130e+10,
+      "bytes": 6.7108864000000000e+07
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/26/0/0/manual_time_mean",
+      "iterations": 686,
+      "real_time": 1.0130999609488593e+06,
+      "cpu_time": 1.0310929959183784e+06,
+      "time_unit": "ns",
+      "bytes_per_second": 6.6243092745739960e+10,
+      "bytes": 6.7108864000000000e+07
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/26/0/0/manual_time_median",
+      "iterations": 686,
+      "real_time": 1.0149732526356447e+06,
+      "cpu_time": 1.0329812157434404e+06,
+      "time_unit": "ns",
+      "bytes_per_second": 6.6118849758586449e+10,
+      "bytes": 6.7108864000000000e+07
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/26/0/0/manual_time_stddev",
+      "iterations": 686,
+      "real_time": 6.1995466559578954e+03,
+      "cpu_time": 7.2377075001378735e+03,
+      "time_unit": "ns",
+      "bytes_per_second": 4.0541080730245751e+08,
+      "bytes": 5.5901699437494745e-01
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/27/0/0/manual_time",
+      "iterations": 359,
+      "real_time": 1.9459847142286911e+06,
+      "cpu_time": 1.9631458830083993e+06,
+      "time_unit": "ns",
+      "bytes_per_second": 6.8971625017721909e+10,
+      "bytes": 1.3421772800000000e+08
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/27/0/0/manual_time",
+      "iterations": 359,
+      "real_time": 1.9536508168781328e+06,
+      "cpu_time": 1.9708604623955330e+06,
+      "time_unit": "ns",
+      "bytes_per_second": 6.8700981178650620e+10,
+      "bytes": 1.3421772800000000e+08
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/27/0/0/manual_time",
+      "iterations": 359,
+      "real_time": 1.9479693405843838e+06,
+      "cpu_time": 1.9652382562673739e+06,
+      "time_unit": "ns",
+      "bytes_per_second": 6.8901355480130493e+10,
+      "bytes": 1.3421772800000000e+08
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/27/0/0/manual_time",
+      "iterations": 359,
+      "real_time": 1.9531158982026377e+06,
+      "cpu_time": 1.9705222228412156e+06,
+      "time_unit": "ns",
+      "bytes_per_second": 6.8719796978517441e+10,
+      "bytes": 1.3421772800000000e+08
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/27/0/0/manual_time",
+      "iterations": 359,
+      "real_time": 1.9493886547858377e+06,
+      "cpu_time": 1.9667224846796249e+06,
+      "time_unit": "ns",
+      "bytes_per_second": 6.8851189664251602e+10,
+      "bytes": 1.3421772800000000e+08
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/27/0/0/manual_time_mean",
+      "iterations": 359,
+      "real_time": 1.9500218849359367e+06,
+      "cpu_time": 1.9672978618384295e+06,
+      "time_unit": "ns",
+      "bytes_per_second": 6.8828989663854416e+10,
+      "bytes": 1.3421772800000000e+08
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/27/0/0/manual_time_median",
+      "iterations": 359,
+      "real_time": 1.9493886547858377e+06,
+      "cpu_time": 1.9667224846796249e+06,
+      "time_unit": "ns",
+      "bytes_per_second": 6.8851189664251602e+10,
+      "bytes": 1.3421772800000000e+08
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/27/0/0/manual_time_stddev",
+      "iterations": 359,
+      "real_time": 3.3035863539651814e+03,
+      "cpu_time": 3.3503950810100059e+03,
+      "time_unit": "ns",
+      "bytes_per_second": 1.1660157628821109e+08,
+      "bytes": 1.1180339887498949e+00
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/28/0/0/manual_time",
+      "iterations": 182,
+      "real_time": 3.8295571070553344e+06,
+      "cpu_time": 3.8480585934067178e+06,
+      "time_unit": "ns",
+      "bytes_per_second": 7.0095692137728256e+10,
+      "bytes": 2.6843545600000000e+08
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/28/0/0/manual_time",
+      "iterations": 182,
+      "real_time": 3.8361429546417277e+06,
+      "cpu_time": 3.8547340549451211e+06,
+      "time_unit": "ns",
+      "bytes_per_second": 6.9975352632568985e+10,
+      "bytes": 2.6843545600000000e+08
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/28/0/0/manual_time",
+      "iterations": 182,
+      "real_time": 3.8294632161793471e+06,
+      "cpu_time": 3.8479846043956582e+06,
+      "time_unit": "ns",
+      "bytes_per_second": 7.0097410745680923e+10,
+      "bytes": 2.6843545600000000e+08
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/28/0/0/manual_time",
+      "iterations": 182,
+      "real_time": 3.8344441148053324e+06,
+      "cpu_time": 3.8530226703297757e+06,
+      "time_unit": "ns",
+      "bytes_per_second": 7.0006355018588654e+10,
+      "bytes": 2.6843545600000000e+08
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/28/0/0/manual_time",
+      "iterations": 182,
+      "real_time": 3.8334122260234184e+06,
+      "cpu_time": 3.8519599230769388e+06,
+      "time_unit": "ns",
+      "bytes_per_second": 7.0025199527904907e+10,
+      "bytes": 2.6843545600000000e+08
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/28/0/0/manual_time_mean",
+      "iterations": 182,
+      "real_time": 3.8326039237410319e+06,
+      "cpu_time": 3.8511519692308432e+06,
+      "time_unit": "ns",
+      "bytes_per_second": 7.0040002012494339e+10,
+      "bytes": 2.6843545600000000e+08
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/28/0/0/manual_time_median",
+      "iterations": 182,
+      "real_time": 3.8334122260234184e+06,
+      "cpu_time": 3.8519599230769388e+06,
+      "time_unit": "ns",
+      "bytes_per_second": 7.0025199527904907e+10,
+      "bytes": 2.6843545600000000e+08
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/28/0/0/manual_time_stddev",
+      "iterations": 182,
+      "real_time": 2.9879562978945687e+03,
+      "cpu_time": 3.0242695010200136e+03,
+      "time_unit": "ns",
+      "bytes_per_second": 5.4607528724510022e+07,
+      "bytes": 2.2360679774997898e+00
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/29/0/0/manual_time",
+      "iterations": 92,
+      "real_time": 7.6252299097731058e+06,
+      "cpu_time": 7.6484756304349434e+06,
+      "time_unit": "ns",
+      "bytes_per_second": 7.0407177010086365e+10,
+      "bytes": 5.3687091200000000e+08
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/29/0/0/manual_time",
+      "iterations": 92,
+      "real_time": 7.6247606750415722e+06,
+      "cpu_time": 7.6482674347824575e+06,
+      "time_unit": "ns",
+      "bytes_per_second": 7.0411509932024567e+10,
+      "bytes": 5.3687091200000000e+08
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/29/0/0/manual_time",
+      "iterations": 92,
+      "real_time": 7.6251113028063076e+06,
+      "cpu_time": 7.6484897826087140e+06,
+      "time_unit": "ns",
+      "bytes_per_second": 7.0408272178586136e+10,
+      "bytes": 5.3687091200000000e+08
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/29/0/0/manual_time",
+      "iterations": 92,
+      "real_time": 7.6250278330205576e+06,
+      "cpu_time": 7.6486411304348120e+06,
+      "time_unit": "ns",
+      "bytes_per_second": 7.0409042925070267e+10,
+      "bytes": 5.3687091200000000e+08
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/29/0/0/manual_time",
+      "iterations": 92,
+      "real_time": 7.6249095702381888e+06,
+      "cpu_time": 7.6484581956522828e+06,
+      "time_unit": "ns",
+      "bytes_per_second": 7.0410134973342270e+10,
+      "bytes": 5.3687091200000000e+08
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/29/0/0/manual_time_mean",
+      "iterations": 92,
+      "real_time": 7.6250078581759473e+06,
+      "cpu_time": 7.6484664347826419e+06,
+      "time_unit": "ns",
+      "bytes_per_second": 7.0409227403821930e+10,
+      "bytes": 5.3687091200000000e+08
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/29/0/0/manual_time_median",
+      "iterations": 92,
+      "real_time": 7.6250278330205576e+06,
+      "cpu_time": 7.6484756304349434e+06,
+      "time_unit": "ns",
+      "bytes_per_second": 7.0409042925070267e+10,
+      "bytes": 5.3687091200000000e+08
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/29/0/0/manual_time_stddev",
+      "iterations": 92,
+      "real_time": 1.8108468256450539e+02,
+      "cpu_time": 1.3305744475776385e+02,
+      "time_unit": "ns",
+      "bytes_per_second": 1.6721407609818145e+06,
+      "bytes": 4.4721359549995796e+00
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/30/0/0/manual_time",
+      "iterations": 46,
+      "real_time": 1.5232638557158086e+07,
+      "cpu_time": 1.5275818260869425e+07,
+      "time_unit": "ns",
+      "bytes_per_second": 7.0489549132998352e+10,
+      "bytes": 1.0737418240000000e+09
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/30/0/0/manual_time",
+      "iterations": 46,
+      "real_time": 1.5235460140620885e+07,
+      "cpu_time": 1.5281397391304282e+07,
+      "time_unit": "ns",
+      "bytes_per_second": 7.0476494578406754e+10,
+      "bytes": 1.0737418240000000e+09
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/30/0/0/manual_time",
+      "iterations": 46,
+      "real_time": 1.5232622522212889e+07,
+      "cpu_time": 1.5275737304347474e+07,
+      "time_unit": "ns",
+      "bytes_per_second": 7.0489623335326660e+10,
+      "bytes": 1.0737418240000000e+09
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/30/0/0/manual_time",
+      "iterations": 46,
+      "real_time": 1.5232990657829721e+07,
+      "cpu_time": 1.5276118782608707e+07,
+      "time_unit": "ns",
+      "bytes_per_second": 7.0487919812916016e+10,
+      "bytes": 1.0737418240000000e+09
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/30/0/0/manual_time",
+      "iterations": 46,
+      "real_time": 1.5232510601534791e+07,
+      "cpu_time": 1.5275731478260344e+07,
+      "time_unit": "ns",
+      "bytes_per_second": 7.0490141256938461e+10,
+      "bytes": 1.0737418240000000e+09
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/30/0/0/manual_time_mean",
+      "iterations": 46,
+      "real_time": 1.5233244495871274e+07,
+      "cpu_time": 1.5276960643478047e+07,
+      "time_unit": "ns",
+      "bytes_per_second": 7.0486745623317245e+10,
+      "bytes": 1.0737418240000000e+09
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/30/0/0/manual_time_median",
+      "iterations": 46,
+      "real_time": 1.5232638557158086e+07,
+      "cpu_time": 1.5275818260869425e+07,
+      "time_unit": "ns",
+      "bytes_per_second": 7.0489549132998352e+10,
+      "bytes": 1.0737418240000000e+09
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/30/0/0/manual_time_stddev",
+      "iterations": 46,
+      "real_time": 1.2516118958938166e+03,
+      "cpu_time": 2.4852517345405704e+03,
+      "time_unit": "ns",
+      "bytes_per_second": 5.7908088481840519e+06,
+      "bytes": 8.9442719099991592e+00
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/31/0/0/manual_time",
+      "iterations": 23,
+      "real_time": 3.0446526634952296e+07,
+      "cpu_time": 3.0568251739130467e+07,
+      "time_unit": "ns",
+      "bytes_per_second": 7.0532960089270447e+10,
+      "bytes": 2.1474836480000000e+09
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/31/0/0/manual_time",
+      "iterations": 23,
+      "real_time": 3.0446074498088464e+07,
+      "cpu_time": 3.0567392347825754e+07,
+      "time_unit": "ns",
+      "bytes_per_second": 7.0534007533050888e+10,
+      "bytes": 2.1474836480000000e+09
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/31/0/0/manual_time",
+      "iterations": 23,
+      "real_time": 3.0446703100334045e+07,
+      "cpu_time": 3.0568259913043566e+07,
+      "time_unit": "ns",
+      "bytes_per_second": 7.0532551288827042e+10,
+      "bytes": 2.1474836480000000e+09
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/31/0/0/manual_time",
+      "iterations": 23,
+      "real_time": 3.0446372278358627e+07,
+      "cpu_time": 3.0568199652173650e+07,
+      "time_unit": "ns",
+      "bytes_per_second": 7.0533317676288086e+10,
+      "bytes": 2.1474836480000000e+09
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/31/0/0/manual_time",
+      "iterations": 23,
+      "real_time": 3.0446232984895293e+07,
+      "cpu_time": 3.0567836869565830e+07,
+      "time_unit": "ns",
+      "bytes_per_second": 7.0533640370727966e+10,
+      "bytes": 2.1474836480000000e+09
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/31/0/0/manual_time_mean",
+      "iterations": 23,
+      "real_time": 3.0446381899325743e+07,
+      "cpu_time": 3.0567988104347855e+07,
+      "time_unit": "ns",
+      "bytes_per_second": 7.0533295391632889e+10,
+      "bytes": 2.1474836480000000e+09
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/31/0/0/manual_time_median",
+      "iterations": 23,
+      "real_time": 3.0446372278358627e+07,
+      "cpu_time": 3.0568199652173650e+07,
+      "time_unit": "ns",
+      "bytes_per_second": 7.0533317676288086e+10,
+      "bytes": 2.1474836480000000e+09
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/31/0/0/manual_time_stddev",
+      "iterations": 23,
+      "real_time": 2.4539899173601327e+02,
+      "cpu_time": 3.7614262195305025e+02,
+      "time_unit": "ns",
+      "bytes_per_second": 5.6850085871369450e+05,
+      "bytes": 1.7888543819998318e+01
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/32/0/0/manual_time",
+      "iterations": 11,
+      "real_time": 6.0874005271629855e+07,
+      "cpu_time": 6.1327122727272414e+07,
+      "time_unit": "ns",
+      "bytes_per_second": 7.0555030457338028e+10,
+      "bytes": 4.2949672960000000e+09
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/32/0/0/manual_time",
+      "iterations": 11,
+      "real_time": 6.0874633152376525e+07,
+      "cpu_time": 6.1329218727272727e+07,
+      "time_unit": "ns",
+      "bytes_per_second": 7.0554302729828049e+10,
+      "bytes": 4.2949672960000000e+09
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/32/0/0/manual_time",
+      "iterations": 11,
+      "real_time": 6.0875607485120945e+07,
+      "cpu_time": 6.1328869999998279e+07,
+      "time_unit": "ns",
+      "bytes_per_second": 7.0553173486601578e+10,
+      "bytes": 4.2949672960000000e+09
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/32/0/0/manual_time",
+      "iterations": 11,
+      "real_time": 6.0874899002638727e+07,
+      "cpu_time": 6.1328759636363752e+07,
+      "time_unit": "ns",
+      "bytes_per_second": 7.0553994608086777e+10,
+      "bytes": 4.2949672960000000e+09
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/32/0/0/manual_time",
+      "iterations": 11,
+      "real_time": 6.0876910320737146e+07,
+      "cpu_time": 6.1333820000000246e+07,
+      "time_unit": "ns",
+      "bytes_per_second": 7.0551663567869339e+10,
+      "bytes": 4.2949672960000000e+09
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/32/0/0/manual_time_mean",
+      "iterations": 11,
+      "real_time": 6.0875211046500638e+07,
+      "cpu_time": 6.1329558218181483e+07,
+      "time_unit": "ns",
+      "bytes_per_second": 7.0553632969944748e+10,
+      "bytes": 4.2949672960000000e+09
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/32/0/0/manual_time_median",
+      "iterations": 11,
+      "real_time": 6.0874899002638727e+07,
+      "cpu_time": 6.1328869999998279e+07,
+      "time_unit": "ns",
+      "bytes_per_second": 7.0553994608086777e+10,
+      "bytes": 4.2949672960000000e+09
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/32/0/0/manual_time_stddev",
+      "iterations": 11,
+      "real_time": 1.1101714409697929e+03,
+      "cpu_time": 2.5160004608232430e+03,
+      "time_unit": "ns",
+      "bytes_per_second": 1.2866633669943784e+06,
+      "bytes": 3.5777087639996637e+01
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/33/0/0/manual_time",
+      "iterations": 6,
+      "real_time": 1.2232545763254166e+08,
+      "cpu_time": 1.2394348466666828e+08,
+      "time_unit": "ns",
+      "bytes_per_second": 7.0221969802914200e+10,
+      "bytes": 8.5899345920000000e+09
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/33/0/0/manual_time",
+      "iterations": 6,
+      "real_time": 1.2232549364368121e+08,
+      "cpu_time": 1.2394331500000060e+08,
+      "time_unit": "ns",
+      "bytes_per_second": 7.0221949130419205e+10,
+      "bytes": 8.5899345920000000e+09
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/33/0/0/manual_time",
+      "iterations": 6,
+      "real_time": 1.2232522666454315e+08,
+      "cpu_time": 1.2394162766666265e+08,
+      "time_unit": "ns",
+      "bytes_per_second": 7.0222102392309357e+10,
+      "bytes": 8.5899345920000000e+09
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/33/0/0/manual_time",
+      "iterations": 6,
+      "real_time": 1.2232678259412448e+08,
+      "cpu_time": 1.2394377366666730e+08,
+      "time_unit": "ns",
+      "bytes_per_second": 7.0221209205682053e+10,
+      "bytes": 8.5899345920000000e+09
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/33/0/0/manual_time",
+      "iterations": 6,
+      "real_time": 1.2232599531610806e+08,
+      "cpu_time": 1.2394397799999978e+08,
+      "time_unit": "ns",
+      "bytes_per_second": 7.0221661142444550e+10,
+      "bytes": 8.5899345920000000e+09
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/33/0/0/manual_time_mean",
+      "iterations": 6,
+      "real_time": 1.2232579117019974e+08,
+      "cpu_time": 1.2394323579999973e+08,
+      "time_unit": "ns",
+      "bytes_per_second": 7.0221778334753891e+10,
+      "bytes": 8.5899345920000000e+09
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/33/0/0/manual_time_median",
+      "iterations": 6,
+      "real_time": 1.2232549364368121e+08,
+      "cpu_time": 1.2394348466666828e+08,
+      "time_unit": "ns",
+      "bytes_per_second": 7.0221949130419205e+10,
+      "bytes": 8.5899345920000000e+09
+    },
+    {
+      "name": "NUMA_Memcpy_GPUToPinned/33/0/0/manual_time_stddev",
+      "iterations": 6,
+      "real_time": 6.2109237484966582e+02,
+      "cpu_time": 9.3467154252308990e+02,
+      "time_unit": "ns",
+      "bytes_per_second": 3.5653634045868187e+05,
+      "bytes": 7.1554175279993274e+01
+    }
+  ]
+}

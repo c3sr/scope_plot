@@ -46,18 +46,7 @@ def configure_xaxis(ax, axis_spec):
 def generator_bar(ax, ax_cfg):
 
     bar_width = ax_cfg.get("bar_width", 0.8)
-    default_x_scale = eval(str(ax_cfg.get("xscale", 1.0)))
-    default_y_scale = eval(str(ax_cfg.get("yscale", 1.0)))
-    default_x_field = ax_cfg.get("xfield", None)
-    default_y_field = ax_cfg.get("yfield", None)
     series_specs = ax_cfg.series
-
-    if default_x_field:
-        utils.debug(
-            "using xfield {} if not defined in series".format(default_x_field))
-    if default_y_field:
-        utils.debug(
-            "using yfield {} if not defined in series".format(default_y_field))
     utils.debug("Number of series: {}".format(len(series_specs)))
 
     df = pd.DataFrame()
@@ -65,10 +54,10 @@ def generator_bar(ax, ax_cfg):
         input_path = series_spec.input_file()
         label = series_spec.get("label", str(i))
         regex = series_spec.get("regex", ".*")
-        y_field = series_spec.get("yfield", default_y_field)
-        x_field = series_spec.get("xfield", default_x_field)
-        y_scale = eval(str(series_spec.get("yscale", default_y_scale)))
-        x_scale = eval(str(series_spec.get("xscale", default_x_scale)))
+        y_field = series_spec.yfield()
+        x_field = series_spec.xfield()
+        y_scale = series_spec.yscale()
+        x_scale = series_spec.xscale()
         input_path = series_spec.input_file()
         utils.require(input_path, "input_file should have been defined")
         utils.require(y_field, "yfield should have been defined")
@@ -116,18 +105,16 @@ def generator_bar(ax, ax_cfg):
 
 
 def generator_errorbar(ax, ax_cfg):
-    default_x_field = ax_cfg.get("xfield", None)
-    default_y_field = ax_cfg.get("yfield", None)
     series_specs = ax_cfg.series
 
     for i, series_spec in enumerate(series_specs):
         file_path = series_spec.input_file()
         label = series_spec["label"]
         regex = series_spec.get("regex", ".*")
-        yscale = eval(str(series_spec.get("yscale", 1.0)))
-        xscale = eval(str(series_spec.get("xscale", 1.0)))
-        x_field = series_spec.get("xfield", default_x_field)
-        y_field = series_spec.get("yfield", default_y_field)
+        yscale = series_spec.yscale()
+        xscale = series_spec.xscale()
+        x_field = series_spec.xfield()
+        y_field = series_spec.yfield()
         utils.debug("series {}: opening {}".format(i, file_path))
 
         with GoogleBenchmark(file_path) as g:
@@ -159,18 +146,17 @@ def generator_errorbar(ax, ax_cfg):
 
 
 def generator_regplot(ax, ax_spec):
-    default_x_field = ax_spec.get("xfield", None)
-    default_y_field = ax_spec.get("yfield", None)
+
     series_specs = ax_spec.series
 
     for i, series_spec in enumerate(series_specs):
         file_path = series_spec.input_file()
         label = series_spec["label"]
         regex = series_spec.get("regex", ".*")
-        yscale = eval(str(series_spec.get("yscale", 1.0)))
-        xscale = eval(str(series_spec.get("xscale", 1.0)))
-        x_field = series_spec.get("xfield", default_x_field)
-        y_field = series_spec.get("yfield", default_y_field)
+        yscale = series_spec.yscale()
+        xscale = series_spec.xscale()
+        x_field = series_spec.xfield()
+        y_field = series_spec.yfield()
         utils.debug("series {}: opening {}".format(i, file_path))
 
         with GoogleBenchmark(file_path) as g:

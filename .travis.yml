@@ -29,10 +29,10 @@ jobs:
       env: TOXENV=py35
     - python: 3.6
       env: TOXENV=py36
-    - python: 3.7
+    - python: 3.7-dev
       env: TOXENV=py37
     - python: nightly
-      env: TOXENV=py38
+      env: TOXENV=py37
 
     # OSX Builds
     - language: generic
@@ -62,7 +62,7 @@ jobs:
           tags: true
   allow_failures:
     - python: nightly
-      env: TOXENV=py38
+      env: TOXENV=py37
 
 notifications:
   email: false

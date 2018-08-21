@@ -38,6 +38,8 @@ SERIES_SCHEMA = Schema({
     Optional("xscale"): EVAL,
     Optional("yscale"): EVAL,
     Optional("color"): COLOR,
+    Optional("tick_seperator"): basestring,
+    Optional("tick_fields"): list,
 })
 
 POS = list

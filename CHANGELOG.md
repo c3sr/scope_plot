@@ -1,6 +1,17 @@
 Changelog
 =========
 
+Release 0.2.1 (Development)
+---------------------------
+
+* Fix bugs in handling labels, color, regex for matplotlib and regex backends
+
+Release 0.2.0 (Development)
+---------------------------
+
+* Refactor some underlying data structures
+* break matplotlib backend
+
 Release 0.1.5 (Development)
 ---------------------------
 

@@ -52,8 +52,8 @@ def generator_bar(ax, ax_cfg):
     df = pd.DataFrame()
     for i, series_spec in enumerate(series_specs):
         input_path = series_spec.input_file()
-        label = series_spec.get("label", str(i))
-        regex = series_spec.get("regex", ".*")
+        label = series_spec.label_or(str(i))
+        regex = series_spec.regex()
         y_field = series_spec.yfield()
         x_field = series_spec.xfield()
         y_scale = series_spec.yscale()
@@ -109,8 +109,8 @@ def generator_errorbar(ax, ax_cfg):
 
     for i, series_spec in enumerate(series_specs):
         file_path = series_spec.input_file()
-        label = series_spec["label"]
-        regex = series_spec.get("regex", ".*")
+        label = series_spec.label_or(str(i))
+        regex = series_spec.regex()
         yscale = series_spec.yscale()
         xscale = series_spec.xscale()
         x_field = series_spec.xfield()
@@ -151,8 +151,8 @@ def generator_regplot(ax, ax_spec):
 
     for i, series_spec in enumerate(series_specs):
         file_path = series_spec.input_file()
-        label = series_spec["label"]
-        regex = series_spec.get("regex", ".*")
+        label = series_spec.label_or(str(i))
+        regex = series_spec.regex()
         yscale = series_spec.yscale()
         xscale = series_spec.xscale()
         x_field = series_spec.xfield()

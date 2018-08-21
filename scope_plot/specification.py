@@ -47,10 +47,24 @@ class input_file_mixin(object):
     def input_file(self):
         if self._input_file:
             return self._input_file
-        f = self.parent.input_file()
-        if not f:
+        elif isinstance(self.parent, input_file_mixin):
+            return self.parent.input_file()
+        else:
             raise InputFileNotDefinedError(self)
-        return f
+
+
+class regex_mixin(object):
+    def __init__(self, parent, spec):
+        self.parent = parent
+        self._regex = spec.get("regex", None)
+
+    def regex(self):
+        if self._regex:
+            return self._regex
+        elif isinstance(self.parent, regex_mixin):
+            return self.parent.regex()
+        else:
+            return ".*"
 
 
 class xfield_mixin(object):
@@ -134,8 +148,9 @@ class SpecificationBase(object):
 
 
 class SeriesSpecification(
-    SpecificationBase, 
     input_file_mixin,
+    SpecificationBase,
+    regex_mixin, 
     xfield_mixin, 
     xscale_mixin,
     yfield_mixin,
@@ -144,6 +159,7 @@ class SeriesSpecification(
     def __init__(self, parent, spec):
         SpecificationBase.__init__(self, parent, spec)
         input_file_mixin.__init__(self, parent, spec)
+        regex_mixin.__init__(self, parent, spec)
         xfield_mixin.__init__(self, parent, spec)
         yfield_mixin.__init__(self, parent, spec)
         xscale_mixin.__init__(self, parent, spec)
@@ -187,6 +203,7 @@ class SeriesSpecification(
 class PlotSpecification(
     SpecificationBase,
     input_file_mixin,
+    regex_mixin,
     xfield_mixin,
     xscale_mixin,
     yfield_mixin,
@@ -195,6 +212,7 @@ class PlotSpecification(
     def __init__(self, parent, spec):
         SpecificationBase.__init__(self, parent, spec)
         input_file_mixin.__init__(self, parent, spec)
+        regex_mixin.__init__(self, parent, spec)
         xfield_mixin.__init__(self, parent, spec)
         yfield_mixin.__init__(self, parent, spec)
         xscale_mixin.__init__(self, parent, spec)
@@ -225,6 +243,7 @@ class PlotSpecification(
 class Specification(
     SpecificationBase,
     input_file_mixin,
+    regex_mixin,
     xfield_mixin,
     xscale_mixin,
     yfield_mixin,
@@ -233,6 +252,7 @@ class Specification(
     def __init__(self, spec):
         SpecificationBase.__init__(self, parent=None, spec=spec)
         input_file_mixin.__init__(self, None, spec)
+        regex_mixin.__init__(self, None, spec)
         xfield_mixin.__init__(self, None, spec)
         yfield_mixin.__init__(self, None, spec)
         xscale_mixin.__init__(self, None, spec)

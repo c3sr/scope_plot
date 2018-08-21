@@ -77,7 +77,7 @@ def generate_errorbar(errorbar_spec):
         utils.debug("series \"{}\": color {}".format(label, color))
 
         input_path = series_spec.input_file()
-        regex = series_spec.get("regex", ".*")
+        regex = series_spec.regex()
         x_field = series_spec.xfield()
         y_field = series_spec.yfield()
         x_scale = series_spec.xscale()
@@ -142,11 +142,11 @@ def generate_bar(bar_spec):
         input_path = series_spec.input_file()
         y_scale = series_spec.yscale()
         x_scale = series_spec.xscale()
-        regex = series_spec.get("regex", ".*")
+        regex = series_spec.regex()
         utils.debug("Using regex {}".format(regex))
         x_field = series_spec.xfield()
         y_field = series_spec.yfield()
-        label = series_spec.get("label", str(i))
+        label = series_spec.label_or(str(i))
 
         utils.debug("Opening {}".format(input_path))
         with GoogleBenchmark(input_path) as b:

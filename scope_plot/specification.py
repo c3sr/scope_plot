@@ -6,6 +6,7 @@ from scope_plot import utils
 from scope_plot.error import NoInputFilesError
 from scope_plot import schema
 
+
 class InputFileNotFoundError(Exception):
     """raise when an input_file cannot be found in include directories"""
     def __init__(self, name, search_dirs):
@@ -15,16 +16,20 @@ class InputFileNotFoundError(Exception):
     def __str__(self):
         return "input_file {} not found in any of {}".format(self.name, self.search_dirs)
 
+
 class InputFileNotDefinedError(Exception):
     """raise when a spec file does not define input_file"""
     def __init__(self, series):
         self.series = series
 
+
 class XfieldNotFoundError(Exception):
     """raise when xfield is not defined"""
 
+
 class YfieldNotFoundError(Exception):
     """raise when yfield is not defined"""
+
 
 def find(name, search_dirs):
     if not os.path.isfile(name):
@@ -82,6 +87,7 @@ class xfield_mixin(object):
             return f
         return None
 
+
 class yfield_mixin(object):
     def __init__(self, parent, spec):
         self.parent = parent
@@ -97,6 +103,7 @@ class yfield_mixin(object):
             return f
         return None
 
+
 class xscale_mixin(object):
     def __init__(self, parent, spec):
         self.parent = parent
@@ -111,6 +118,7 @@ class xscale_mixin(object):
                 return f
         return 1.0
 
+
 class yscale_mixin(object):
     def __init__(self, parent, spec):
         self.parent = parent
@@ -124,6 +132,7 @@ class yscale_mixin(object):
             if f:
                 return f
         return 1.0
+
 
 class SpecificationBase(object):
     """ emulate a dictionary to provide compatibility with most of old implementation"""
@@ -150,8 +159,8 @@ class SpecificationBase(object):
 class SeriesSpecification(
     input_file_mixin,
     SpecificationBase,
-    regex_mixin, 
-    xfield_mixin, 
+    regex_mixin,
+    xfield_mixin,
     xscale_mixin,
     yfield_mixin,
     yscale_mixin,
@@ -207,7 +216,7 @@ class PlotSpecification(
     xfield_mixin,
     xscale_mixin,
     yfield_mixin,
-    yscale_mixin,    
+    yscale_mixin,
 ):
     def __init__(self, parent, spec):
         SpecificationBase.__init__(self, parent, spec)

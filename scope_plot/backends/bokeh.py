@@ -158,7 +158,6 @@ def generate_bar(bar_spec):
             new_df = new_df.set_index(x_field)
             df = pd.concat([df, new_df], axis=1, sort=False)
 
-
     # convert index to a string
     df.index = df.index.map(str)
     source = ColumnDataSource(data=df)

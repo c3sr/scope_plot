@@ -146,6 +146,7 @@ SUBPLOTS_EXTENSIONS = {
 
 SUBPLOTS_FIGURE = Schema(FIGURE_FIELDS).extend(SUBPLOTS_EXTENSIONS)
 
+
 def validate(orig_spec):
     if "subplots" in orig_spec:
         return SUBPLOTS_FIGURE(orig_spec)

@@ -43,7 +43,7 @@ if __name__ == '__main__':
         name='scope_plot',
         description='Plot Google Benchmark results',
         long_description='\n\n'.join([readme, changes]),
-        long_description_content_type='text/markdown', # This is important!
+        long_description_content_type='text/markdown',  # This is important!
         license=LICENSE,
         url='https://github.com/rai-project/scope_plot',
         version=VERSION,

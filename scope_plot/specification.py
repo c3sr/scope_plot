@@ -7,13 +7,18 @@ from scope_plot.error import NoInputFilesError
 from scope_plot import schema
 
 class InputFileNotFoundError(Exception):
-    """raise when a spec file does not define 'backend'"""
+    """raise when an input_file cannot be found in include directories"""
     def __init__(self, name, search_dirs):
         self.name = name
         self.search_dirs = search_dirs
 
     def __str__(self):
         return "input_file {} not found in any of {}".format(self.name, self.search_dirs)
+
+class InputFileNotDefinedError(Exception):
+    """raise when a spec file does not define input_file"""
+    def __init__(self, series):
+        self.series = series
 
 class XfieldNotFoundError(Exception):
     """raise when xfield is not defined"""
@@ -32,6 +37,20 @@ def find(name, search_dirs):
                 return check_path
         if not found:
             return None
+
+
+class input_file_mixin(object):
+    def __init__(self, parent, spec):
+        self.parent = parent
+        self._input_file = spec.get("input_file", None)
+
+    def input_file(self):
+        if self._input_file:
+            return self._input_file
+        f = self.parent.input_file()
+        if not f:
+            raise InputFileNotDefinedError(self)
+        return f
 
 
 class xfield_mixin(object):
@@ -116,9 +135,10 @@ class SpecificationBase(object):
 
 class SeriesSpecification(
     SpecificationBase, 
+    input_file_mixin,
     xfield_mixin, 
-    yfield_mixin,
     xscale_mixin,
+    yfield_mixin,
     yscale_mixin,
 ):
     def __init__(self, parent, spec):
@@ -127,53 +147,53 @@ class SeriesSpecification(
         yfield_mixin.__init__(self, parent, spec)
         xscale_mixin.__init__(self, parent, spec)
         yscale_mixin.__init__(self, parent, spec)
-        self._input_file = spec.get("input_file", None)
+        input_file_mixin.__init__(self, parent, spec)
+        self._color = spec.get("color", None)
+        self._label = spec.get("label", None)
 
     def label_seperator(self):
-        """the seperator that should be used to build the label, or None if the label a string"""
-        label_spec = self.spec["label"]
-        if isinstance(label_spec, dict):
-            return label_spec.get("seperator", "x")
-        return None
+        """the seperator that should be used to build the label, or x if not defined"""
+        if isinstance(self._label, dict):
+            return self._label.get("seperator", "x")
+        return "x"
 
     def label_fields(self):
-        """the fields that should be used to build the label, or None if the label a string"""
-        label_spec = self.spec["label"]
-        if isinstance(label_spec, dict):
-            return label_spec["fields"]
-        return None
+        """the benchmark fields that should be used to build the label, or [] if not defined"""
+        if isinstance(self._label, dict):
+            return self._label.get("fields", [])
+        return []
 
-    def label(self):
-        """return the label, if it is a string, or None"""
-        label_spec = self.spec["label"]
-        if isinstance(label_spec, str):
-            return label_spec
-        return None
+    def label_or(self, default=None):
+        """return the series label, if it is a string, the default"""
+        if isinstance(self._label, str):
+            return self._label
+        return default
 
     def find_input_file(self, search_dirs):
         if self._input_file:
-            utils.debug("searching for input_file={} defined for series".format(self.input_file))
+            utils.debug("searching for input_file={} defined for series".format(self._input_file))
             e = InputFileNotFoundError(self._input_file, search_dirs)
             self._input_file = find(self._input_file, search_dirs)
             if not self._input_file:
                 raise e
 
-    def input_file(self):
-        if self._input_file:
-            return self._input_file
-        f = self.parent.input_file()
-        assert f
-        return f
+    def color_or(self, default=None):
+        """return series color, or default value if color not defined"""
+        if self._color:
+            return self._color
+        return default
 
 
 class PlotSpecification(SpecificationBase,
+    input_file_mixin,
     xfield_mixin,
-    yfield_mixin,
     xscale_mixin,
+    yfield_mixin,
     yscale_mixin,    
 ):
     def __init__(self, parent, spec):
         SpecificationBase.__init__(self, parent, spec)
+        input_file_mixin.__init__(self, parent, spec)
         xfield_mixin.__init__(self, parent, spec)
         yfield_mixin.__init__(self, parent, spec)
         xscale_mixin.__init__(self, parent, spec)
@@ -181,11 +201,7 @@ class PlotSpecification(SpecificationBase,
         self.series = [
             SeriesSpecification(self, s) for s in spec["series"]
         ]
-        self._input_file = spec.get("input_file", None)
-        self._xfield = spec.get("xfield", None)
-        self._yfield = spec.get("yfield", None)
         self.type_str = spec.get("type", None)
-        self.spec = spec
 
     def find_input_files(self, search_dirs):
         if self._input_file:
@@ -193,15 +209,8 @@ class PlotSpecification(SpecificationBase,
             self._input_file = find(self._input_file, search_dirs)
             if not self._input_file:
                 raise e
-
         for series in self.series:
             series.find_input_file(search_dirs)
-
-    def input_file(self):
-        """ input_file for plot """
-        if self._input_file:
-            return self._input_file
-        return self.parent.input_file()
 
     def ty(self):
         """ plot type """
@@ -215,6 +224,7 @@ class PlotSpecification(SpecificationBase,
 class Specification(SpecificationBase, xfield_mixin, yfield_mixin):
     def __init__(self, spec):
         SpecificationBase.__init__(self, parent=None, spec=spec)
+        input_file_mixin.__init__(self, None, spec)
         xfield_mixin.__init__(self, None, spec)
         yfield_mixin.__init__(self, None, spec)
         xscale_mixin.__init__(self, None, spec)
@@ -227,7 +237,6 @@ class Specification(SpecificationBase, xfield_mixin, yfield_mixin):
             utils.debug("subplot not in spec")
             self.subplots = [PlotSpecification(self, spec)]
             self.subplots[0]["pos"] = (1, 1)
-        self._input_file = spec.get("input_file", None)
         self.size = spec.get("size", None)
         self.type_str = spec.get("type", None)
 
@@ -237,17 +246,13 @@ class Specification(SpecificationBase, xfield_mixin, yfield_mixin):
             for series in plot.series:
                 yield series.input_file()
 
-    def input_file(self):
-        return self._input_file
-
     def find_input_files(self, search_dirs):
         if self._input_file:
-            utils.debug("searching for input_file={} defined at top level of spec".format(self.input_file))
+            utils.debug("searching for input_file={} defined at top level of spec".format(self._input_file))
             e = InputFileNotFoundError(self._input_file, search_dirs)
             self._input_file = find(self._input_file, search_dirs)
             if not self._input_file:
                 raise e
-
         for plot in self.subplots:
             plot.find_input_files(search_dirs)
 

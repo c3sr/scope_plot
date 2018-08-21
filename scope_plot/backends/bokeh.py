@@ -70,8 +70,10 @@ def generate_errorbar(errorbar_spec):
     # Read all the series data
     df = pd.DataFrame()
     for i, series_spec in enumerate(errorbar_spec.series):
-        label = series_spec.get("label", str(i))
-        color = series_spec.get("color", styles.colors[i])
+
+        label = series_spec.label_or(str(i))
+
+        color = series_spec.color_or(styles.colors[i])
         utils.debug("series \"{}\": color {}".format(label, color))
 
         input_path = series_spec.input_file()
@@ -156,6 +158,7 @@ def generate_bar(bar_spec):
             new_df = new_df.set_index(x_field)
             df = pd.concat([df, new_df], axis=1, sort=False)
 
+
     # convert index to a string
     df.index = df.index.map(str)
     source = ColumnDataSource(data=df)
@@ -187,7 +190,7 @@ def generate_bar(bar_spec):
     # plot the bars
     for i, series_spec in enumerate(bar_spec.series):
 
-        color = series_spec.get("color", styles.colors[i])
+        color = series_spec.color_or(styles.colors[i])
 
         dodge_amount = -0.5 + (i + 1) * group_width
         utils.debug("{}".format(dodge_amount))

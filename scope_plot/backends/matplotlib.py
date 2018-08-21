@@ -129,7 +129,7 @@ def generator_errorbar(ax, ax_cfg):
         y *= yscale
         e *= yscale
 
-        color = series_spec.get("color", styles.colors[i])
+        color = series_spec.color_or(styles.colors[i])
         ax.errorbar(x, y, e, capsize=3, label=label, color=color)
 
     if "title" in ax_cfg:
@@ -171,7 +171,7 @@ def generator_regplot(ax, ax_spec):
         y *= yscale
         e *= yscale
 
-        color = series_spec.get("color", styles.colors[i])
+        color = series_spec.color_or(styles.colors[i])
 
         # Draw scatter plot of values
         ax.errorbar(

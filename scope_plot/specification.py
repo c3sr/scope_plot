@@ -143,11 +143,11 @@ class SeriesSpecification(
 ):
     def __init__(self, parent, spec):
         SpecificationBase.__init__(self, parent, spec)
+        input_file_mixin.__init__(self, parent, spec)
         xfield_mixin.__init__(self, parent, spec)
         yfield_mixin.__init__(self, parent, spec)
         xscale_mixin.__init__(self, parent, spec)
         yscale_mixin.__init__(self, parent, spec)
-        input_file_mixin.__init__(self, parent, spec)
         self._color = spec.get("color", None)
         self._label = spec.get("label", None)
 
@@ -184,7 +184,8 @@ class SeriesSpecification(
         return default
 
 
-class PlotSpecification(SpecificationBase,
+class PlotSpecification(
+    SpecificationBase,
     input_file_mixin,
     xfield_mixin,
     xscale_mixin,
@@ -221,7 +222,14 @@ class PlotSpecification(SpecificationBase,
         return type_str
 
 
-class Specification(SpecificationBase, xfield_mixin, yfield_mixin):
+class Specification(
+    SpecificationBase,
+    input_file_mixin,
+    xfield_mixin,
+    xscale_mixin,
+    yfield_mixin,
+    yscale_mixin
+):
     def __init__(self, spec):
         SpecificationBase.__init__(self, parent=None, spec=spec)
         input_file_mixin.__init__(self, None, spec)

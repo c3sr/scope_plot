@@ -1,0 +1,23 @@
+output:
+  name: optional-name
+  files:
+  - backend: bokeh
+    extension: html
+  - backend: matplotlib
+    extension: pdf
+type: errorbar
+series:
+  - label: CPU0 to GPU0 (local)
+    input_file: hal000.ncsa.illinois.edu-UM_Coherence_GPUToGPU-0-1.json
+    yscale: 1e-9
+yaxis:
+  label: Transfer Bandwidth (GB/s)
+  lim:
+    - 0
+    - 70
+xaxis:
+  label: Transfer Size (B)
+  type: log
+title: AC922 CPU/GPU Coherence Bandwidth
+xfield: bytes
+yfield: bytes_per_second

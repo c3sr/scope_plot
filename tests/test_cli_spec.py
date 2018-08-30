@@ -31,6 +31,16 @@ def run_spec(testdir):
 
     return do_run
 
+@pytest.fixture
+def run_spec_no_output(testdir):
+    def do_run(spec_file):
+        spec_path = os.path.join(FIXTURES_DIR, spec_file)
+        args = [
+            "scope_plot", "--debug", "--include", FIXTURES_DIR, "spec", spec_path
+        ]
+        return testdir._run(*args)
+
+    return do_run
 
 def test_spec_missing(tmpdir, run_spec):
     result = run_spec("matplotlib_bar_missing.yml")
@@ -69,4 +79,8 @@ def test_matplotlib_regplot(tmpdir, run_spec):
 
 def test_matplotlib_subplots(tmpdir, run_spec):
     result = run_spec("matplotlib_subplots.yml")
+    assert result.ret == 0
+
+def test_no_output_on_cli(tmpdir, run_spec_no_output):
+    result=run_spec_no_output("errorbar_output.yml")
     assert result.ret == 0

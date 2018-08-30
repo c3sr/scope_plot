@@ -1,7 +1,11 @@
 from __future__ import absolute_import
 
-import json
 import sys
+if sys.platform == "darwin":
+    import matplotlib
+    matplotlib.use("TkAgg") 
+
+import json
 import pprint
 import os
 import re
@@ -17,8 +21,6 @@ from scope_plot.schema import validate
 from scope_plot import schema
 from scope_plot.benchmark import GoogleBenchmark
 from scope_plot import styles
-
-# plt.switch_backend('agg')
 
 
 def configure_yaxis(ax, axis_spec):

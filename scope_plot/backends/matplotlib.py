@@ -3,7 +3,7 @@ from __future__ import absolute_import
 import sys
 if sys.platform == "darwin":
     import matplotlib
-    matplotlib.use("TkAgg") 
+    matplotlib.use("TkAgg")
 
 import json
 import pprint

@@ -1,13 +1,16 @@
 from __future__ import absolute_import
 
 import sys
+import os
 if sys.platform == "darwin":
     import matplotlib
-    matplotlib.use("TkAgg") 
+    matplotlib.use("TkAgg")
+if 'DISPLAY' not in os.environ:
+    import matplotlib
+    matplotlib.use("agg")
 
 import json
 import pprint
-import os
 import re
 import numpy as np
 import matplotlib.pyplot as plt

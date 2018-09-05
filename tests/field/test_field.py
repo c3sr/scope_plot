@@ -15,6 +15,7 @@ def generate_html(name):
     for job in jobs:
         backend.run(job)
 
+
 def generate_pdf(name):
     figure_spec = Specification.load_yaml(os.path.join(THIS_DIR, name))
     figure_spec.find_input_files([THIS_DIR])

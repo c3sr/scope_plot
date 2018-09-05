@@ -23,6 +23,7 @@ def test_scope_plot_bar(tmpdir, run):
                  "real_time", os.path.join(FIXTURES_DIR, "temp.pdf"))
     assert result.ret == 0
 
+
 def test_scope_plot_bar_nonfloat(tmpdir, run):
     result = run("bar", os.path.join(FIXTURES_DIR, "unsorted.json"), "name",
                  "real_time", os.path.join(FIXTURES_DIR, "temp.pdf"))

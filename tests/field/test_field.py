@@ -10,7 +10,7 @@ def generate_html(name):
     figure_spec = Specification.load_yaml(os.path.join(THIS_DIR, name))
     figure_spec.find_input_files([THIS_DIR])
     path = "test.html"
-    backend_str = backend.infer_backend(path)
+    backend_str = backend.infer_from_path(path)
     jobs = backend.construct_jobs(figure_spec, [(path, backend_str)])
     for job in jobs:
         backend.run(job)
@@ -19,7 +19,7 @@ def generate_pdf(name):
     figure_spec = Specification.load_yaml(os.path.join(THIS_DIR, name))
     figure_spec.find_input_files([THIS_DIR])
     path = "test.pdf"
-    backend_str = backend.infer_backend(path)
+    backend_str = backend.infer_from_path(path)
     jobs = backend.construct_jobs(figure_spec, [(path, backend_str)])
     for job in jobs:
         backend.run(job)

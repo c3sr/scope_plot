@@ -83,7 +83,10 @@ def generator_bar(ax, ax_cfg):
                 utils.debug("name {} matched regex {}".format(entry["name"], regex))
             series_df = matches.xy_dataframe(x_field, y_field)
 
-        series_df.loc[:, x_field] *= x_scale
+        if series_df.dtypes[x_field] == np.object:
+            utils.debug("Not scaling non-numeric x data by {}".format(x_scale))
+        else:
+            series_df.loc[:, x_field] *= x_scale
         series_df.loc[:, y_field] *= y_scale
         series_df = series_df.rename(columns={y_field: label})
         series_df = series_df.set_index(x_field)

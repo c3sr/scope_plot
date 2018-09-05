@@ -11,7 +11,7 @@ def generate_fixture(name):
     figure_spec = Specification.load_yaml(os.path.join(FIXTURES_DIR, name))
     figure_spec.find_input_files([FIXTURES_DIR])
     path = "test.pdf"
-    backend_str = backend.infer_backend(path)
+    backend_str = backend.infer_from_path(path)
     jobs = backend.construct_jobs(figure_spec, [(path, backend_str)])
     for job in jobs:
         backend.run(job)

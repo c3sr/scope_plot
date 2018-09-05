@@ -24,7 +24,7 @@ def run(job):
         utils.halt("Unexpected backend str: {}".format(backend_str))
 
 
-def infer_backend(output_path):
+def infer_from_path(output_path):
     _, file_extension = os.path.splitext(output_path)
     if file_extension == ".pdf" or file_extension == ".png":
         utils.debug(

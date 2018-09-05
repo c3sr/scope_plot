@@ -133,7 +133,7 @@ class GoogleBenchmark(object):
         data = {}
         for field in column_fields:
             data[field] = list(
-                map(lambda b: float(b[field]),
+                map(lambda b: b[field],
                     filter(field_present, self.benchmarks)))
 
         df = pd.DataFrame.from_dict(data)

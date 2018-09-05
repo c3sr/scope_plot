@@ -15,6 +15,7 @@ voluptuous = ">=0.11,<0.12"
 PyYAML = ">=3.13,<3.14"
 "e1839a8" = {editable = true, path = "."}
 tox = "*"
+pycodestyle = "*"
 
 [dev-packages]
 pycodestyle = "*"

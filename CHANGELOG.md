@@ -1,9 +1,17 @@
 Changelog
 =========
 
+Release 0.2.2 (Development)
+---------------------------
+* Add NOTICE and Apache 2.0 LICENSE
+* Fixed a bug where ScopePlot would not run without DISPLAY environment set
+* Use TkAgg backend on macOS to support running from a virtualenv
+* Allow non-numeric x data in bar plots
+* Add support for the `output` field in spec files
+
+
 Release 0.2.1 (Development)
 ---------------------------
-
 * Fix bugs in handling labels, color, regex for matplotlib and regex backends
 
 Release 0.2.0 (Development)

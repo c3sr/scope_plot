@@ -78,7 +78,10 @@ def generator_bar(ax, ax_cfg):
             utils.debug("series {}: yscale: {}".format(i, y_scale))
 
         with GoogleBenchmark(input_path) as b:
-            series_df = b.keep_name_regex(regex).xy_dataframe(x_field, y_field)
+            matches = b.keep_name_regex(regex)
+            for entry in matches.benchmarks:
+                utils.debug("name {} matched regex {}".format(entry["name"], regex))
+            series_df = matches.xy_dataframe(x_field, y_field)
 
         series_df.loc[:, x_field] *= x_scale
         series_df.loc[:, y_field] *= y_scale
@@ -88,8 +91,8 @@ def generator_bar(ax, ax_cfg):
         # FIXME: this could be resolved with join?
         # https://stackoverflow.com/questions/27719407/pandas-concat-valueerror-shape-of-passed-values-is-blah-indices-imply-blah2
         if not series_df.index.is_unique:
-            utils.error(
-                "multiple benchmark results with equal x_field={} values. The plot might be weird.".format(
+            utils.warn(
+                "multiple benchmark results with identical {} values. The plot might be weird.".format(
                     x_field))
         df = pd.concat([df, series_df], axis=1, sort=False)
     df = df.sort_index()

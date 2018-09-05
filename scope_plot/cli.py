@@ -70,7 +70,8 @@ def bar(ctx, benchmark, filter_name, output, x_field, y_field):
         bar_spec["title"] = filter_name
 
     bar_spec = Specification.load_dict(bar_spec)
-    jobs = backend.construct_jobs(bar_spec, [output])
+    backend_str = backend.infer_backend(output)
+    jobs = backend.construct_jobs(bar_spec, [(output, backend_str)])
     for job in jobs:
         backend.run(job)
 
@@ -99,17 +100,21 @@ def spec(ctx, output, output_prefix, spec):
 
     # output path from command line or spec
     if output:
-        output_paths = [output]
+        utils.debug("output path from command line: {}".format(output))
+        backend_str = backend.infer_backend(output)
+        utils.debug("inferred backend: {}".format(backend_str))
+        output_specs = [(output, backend_str)]
     else:
-        output_paths = figure_spec.output_paths()
+        output_specs = figure_spec.output_specs()
 
     # prepend prefix to output_path
     if output_prefix:
-        for output_path in output_paths:
-            output_path = os.path.join(output_prefix, output_path)
+        output_specs = [(os.path.join(output_prefix, path), backend) for path, backend in output_specs]
+        for (path, backend_str) in output_specs:
+            utils.debug("prefixed output path: {}".format(path))
 
     # determine the figures that need to be constructed
-    jobs = backend.construct_jobs(figure_spec, output_paths)
+    jobs = backend.construct_jobs(figure_spec, output_specs)
 
     utils.debug("{} jobs to run".format(len(jobs)))
 

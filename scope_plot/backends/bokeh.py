@@ -219,8 +219,6 @@ def generate_plot(plot_spec):
 
 def generate(figure_spec):
 
-    figure_spec = specification.canonicalize_to_subplot(figure_spec)
-
     # figure out the size of the grid
     num_x = max([int(spec["pos"][0]) for spec in figure_spec.subplots])
     num_y = max([int(spec["pos"][1]) for spec in figure_spec.subplots])
@@ -240,8 +238,7 @@ def generate(figure_spec):
         fig = generate_plot(plot_spec)
         grid[pos[1] - 1][pos[0] - 1] = fig
 
-    merge_tools = False  # don't merge child plot tools
-    grid = gridplot(grid, merge_tools=merge_tools)
+    grid = gridplot(grid, merge_tools=False)
 
     return grid
 

@@ -2,6 +2,7 @@ from scope_plot import utils
 import scope_plot.backends.bokeh as bokeh_backend
 import scope_plot.backends.matplotlib as matplotlib_backend
 import os
+from sys import exit
 
 
 class Job(object):
@@ -23,22 +24,26 @@ def run(job):
         utils.halt("Unexpected backend str: {}".format(backend_str))
 
 
-def construct_jobs(spec, output_paths):
-    """ construct jobs from spec, ignoring output field in spec and using output_paths"""
-    jobs = []
-    for output_path in output_paths:
-        _, file_extension = os.path.splitext(output_path)
-        if file_extension == ".pdf" or file_extension == ".png":
-            utils.debug(
-                "inferring matplotlib backend from output path {}".format(
-                    output_path))
-            backend = 'matplotlib'
-        elif file_extension == ".svg" or file_extension == ".html":
-            utils.debug("inferring bokeh backend from output path {}".format(
+def infer_backend(output_path):
+    _, file_extension = os.path.splitext(output_path)
+    if file_extension == ".pdf" or file_extension == ".png":
+        utils.debug(
+            "inferring matplotlib backend from output path {}".format(
                 output_path))
-            backend = 'bokeh'
-        else:
-            utils.halt("No backend for extension {}".format(file_extension))
+        return 'matplotlib'
+    elif file_extension == ".svg" or file_extension == ".html":
+        utils.debug("inferring bokeh backend from output path {}".format(
+            output_path))
+        return 'bokeh'
+    else:
+        utils.error("No backend for extension {}".format(file_extension))
+        exit(-1)
 
+
+def construct_jobs(spec, output_specs):
+    """ construct jobs from spec, ignoring output field in spec and using output_specs"""
+    jobs = []
+    for output_spec in output_specs:
+        output_path, backend = output_spec
         jobs += [Job(spec, output_path, backend)]
     return jobs

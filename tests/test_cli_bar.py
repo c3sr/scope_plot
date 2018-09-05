@@ -18,21 +18,12 @@ def run(testdir):
     return do_run
 
 
-@pytest.fixture
-def run_spec(testdir):
-    def do_run(spec_file):
-        spec_path = os.path.join(FIXTURES_DIR, spec_file)
-        output_path = os.path.join(FIXTURES_DIR, "test.pdf")
-        args = [
-            "scope_plot", "--debug", "--include", FIXTURES_DIR, "spec",
-            "--output", output_path, spec_path
-        ]
-        return testdir._run(*args)
-
-    return do_run
-
-
 def test_scope_plot_bar(tmpdir, run):
     result = run("bar", os.path.join(FIXTURES_DIR, "unsorted.json"), "bytes",
+                 "real_time", os.path.join(FIXTURES_DIR, "temp.pdf"))
+    assert result.ret == 0
+
+def test_scope_plot_bar_nonfloat(tmpdir, run):
+    result = run("bar", os.path.join(FIXTURES_DIR, "unsorted.json"), "name",
                  "real_time", os.path.join(FIXTURES_DIR, "temp.pdf"))
     assert result.ret == 0

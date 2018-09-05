@@ -258,7 +258,7 @@ class Specification(
     yfield_mixin,
     yscale_mixin
 ):
-    def __init__(self, spec):
+    def __init__(self, spec, spec_path=None):
         SpecificationBase.__init__(self, parent=None, spec=spec)
         input_file_mixin.__init__(self, None, spec)
         regex_mixin.__init__(self, None, spec)
@@ -276,6 +276,8 @@ class Specification(
             self.subplots[0]["pos"] = (1, 1)
         self.size = spec.get("size", None)
         self.type_str = spec.get("type", None)
+        self.output_spec = spec.get("output", None)
+        self.spec_path = spec_path  # path of file this spec came from, if any
 
     def input_files(self):
         """ return all input_files entries in the specification"""
@@ -298,21 +300,26 @@ class Specification(
         with open(path, 'rb') as f:
             spec = yaml.load(f)
             spec = schema.validate(spec)
-            return Specification(spec)
+            return Specification(spec, path)
 
     @staticmethod
     def load_dict(d):
         spec = schema.validate(d)
         return Specification(d)
 
-    def output_paths(self):
-        raise NotImplementedError
-        if "output" not in self.spec:
+    def output_specs(self):
+        """ return a list of (name, backend) parsed from spec.output"""
+        if not self.output_spec:
             return []
-        output_spec = figure_spec['output']
-        name = output_spec.get("name", None)
+        name = self.output_spec.get("name", None)
+        if not name:
+            if self.spec_path:
+                base = os.path.basename(self.spec_path)
+                name = os.path.splitext(base)[0]
+            else:
+                raise ValueError("spec.name undefined and no spec_path")
         specs = []
-        for spec in figure_spec.get("output", []):
+        for spec in self.output_spec.get("files", []):
             backend = spec['backend']
             ext = spec['extension']
             specs += [(name + "." + ext, backend)]
@@ -332,22 +339,3 @@ class Specification(
             for d in deps:
                 f.write(" \\\n\t")
                 f.write(d)
-
-
-def canonicalize_to_subplot(orig_spec):
-    if 'subplots' in orig_spec:
-        return orig_spec
-    else:
-        new_spec = {
-            "subplots": [
-                {
-                    "pos": [1, 1]
-                },
-            ]
-        }
-        for key, value in iteritems(orig_spec):
-            if key in ["size"]:
-                new_spec[key] = value
-            else:
-                new_spec["subplots"][0][key] = value
-        return new_spec

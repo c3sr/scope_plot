@@ -1,6 +1,6 @@
 # ScopePlot
 
-[![Build Status](https://travis-ci.com/rai-project/scope_plot.svg?branch=master)](https://travis-ci.com/rai-project/scope_plot)
+[![Build Status](https://travis-ci.com/c3sr/scope_plot.svg?branch=master)](https://travis-ci.com/c3sr/scope_plot)
 
 
 Plot Google Benchmark results
@@ -13,7 +13,7 @@ ScopePlot is available on [PyPI](https://pypi.org/project/scope-plot/) can be in
 
 To install the latest development version from [Github](https://github.com/rai-project/scope_plot)
 
-    $ python -m pip install git+git://github.com/rai-project/scope_plot.git
+    $ python -m pip install git+git://github.com/c3sr/scope_plot.git
 
 If your current Python installation doesn't have pip available, try [get-pip.py](bootstrap.pypa.io)
 
@@ -65,4 +65,4 @@ We happily welcome contributions, please see [our guide for Contributors](CONTRI
 License
 -------
 
-scope_plot is made available under the MIT License. For more details, see [LICENSE.txt](https://github.com/rai-project/scope_plot/blob/master/LICENSE.txt).
+scope_plot is made available under the Apache 2.0 License. For more details, see [LICENSE.txt](https://github.com/c3sr/scope_plot/blob/master/LICENSE.txt).

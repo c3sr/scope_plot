@@ -68,7 +68,6 @@ PLOT_FIELDS = Schema({
     Optional("yaxis"): AXIS,
     Optional("xaxis"): AXIS,
     Optional("series"): [SERIES_SCHEMA],
-    Optional("linestyle"): basestring,
     Optional("xtype"): basestring,
     Optional("ytype"): basestring,
     Optional("yscale"): EVAL,
@@ -81,7 +80,9 @@ BAR_EXTENSIONS = {
 }
 BAR_FIELDS = PLOT_FIELDS.extend(BAR_EXTENSIONS)
 
-ERRORBAR_EXTENSIONS = {}
+ERRORBAR_EXTENSIONS = {
+    Optional("linestyle"): basestring,
+}
 ERRORBAR_FIELDS = PLOT_FIELDS.extend(ERRORBAR_EXTENSIONS)
 
 REG_EXTENSIONS = {

@@ -134,6 +134,21 @@ class yscale_mixin(object):
         return 1.0
 
 
+class linestyle_mixin(object):
+    def __init__(self, parent, spec):
+        self.parent = parent
+        self._linestyle = spec.get("linestyle", None)
+
+    def linestyle(self):
+        if self._linestyle:
+            return self._linestyle
+        elif isinstance(self.parent, linestyle_mixin):
+            s = self.parent.linestyle()
+            if s:
+                return s
+        return "-"
+
+
 class SpecificationBase(object):
     """ emulate a dictionary to provide compatibility with most of old implementation"""
     def __init__(self, parent, spec):
@@ -159,6 +174,7 @@ class SpecificationBase(object):
 class SeriesSpecification(
     input_file_mixin,
     SpecificationBase,
+    linestyle_mixin,
     regex_mixin,
     xfield_mixin,
     xscale_mixin,
@@ -168,6 +184,7 @@ class SeriesSpecification(
     def __init__(self, parent, spec):
         SpecificationBase.__init__(self, parent, spec)
         input_file_mixin.__init__(self, parent, spec)
+        linestyle_mixin.__init__(self, parent, spec)
         regex_mixin.__init__(self, parent, spec)
         xfield_mixin.__init__(self, parent, spec)
         yfield_mixin.__init__(self, parent, spec)
@@ -189,7 +206,7 @@ class SeriesSpecification(
         return []
 
     def label_or(self, default=None):
-        """return the series label, if it is a string, the default"""
+        """return the series label if it is a string, or the default"""
         if isinstance(self._label, str):
             return self._label
         return default
@@ -212,6 +229,7 @@ class SeriesSpecification(
 class PlotSpecification(
     SpecificationBase,
     input_file_mixin,
+    linestyle_mixin,
     regex_mixin,
     xfield_mixin,
     xscale_mixin,
@@ -221,6 +239,7 @@ class PlotSpecification(
     def __init__(self, parent, spec):
         SpecificationBase.__init__(self, parent, spec)
         input_file_mixin.__init__(self, parent, spec)
+        linestyle_mixin.__init__(self, parent, spec)
         regex_mixin.__init__(self, parent, spec)
         xfield_mixin.__init__(self, parent, spec)
         yfield_mixin.__init__(self, parent, spec)

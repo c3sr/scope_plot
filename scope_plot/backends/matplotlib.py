@@ -126,6 +126,8 @@ def generator_errorbar(ax, ax_cfg):
         xscale = series_spec.xscale()
         x_field = series_spec.xfield()
         y_field = series_spec.yfield()
+        linestyle = series_spec.linestyle()
+        utils.debug("series {}: linestyle: {}".format(i, linestyle))
         utils.debug("series {}: opening {}".format(i, file_path))
 
         with GoogleBenchmark(file_path) as g:
@@ -141,7 +143,7 @@ def generator_errorbar(ax, ax_cfg):
         e *= yscale
 
         color = series_spec.color_or(styles.colors[i])
-        ax.errorbar(x, y, e, capsize=3, label=label, color=color)
+        ax.errorbar(x, y, e, capsize=3, label=label, color=color, linestyle=linestyle)
 
     if "title" in ax_cfg:
         ax.set_title(ax_cfg["title"])

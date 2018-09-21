@@ -40,6 +40,7 @@ SERIES_SCHEMA = Schema({
     Optional("color"): COLOR,
     Optional("tick_seperator"): basestring,
     Optional("tick_fields"): list,
+    Optional("linestyle"): basestring,
 })
 
 POS = list
@@ -67,6 +68,7 @@ PLOT_FIELDS = Schema({
     Optional("yaxis"): AXIS,
     Optional("xaxis"): AXIS,
     Optional("series"): [SERIES_SCHEMA],
+    Optional("linestyle"): basestring,
     Optional("xtype"): basestring,
     Optional("ytype"): basestring,
     Optional("yscale"): EVAL,

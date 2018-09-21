@@ -21,7 +21,7 @@ file should be the entry point for that interface. """
 @click.argument('output', type=click.Path(dir_okay=False, resolve_path=True))
 @click.argument(
     'spec', type=click.Path(exists=True, dir_okay=False, resolve_path=True))
-@click.argument('target', type=click.Path(dir_okay=False, resolve_path=True))
+@click.argument('target', type=click.Path(dir_okay=False, resolve_path=False))
 @click.pass_context
 def deps(ctx, output, spec, target):
     """Create a Makefile dependence"""

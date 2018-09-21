@@ -6,7 +6,7 @@ import click
 import glob
 
 from scope_plot import specification
-from scope_plot.specification import Specification
+from scope_plot.specification import Specification, InputFileNotFoundError
 from scope_plot import schema
 from scope_plot.benchmark import GoogleBenchmark
 from scope_plot import utils
@@ -30,7 +30,12 @@ def deps(ctx, output, spec, target):
     figure_spec = Specification.load_yaml(spec)
     include_dirs = ctx.obj["INCLUDE"]
     utils.debug("Searching for input_file values in: {}".format(include_dirs))
-    figure_spec.find_input_files(include_dirs)
+    try:
+        figure_spec.find_input_files(include_dirs)
+    except InputFileNotFoundError as e:
+        utils.error(str(e))
+        sys.exit(-1)
+
     utils.debug("Saving deps to {}".format(output))
     figure_spec.save_makefile_deps(output, target)
 

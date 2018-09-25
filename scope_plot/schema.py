@@ -82,6 +82,7 @@ BAR_FIELDS = PLOT_FIELDS.extend(BAR_EXTENSIONS)
 
 ERRORBAR_EXTENSIONS = {
     Optional("linestyle"): basestring,
+    Optional("color"): COLOR,
 }
 ERRORBAR_FIELDS = PLOT_FIELDS.extend(ERRORBAR_EXTENSIONS)
 

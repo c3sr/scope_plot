@@ -44,6 +44,20 @@ def find(name, search_dirs):
             return None
 
 
+class color_mixin(object):
+    def __init__(self, parent, spec):
+        self.parent = parent
+        self._color = spec.get("color", None)
+
+    def color_or(self, default=None):
+        if self._color:
+            return self._color
+        elif isinstance(self.parent, color_mixin):
+            return self.parent.color_or(default)
+        else:
+            return default
+
+
 class input_file_mixin(object):
     def __init__(self, parent, spec):
         self.parent = parent
@@ -172,8 +186,9 @@ class SpecificationBase(object):
 
 
 class SeriesSpecification(
-    input_file_mixin,
     SpecificationBase,
+    color_mixin,
+    input_file_mixin,
     linestyle_mixin,
     regex_mixin,
     xfield_mixin,
@@ -183,6 +198,7 @@ class SeriesSpecification(
 ):
     def __init__(self, parent, spec):
         SpecificationBase.__init__(self, parent, spec)
+        color_mixin.__init__(self, parent, spec)
         input_file_mixin.__init__(self, parent, spec)
         linestyle_mixin.__init__(self, parent, spec)
         regex_mixin.__init__(self, parent, spec)
@@ -190,7 +206,6 @@ class SeriesSpecification(
         yfield_mixin.__init__(self, parent, spec)
         xscale_mixin.__init__(self, parent, spec)
         yscale_mixin.__init__(self, parent, spec)
-        self._color = spec.get("color", None)
         self._label = spec.get("label", None)
 
     def label_seperator(self):
@@ -219,15 +234,10 @@ class SeriesSpecification(
             if not self._input_file:
                 raise e
 
-    def color_or(self, default=None):
-        """return series color, or default value if color not defined"""
-        if self._color:
-            return self._color
-        return default
-
 
 class PlotSpecification(
     SpecificationBase,
+    color_mixin,
     input_file_mixin,
     linestyle_mixin,
     regex_mixin,
@@ -238,6 +248,7 @@ class PlotSpecification(
 ):
     def __init__(self, parent, spec):
         SpecificationBase.__init__(self, parent, spec)
+        color_mixin.__init__(self, parent, spec)
         input_file_mixin.__init__(self, parent, spec)
         linestyle_mixin.__init__(self, parent, spec)
         regex_mixin.__init__(self, parent, spec)

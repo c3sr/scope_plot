@@ -143,6 +143,7 @@ def generator_errorbar(ax, ax_cfg):
         e *= yscale
 
         color = series_spec.color_or(styles.colors[i])
+        utils.debug("series {}: color = {}".format(i, color))
         ax.errorbar(x, y, e, capsize=3, label=label, color=color, linestyle=linestyle)
 
     if "title" in ax_cfg:

@@ -44,6 +44,12 @@ Commands:
 
 More information about the subcommands can be accessed with `python -m scope_plot COMMAND --help`, and also in the documentation: [bar](docs/bar.md), [spec](docs/spec.md), [deps](docs/makefiles.md).
 
+## Prerequisites
+
+You may have to install the following for scope_plot to install matplotlib
+
+    sudo apt install python-dev libfreetype6-dev and libpng-dev
+
 API Reference
 -------------
 

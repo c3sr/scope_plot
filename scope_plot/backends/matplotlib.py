@@ -120,7 +120,7 @@ def generator_errorbar(ax, ax_cfg):
 
     for i, series_spec in enumerate(series_specs):
         file_path = series_spec.input_file()
-        label = series_spec.label_or(str(i))
+        label = series_spec.label_or(None)
         regex = series_spec.regex()
         yscale = series_spec.yscale()
         xscale = series_spec.xscale()

@@ -7,7 +7,7 @@ if sys.platform == "darwin":
     matplotlib.use("TkAgg")
 if 'DISPLAY' not in os.environ:
     import matplotlib
-    matplotlib.use("agg")
+    matplotlib.use("Agg")
 
 import json
 import pprint
@@ -141,9 +141,9 @@ def generator_errorbar(ax, ax_cfg):
         x *= xscale
         y *= yscale
         e *= yscale
-
+        alpha = series_spec.alpha()
         color = series_spec.color_or(styles.colors[i])
-        utils.debug("series {}: color = {}".format(i, color))
+        utils.debug("series {}: color = {} alpha = {}".format(i, color, alpha))
         ax.errorbar(x, y, e, capsize=3, label=label, color=color, linestyle=linestyle)
 
     if "title" in ax_cfg:

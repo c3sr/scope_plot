@@ -44,6 +44,20 @@ def find(name, search_dirs):
             return None
 
 
+class alpha_mixin(object):
+    def __init__(self, parent, spec):
+        self.parent = parent
+        self._alpha = spec.get("alpha", None)
+
+    def alpha(self):
+        if self._alpha:
+            return self._alpha
+        elif isinstance(self.parent, alpha_mixin):
+            return self.parent.alpha()
+        else:
+            return 0.0
+
+
 class color_mixin(object):
     def __init__(self, parent, spec):
         self.parent = parent
@@ -187,6 +201,7 @@ class SpecificationBase(object):
 
 class SeriesSpecification(
     SpecificationBase,
+    alpha_mixin,
     color_mixin,
     input_file_mixin,
     linestyle_mixin,
@@ -198,6 +213,7 @@ class SeriesSpecification(
 ):
     def __init__(self, parent, spec):
         SpecificationBase.__init__(self, parent, spec)
+        alpha_mixin.__init__(self, parent, spec)
         color_mixin.__init__(self, parent, spec)
         input_file_mixin.__init__(self, parent, spec)
         linestyle_mixin.__init__(self, parent, spec)
@@ -237,6 +253,7 @@ class SeriesSpecification(
 
 class PlotSpecification(
     SpecificationBase,
+    alpha_mixin,
     color_mixin,
     input_file_mixin,
     linestyle_mixin,
@@ -248,6 +265,7 @@ class PlotSpecification(
 ):
     def __init__(self, parent, spec):
         SpecificationBase.__init__(self, parent, spec)
+        alpha_mixin.__init__(self, parent, spec)
         color_mixin.__init__(self, parent, spec)
         input_file_mixin.__init__(self, parent, spec)
         linestyle_mixin.__init__(self, parent, spec)

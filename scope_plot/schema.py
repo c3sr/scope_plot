@@ -30,6 +30,8 @@ COLOR = Any(basestring, float, int)
 EVAL = Any(basestring, float, int)
 
 SERIES_SCHEMA = Schema({
+    Optional("alpha"): float,
+    Optional("color"): COLOR,
     Optional("label"): basestring,
     Optional("input_file"): basestring,
     Optional("regex"): basestring,
@@ -37,7 +39,6 @@ SERIES_SCHEMA = Schema({
     Optional("yfield"): basestring,
     Optional("xscale"): EVAL,
     Optional("yscale"): EVAL,
-    Optional("color"): COLOR,
     Optional("tick_seperator"): basestring,
     Optional("tick_fields"): list,
     Optional("linestyle"): basestring,
@@ -81,6 +82,7 @@ BAR_EXTENSIONS = {
 BAR_FIELDS = PLOT_FIELDS.extend(BAR_EXTENSIONS)
 
 ERRORBAR_EXTENSIONS = {
+    Optional("alpha"): float,
     Optional("linestyle"): basestring,
     Optional("color"): COLOR,
 }

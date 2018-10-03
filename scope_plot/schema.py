@@ -135,11 +135,11 @@ BAR_FIGURE = BAR_FIGURE_FIELDS
 ERRORBAR_FIGURE = ERRORBAR_FIGURE_FIELDS
 REG_FIGURE = REG_FIGURE_FIELDS
 
-# an errorbar plot in a subplot
-ERRORBAR_SUBPLOT = SUBPLOT_FIELDS
+# an errorbar plot in a subplot is a subplot and an errorbar plot
+ERRORBAR_SUBPLOT = SUBPLOT_FIELDS.extend(ERRORBAR_EXTENSIONS)
 BAR_SUBPLOT = BAR_SUBPLOT_FIELDS
 
-# anythink that can be a subplot
+# anything that can be a subplot
 SUBPLOT = Any(
     ERRORBAR_SUBPLOT,
     BAR_SUBPLOT,

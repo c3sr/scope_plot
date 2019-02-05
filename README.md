@@ -14,6 +14,10 @@ ScopePlot is available on [PyPI](https://pypi.org/project/scope-plot/) can be in
 To install the latest development version from [Github](https://github.com/rai-project/scope_plot)
 
     $ python -m pip install git+git://github.com/c3sr/scope_plot.git
+    
+To use a version in a local directory
+
+    $ python -m pip install -e ${HOME}/repos/scope_plot
 
 If your current Python installation doesn't have pip available, try [get-pip.py](bootstrap.pypa.io)
 

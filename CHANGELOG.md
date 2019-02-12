@@ -1,6 +1,15 @@
 Changelog
 =========
 
+Release 0.2.3 (Development)
+---------------------------
+* Use `agg` matplotlib backend if tkinter cannot be imported
+* allow subplots to have error bars
+* hide error bar labels by default
+* add linestyle spec to matplotlib errorbars
+* don't resolve path for scope_plot deps since makefiles probably expect target names to be relative
+* print error when an input file is not found
+
 Release 0.2.2 (Development)
 ---------------------------
 * Add NOTICE and Apache 2.0 LICENSE

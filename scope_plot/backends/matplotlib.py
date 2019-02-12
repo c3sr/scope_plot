@@ -5,15 +5,21 @@ import os
 if sys.platform == "darwin":
     import matplotlib
     matplotlib.use("TkAgg")
-if 'DISPLAY' not in os.environ:
+elif 'DISPLAY' not in os.environ:
     import matplotlib
     matplotlib.use("Agg")
+
+try:
+    import tkinter
+except ImportError as e:
+    import matplotlib
+    matplotlib.use("agg")
+    import matplotlib.pyplot as plt
 
 import json
 import pprint
 import re
 import numpy as np
-import matplotlib.pyplot as plt
 import yaml
 from future.utils import iteritems
 import pandas as pd

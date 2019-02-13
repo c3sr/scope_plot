@@ -14,6 +14,10 @@ ScopePlot is available on [PyPI](https://pypi.org/project/scope-plot/) can be in
 To install the latest development version from [Github](https://github.com/rai-project/scope_plot)
 
     $ python -m pip install git+git://github.com/c3sr/scope_plot.git
+    
+To use a version in a local directory
+
+    $ python -m pip install -e ${HOME}/repos/scope_plot
 
 If your current Python installation doesn't have pip available, try [get-pip.py](bootstrap.pypa.io)
 
@@ -43,6 +47,12 @@ Commands:
 ```
 
 More information about the subcommands can be accessed with `python -m scope_plot COMMAND --help`, and also in the documentation: [bar](docs/bar.md), [spec](docs/spec.md), [deps](docs/makefiles.md).
+
+## Prerequisites
+
+You may have to install the following for scope_plot to install matplotlib
+
+    sudo apt install python-dev libfreetype6-dev and libpng-dev
 
 API Reference
 -------------

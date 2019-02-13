@@ -15,6 +15,9 @@ except ImportError as e:
     import matplotlib
     matplotlib.use("agg")
     import matplotlib.pyplot as plt
+else:
+    import matplotlib.pyplot as plt
+
 
 import json
 import pprint

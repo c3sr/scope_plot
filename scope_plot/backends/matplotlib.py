@@ -14,7 +14,11 @@ try:
 except ImportError as e:
     import matplotlib
     matplotlib.use("agg")
-    import matplotlib.pyplot as plt
+
+matplotlib.rcParams['pdf.fonttype'] = 42
+matplotlib.rcParams['ps.fonttype'] = 42
+
+import matplotlib.pyplot as plt
 
 import json
 import pprint
